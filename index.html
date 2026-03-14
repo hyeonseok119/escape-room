@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>현석방탈출</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #222222;
+      font-family: 'Arial', sans-serif;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #ff6b00;
+    }
+
+    header p {
+      color: #888888;
+      margin-top: 8px;
+    }
+
+    .search-bar {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 16px;
+      width: 100%;
+      max-width: 400px;
+      border: 2px solid #ff6b00;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border: 2px solid #ff6b00;
+      border-radius: 12px;
+      padding: 24px 20px;
+      width: 220px;
+      text-decoration: none;
+      color: #222222;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .card:hover {
+      background-color: #ff6b00;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .card .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .card .name {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .card .desc {
+      font-size: 0.78rem;
+      margin-top: 8px;
+      color: #777777;
+      line-height: 1.4;
+    }
+
+    .card:hover .desc {
+      color: #ffe0cc;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🔐 현석방탈출</h1>
+    <p>자주 가는 방탈출 사이트들을 한 곳에 모았어요</p>
+    <input class="search-bar" type="text" id="search" placeholder="🔍 매장 이름으로 검색..." oninput="filterCards()">
+  </header>
+
+  <div class="card-container" id="cardContainer">
+
+    <a class="card" href="https://keyescape.co.kr/" target="_blank">
+      <div class="icon">🗝️</div>
+      <div class="name">키이스케이프</div>
+      <div class="desc">강남점, 로그 등 독보적인 인테리어와 연출력으로 예약 난이도가 가장 높은 브랜드</div>
+    </a>
+
+    <a class="card" href="https://www.xphobia.net/" target="_blank">
+      <div class="icon">🧟</div>
+      <div class="name">비트포비아</div>
+      <div class="desc">던전 시리즈로 유명하며 스케일 큰 테마와 탄탄한 시스템을 갖춘 대형 프랜차이즈</div>
+    </a>
+
+    <a class="card" href="http://www.zeroworld.co.kr/" target="_blank">
+      <div class="icon">👻</div>
+      <div class="name">제로월드</div>
+      <div class="desc">공포 테마 링, 콜러 등으로 정점을 찍었으며 압도적인 몰입감을 제공</div>
+    </a>
+
+    <a class="card" href="http://sherlock-holmes.co.kr/" target="_blank">
+      <div class="icon">🔍</div>
+      <div class="name">셜록홈즈</div>
+      <div class="desc">전국에 가장 많은 지점을 보유하여 접근성이 뛰어나며 다양한 난이도의 테마가 강점</div>
+    </a>
+
+    <a class="card" href="https://www.nextedition.co.kr/" target="_blank">
+      <div class="icon">📖</div>
+      <div class="name">넥스트에디션</div>
+      <div class="desc">문제 풀이 위주부터 스토리 중심 테마까지 폭넓은 스펙트럼을 자랑</div>
+    </a>
+
+    <a class="card" href="http://www.secretgardenescape.com/" target="_blank">
+      <div class="icon">🌸</div>
+      <div class="name">비밀의 화원</div>
+      <div class="desc">감성적인 인테리어와 야외 방탈출로 여성층에게 인기가 많음</div>
+    </a>
+
+    <a class="card" href="http://seoul-escape.com/" target="_blank">
+      <div class="icon">🏙️</div>
+      <div class="name">서울이스케이프룸</div>
+      <div class="desc">한국 방탈출의 시초격으로 미국식 스타일의 장치와 스토리 연결성이 훌륭</div>
+    </a>
+
+    <a class="card" href="http://murderparker.com/" target="_blank">
+      <div class="icon">🕵️</div>
+      <div class="name">머더파커</div>
+      <div class="desc">독특한 손맛과 아날로그적인 감성, 매니아층이 두터운 전주 기반의 브랜드</div>
+    </a>
+
+    <a class="card" href="http://www.master-key.co.kr/" target="_blank">
+      <div class="icon">🔑</div>
+      <div class="name">마스터키</div>
+      <div class="desc">합리적인 가격과 깔끔한 가이드로 입문자부터 숙련자까지 골고루 사랑받음</div>
+    </a>
+
+    <a class="card" href="http://roomsa.co.kr/" target="_blank">
+      <div class="icon">🤖</div>
+      <div class="name">룸즈에이</div>
+      <div class="desc">똑똑한 기계 장치와 세련된 UI를 활용한 문제들이 특징인 깔끔한 브랜드</div>
+    </a>
+
+    <a class="card" href="http://decoder.kr/" target="_blank">
+      <div class="icon">📡</div>
+      <div class="name">디코더</div>
+      <div class="desc">자물쇠 없는 최첨단 센서 방탈출의 끝판왕</div>
+    </a>
+
+    <a class="card" href="http://www.code-k.co.kr/" target="_blank">
+      <div class="icon">☕</div>
+      <div class="name">코드케이</div>
+      <div class="desc">강남 최대 규모, 대기실 셀프바와 카페 같은 편의시설이 잘 되어 있음</div>
+    </a>
+
+    <a class="card" href="http://www.dumbndumber.kr/" target="_blank">
+      <div class="icon">🎓</div>
+      <div class="name">덤앤더머</div>
+      <div class="desc">학점 시스템이라는 독특한 콘셉트로 재방문 욕구를 자극</div>
+    </a>
+
+    <a class="card" href="http://solver-gd.com/" target="_blank">
+      <div class="icon">🧩</div>
+      <div class="name">솔버</div>
+      <div class="desc">건대권의 강자로 스릴러와 추리물에서 깊이 있는 스토리를 보여줌</div>
+    </a>
+
+    <a class="card" href="http://www.x-cape.co.kr/" target="_blank">
+      <div class="icon">⚡</div>
+      <div class="name">엑스케이프</div>
+      <div class="desc">실화 기반 테마가 많아 몰입도가 높으며 하이테크 장치 활용도가 높음</div>
+    </a>
+
+    <a class="card" href="http://www.escapers.co.kr/" target="_blank">
+      <div class="icon">💡</div>
+      <div class="name">이스케이퍼스</div>
+      <div class="desc">홍대 인근 브랜드로 참신하고 창의적인 문제 구성이 돋보임</div>
+    </a>
+
+    <a class="card" href="http://cubeescape.co.kr/" target="_blank">
+      <div class="icon">📦</div>
+      <div class="name">큐브이스케이프</div>
+      <div class="desc">직관적이고 직설적인 공포와 스릴러 테마로 대중적인 인지도가 높음</div>
+    </a>
+
+    <a class="card" href="http://www.mysteryroomescape.com/" target="_blank">
+      <div class="icon">🎭</div>
+      <div class="name">미스터리룸 이스케이프</div>
+      <div class="desc">다양한 물리적 장치를 활용해 몸을 쓰는 재미가 있는 테마들이 많음</div>
+    </a>
+
+    <a class="card" href="https://letoescape.com/" target="_blank">
+      <div class="icon">🏨</div>
+      <div class="name">호텔 레토</div>
+      <div class="desc">강남의 단일 테마 매장으로 영화 세트장 같은 압도적인 스케일로 유명</div>
+    </a>
+
+    <a class="card" href="https://realworld.to/" target="_blank">
+      <div class="icon">🌐</div>
+      <div class="name">리얼월드</div>
+      <div class="desc">AR 기반 야외 방탈출 및 성수동 오프라인 센터가 핫플레이스</div>
+    </a>
+
+  </div>
+
+  <script>
+    function filterCards() {
+      const keyword = document.getElementById('search').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        const name = card.querySelector('.name').textContent.toLowerCase();
+        const desc = card.querySelector('.desc').textContent.toLowerCase();
+        if (name.includes(keyword) || desc.includes(keyword)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
