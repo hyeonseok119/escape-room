@@ -49,14 +49,14 @@
     .card-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      max-width: 800px;
+      gap: 16px;
+      max-width: 600px;
       margin: 0 auto;
     }
 
     @media (min-width: 600px) {
       .card-container {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -64,31 +64,36 @@
       background-color: #ffffff;
       border: 2px solid #ff6b00;
       border-radius: 12px;
-      padding: 16px 12px;
-      text-decoration: none;
-      color: #222222;
+      overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
     }
 
     .card:hover {
-      background-color: #ff6b00;
-      color: white;
       transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
     }
 
-    .card:hover .desc {
-      color: #ffe0cc;
+    .card-img {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+height: 100px;
+      object-fit: contain;
+padding: 8px;
     }
 
-    .card .icon { font-size: 1.6rem; margin-bottom: 8px; }
-    .card .name { font-size: 0.95rem; font-weight: bold; }
-    .card .desc { font-size: 0.72rem; margin-top: 6px; color: #777777; line-height: 1.4; }
+    .card-name {
+      padding: 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #222222;
+      background-color: #ffffff;
+    }
 
+    /* 모달 */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -174,15 +179,13 @@
   <div class="card-container" id="cardContainer">
 
     <div class="card" onclick="openModal('zeroworld')">
-      <div class="icon">👻</div>
-      <div class="name">제로월드 홍대점</div>
-      <div class="desc">NOX, 층간소음 등 압도적인 연출의 공포 방탈출</div>
+      <img class="card-img" src="https://zerohongdae.com/storage/FUxKErAmgXZVl8jCvO46vQk0lvG3UYJoKIY3v4pC.png" alt="제로월드 홍대점">
+      <div class="card-name">제로월드 홍대점</div>
     </div>
 
     <div class="card" onclick="openModal('danpyunson')">
-      <div class="icon">📝</div>
-      <div class="name">단편선 성수</div>
-      <div class="desc">문학적 감성의 스토리 중심 테마로 깊은 몰입감 제공</div>
+      <img class="card-img" src="https://cdn.imweb.me/thumbnail/20221107/3aa26fe234692.png" alt="단편선 성수">
+      <div class="card-name">단편선 성수</div>
     </div>
 
   </div>
@@ -250,9 +253,8 @@
       const keyword = document.getElementById('search').value.toLowerCase();
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
-        const name = card.querySelector('.name').textContent.toLowerCase();
-        const desc = card.querySelector('.desc').textContent.toLowerCase();
-        if (name.includes(keyword) || desc.includes(keyword)) {
+        const name = card.querySelector('.card-name').textContent.toLowerCase();
+        if (name.includes(keyword)) {
           card.classList.remove('hidden');
         } else {
           card.classList.add('hidden');
