@@ -46,12 +46,19 @@
       outline: none;
     }
 
+    /* 메인 카드 */
     .card-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       max-width: 800px;
       margin: 0 auto;
+    }
+
+    @media (min-width: 600px) {
+      .card-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
     .card {
@@ -61,6 +68,7 @@
       padding: 16px 12px;
       text-decoration: none;
       color: #222222;
+      cursor: pointer;
       transition: transform 0.2s, background-color 0.2s;
       display: flex;
       flex-direction: column;
@@ -74,36 +82,87 @@
       transform: scale(1.03);
     }
 
-    .card .icon {
-      font-size: 1.6rem;
-      margin-bottom: 8px;
-    }
-
-    .card .name {
-      font-size: 0.95rem;
-      font-weight: bold;
-    }
-
-    .card .desc {
-      font-size: 0.72rem;
-      margin-top: 6px;
-      color: #777777;
-      line-height: 1.4;
-    }
-
     .card:hover .desc {
       color: #ffe0cc;
     }
 
-    @media (min-width: 600px) {
-      .card-container {
-        grid-template-columns: repeat(4, 1fr);
-      }
+    .card .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .card .name { font-size: 0.95rem; font-weight: bold; }
+    .card .desc { font-size: 0.72rem; margin-top: 6px; color: #777777; line-height: 1.4; }
+
+    /* 테마 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
     }
 
-    .hidden {
-      display: none;
+    .modal-overlay.active {
+      display: flex;
     }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 90%;
+      max-width: 420px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff6b00;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888888;
+    }
+
+    .theme-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .theme-btn {
+      display: block;
+      padding: 14px 16px;
+      background-color: #fff7f0;
+      border: 2px solid #ff6b00;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #222222;
+      font-size: 0.95rem;
+      font-weight: bold;
+      text-align: center;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .theme-btn:hover {
+      background-color: #ff6b00;
+      color: white;
+    }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -116,6 +175,18 @@
 
   <div class="card-container" id="cardContainer">
 
+    <div class="card" onclick="openModal('zeroworld')">
+      <div class="icon">👻</div>
+      <div class="name">제로월드 홍대점</div>
+      <div class="desc">링, 콜러 등 공포 영화 세트장 같은 압도적인 연출</div>
+    </div>
+
+    <div class="card" onclick="openModal('danpyunson')">
+      <div class="icon">📝</div>
+      <div class="name">단편선 성수</div>
+      <div class="desc">문학적 감성의 스토리 중심 테마로 깊은 몰입감을 제공</div>
+    </div>
+
     <a class="card" href="https://keyescape.co.kr/" target="_blank">
       <div class="icon">🗝️</div>
       <div class="name">키이스케이프</div>
@@ -126,12 +197,6 @@
       <div class="icon">🧟</div>
       <div class="name">비트포비아 던전</div>
       <div class="desc">강남, 홍대 등 던전 시리즈로 거대한 스케일과 탄탄한 스토리 제공</div>
-    </a>
-
-    <a class="card" href="https://www.zeroworld.co.kr/" target="_blank">
-      <div class="icon">👻</div>
-      <div class="name">제로월드</div>
-      <div class="desc">링, 콜러 등 공포 영화 세트장에 들어온 듯한 압도적인 연출</div>
     </a>
 
     <a class="card" href="https://point-nine.com/" target="_blank">
@@ -238,7 +303,66 @@
 
   </div>
 
+  <!-- 테마 모달 -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="theme-list" id="themeList"></div>
+    </div>
+  </div>
+
   <script>
+    const themes = {
+      zeroworld: {
+        name: '제로월드 홍대점',
+        list: [
+          { name: 'NOX', url: 'https://zerohongdae.com/reservation' },
+          { name: '층간소음', url: 'https://zerohongdae.com/reservation' },
+          { name: '깜방탈출 : WAY OUT', url: 'https://zerohongdae.com/reservation' },
+          { name: '사랑...하는...감?', url: 'https://zerohongdae.com/reservation' },
+          { name: 'ALIVE', url: 'https://zerohongdae.com/reservation' },
+        ]
+      },
+      danpyunson: {
+        name: '단편선 성수',
+        list: [
+          { name: '쓰여진 문장 속에 구원이 없다면', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '존재할 자격', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '쥐와 파시스트와 마지막 한 장', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '뱃사람의 별', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+        ]
+      }
+    };
+
+    function openModal(id) {
+      const store = themes[id];
+      document.getElementById('modalTitle').textContent = store.name;
+      const list = document.getElementById('themeList');
+      list.innerHTML = '';
+      store.list.forEach(theme => {
+        const a = document.createElement('a');
+        a.className = 'theme-btn';
+        a.href = theme.url;
+        a.target = '_blank';
+        a.textContent = theme.name;
+        list.appendChild(a);
+      });
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function closeModalOutside(event) {
+      if (event.target === document.getElementById('modalOverlay')) {
+        closeModal();
+      }
+    }
+
     function filterCards() {
       const keyword = document.getElementById('search').value.toLowerCase();
       const cards = document.querySelectorAll('.card');
