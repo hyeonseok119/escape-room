@@ -54,12 +54,6 @@
       margin: 0 auto;
     }
 
-    @media (min-width: 600px) {
-      .card-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
     .card {
       background-color: #ffffff;
       border: 2px solid #ff6b00;
@@ -78,10 +72,9 @@
 
     .card-img {
       width: 100%;
-      aspect-ratio: 3 / 2;
-height: 100px;
+      height: 100px;
       object-fit: contain;
-padding: 8px;
+      padding: 8px;
     }
 
     .card-name {
@@ -93,7 +86,6 @@ padding: 8px;
       background-color: #ffffff;
     }
 
-    /* 모달 */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -147,8 +139,10 @@ padding: 8px;
     }
 
     .theme-btn {
-      display: block;
-      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
       background-color: #fff7f0;
       border: 2px solid #ff6b00;
       border-radius: 10px;
@@ -156,13 +150,25 @@ padding: 8px;
       color: #222222;
       font-size: 0.95rem;
       font-weight: bold;
-      text-align: center;
       transition: background-color 0.2s, color 0.2s;
     }
 
     .theme-btn:hover {
       background-color: #ff6b00;
       color: white;
+    }
+
+    .theme-btn img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .theme-btn span {
+      flex: 1;
+      text-align: left;
     }
 
     .hidden { display: none; }
@@ -205,20 +211,20 @@ padding: 8px;
       zeroworld: {
         name: '제로월드 홍대점',
         list: [
-          { name: 'NOX', url: 'https://zerohongdae.com/reservation' },
-          { name: '층간소음', url: 'https://zerohongdae.com/reservation' },
-          { name: '깜방탈출 : WAY OUT', url: 'https://zerohongdae.com/reservation' },
-          { name: '사랑...하는...감?', url: 'https://zerohongdae.com/reservation' },
-          { name: 'ALIVE', url: 'https://zerohongdae.com/reservation' },
+          { name: 'NOX', img: 'https://zerohongdae.com/storage/lwGpXRwNnpUlFVWKcZQzfK8wMeC6gQ4gjYnTCndw.png', url: 'https://zerohongdae.com/reservation' },
+          { name: '층간소음', img: 'https://zerohongdae.com/storage/m09Dw0A46eZbIlxCKOgXcp5b02QB6UmfrSTzAtbi.jpg', url: 'https://zerohongdae.com/reservation' },
+          { name: '깜방탈출 : WAY OUT', img: 'https://zerohongdae.com/storage/04dAAb57MJKD0poJ4VnlsJIL9EDWrYMzq6hTCRYi.jpg', url: 'https://zerohongdae.com/reservation' },
+          { name: '사랑...하는...감?', img: 'https://zerohongdae.com/storage/NZSXGtMhy5Rod5fwRFqpP9edW6ggmNvFSAytmlDP.jpg', url: 'https://zerohongdae.com/reservation' },
+          { name: 'ALIVE', img: 'https://zerohongdae.com/storage/9ibzZ5mUK63r5DvwjODh9e64heWXtFG8rxFili3P.jpg', url: 'https://zerohongdae.com/reservation' },
         ]
       },
       danpyunson: {
         name: '단편선 성수',
         list: [
-          { name: '쓰여진 문장 속에 구원이 없다면', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
-          { name: '존재할 자격', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
-          { name: '쥐와 파시스트와 마지막 한 장', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
-          { name: '뱃사람의 별', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '쓰여진 문장 속에 구원이 없다면', img: '', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '존재할 자격', img: 'https://cdn.imweb.me/thumbnail/20240425/4b91bd6f19d9d.png', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '쥐와 파시스트와 마지막 한 장', img: 'https://cdn.imweb.me/thumbnail/20240623/0b00a78ea96e7.jpg', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
+          { name: '뱃사람의 별', img: 'https://cdn.imweb.me/thumbnail/20240425/8b8cf215fd5ac.jpeg', url: 'https://dpsnnn-s.imweb.me/reserve_ss' },
         ]
       }
     };
@@ -233,7 +239,18 @@ padding: 8px;
         a.className = 'theme-btn';
         a.href = theme.url;
         a.target = '_blank';
-        a.textContent = theme.name;
+
+        if (theme.img) {
+          const img = document.createElement('img');
+          img.src = theme.img;
+          img.alt = theme.name;
+          a.appendChild(img);
+        }
+
+        const span = document.createElement('span');
+        span.textContent = theme.name;
+        a.appendChild(span);
+
         list.appendChild(a);
       });
       document.getElementById('modalOverlay').classList.add('active');
