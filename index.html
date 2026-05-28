@@ -7,11 +7,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap');
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: #0a0a0a;
@@ -19,11 +15,9 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    /* 스폰서 배너 */
     .sponsor-bar {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       background-color: #1a0000;
       border-bottom: 1px solid #ff0000;
@@ -34,7 +28,6 @@
       z-index: 999;
     }
 
-    /* 메인 헤더 */
     .hero {
       margin-top: 36px;
       padding: 60px 16px 40px;
@@ -48,7 +41,6 @@
       letter-spacing: 6px;
       color: #ff0000;
       margin-bottom: 16px;
-      text-transform: uppercase;
     }
 
     .hero-title {
@@ -60,9 +52,7 @@
       line-height: 1.2;
     }
 
-    .hero-title span {
-      color: #ff0000;
-    }
+    .hero-title span { color: #ff0000; }
 
     .hero-desc {
       margin-top: 16px;
@@ -71,16 +61,13 @@
       letter-spacing: 2px;
     }
 
-    /* 필터 */
     .filter-section {
       padding: 24px 16px;
       max-width: 900px;
       margin: 0 auto;
     }
 
-    .filter-group {
-      margin-bottom: 16px;
-    }
+    .filter-group { margin-bottom: 16px; }
 
     .filter-label {
       font-size: 0.8rem;
@@ -107,14 +94,12 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    .filter-btn:hover,
-    .filter-btn.active {
+    .filter-btn:hover, .filter-btn.active {
       background-color: #ff0000;
       border-color: #ff0000;
       color: #ffffff;
     }
 
-    /* 테마 카드 그리드 */
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -125,15 +110,11 @@
     }
 
     @media (min-width: 600px) {
-      .theme-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .theme-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     @media (min-width: 900px) {
-      .theme-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      .theme-grid { grid-template-columns: repeat(4, 1fr); }
     }
 
     .theme-card {
@@ -141,15 +122,14 @@
       border: 1px solid #2a0000;
       border-radius: 10px;
       overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .theme-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3);
+      box-shadow: 0 8px 24px rgba(255,0,0,0.3);
       border-color: #ff0000;
     }
 
@@ -195,8 +175,13 @@
     }
 
     .horror-level {
-      font-size: 0.8rem;
-      letter-spacing: 1px;
+      font-size: 0.75rem;
+      color: #ff4444;
+    }
+
+    .theme-card-price {
+      font-size: 0.78rem;
+      color: #aaaaaa;
     }
 
     .reserve-btn {
@@ -230,133 +215,153 @@
 </head>
 <body>
 
-  <!-- 스폰서 배너 -->
-  <div class="sponsor-bar">
-    📢 이 자리는 스폰서 광고 배너입니다
-  </div>
+  <div class="sponsor-bar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
-  <!-- 메인 헤더 -->
   <div class="hero">
     <div class="hero-subtitle">— HORROR THEME GUIDE —</div>
     <div class="hero-title">공<span>테</span>가이드</div>
     <div class="hero-desc">당신이 두려워할 공포 방탈출 테마를 찾아드립니다</div>
   </div>
 
-  <!-- 필터 -->
   <div class="filter-section">
     <div class="filter-group">
       <div class="filter-label">📍 지역</div>
       <div class="filter-buttons" id="regionFilter">
-        <button class="filter-btn active" onclick="setFilter('region', '전체', this)">전체</button>
-        <button class="filter-btn" onclick="setFilter('region', '강남', this)">강남</button>
-        <button class="filter-btn" onclick="setFilter('region', '홍대', this)">홍대</button>
-        <button class="filter-btn" onclick="setFilter('region', '건대', this)">건대</button>
-        <button class="filter-btn" onclick="setFilter('region', '대학로', this)">대학로</button>
-        <button class="filter-btn" onclick="setFilter('region', '잠실', this)">잠실</button>
-        <button class="filter-btn" onclick="setFilter('region', '인천', this)">인천</button>
-        <button class="filter-btn" onclick="setFilter('region', '수원', this)">수원</button>
-        <button class="filter-btn" onclick="setFilter('region', '안산', this)">안산</button>
-        <button class="filter-btn" onclick="setFilter('region', '안양', this)">안양</button>
+        <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
+        <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
+        <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
+        <button class="filter-btn" onclick="setFilter('region','건대',this)">건대</button>
+        <button class="filter-btn" onclick="setFilter('region','대학로',this)">대학로</button>
+        <button class="filter-btn" onclick="setFilter('region','잠실',this)">잠실</button>
+        <button class="filter-btn" onclick="setFilter('region','신촌',this)">신촌</button>
+        <button class="filter-btn" onclick="setFilter('region','신림',this)">신림</button>
+        <button class="filter-btn" onclick="setFilter('region','인천',this)">인천</button>
+        <button class="filter-btn" onclick="setFilter('region','수원',this)">수원</button>
+        <button class="filter-btn" onclick="setFilter('region','안산',this)">안산</button>
+        <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
       </div>
     </div>
 
     <div class="filter-group">
       <div class="filter-label">👻 공포도</div>
       <div class="filter-buttons" id="horrorFilter">
-        <button class="filter-btn active" onclick="setFilter('horror', '전체', this)">전체</button>
-        <button class="filter-btn" onclick="setFilter('horror', 1, this)">💀 1단계</button>
-        <button class="filter-btn" onclick="setFilter('horror', 2, this)">💀💀 2단계</button>
-        <button class="filter-btn" onclick="setFilter('horror', 3, this)">💀💀💀 3단계</button>
-        <button class="filter-btn" onclick="setFilter('horror', 4, this)">💀💀💀💀 4단계</button>
-        <button class="filter-btn" onclick="setFilter('horror', 5, this)">💀💀💀💀💀 5단계</button>
+        <button class="filter-btn active" onclick="setFilter('horror','전체',this)">전체</button>
+        <button class="filter-btn" onclick="setFilter('horror',1,this)">💀 1단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',1.5,this)">💀 1.5단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',2,this)">💀💀 2단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',2.5,this)">💀💀 2.5단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',3,this)">💀💀💀 3단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',3.5,this)">💀💀💀 3.5단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',4,this)">💀💀💀💀 4단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',4.5,this)">💀💀💀💀 4.5단계</button>
+        <button class="filter-btn" onclick="setFilter('horror',5,this)">💀💀💀💀💀 5단계</button>
       </div>
     </div>
   </div>
 
-  <!-- 테마 카드 그리드 -->
   <div class="theme-grid" id="themeGrid"></div>
 
   <script>
     const themes = [
       {
-        name: 'NOX',
-        store: '제로월드 홍대점',
-        region: '홍대',
-        horror: 4,
-        img: 'https://zerohongdae.com/storage/lwGpXRwNnpUlFVWKcZQzfK8wMeC6gQ4gjYnTCndw.png',
-        url: 'https://zerohongdae.com/reservation'
-      },
-      {
-        name: '층간소음',
-        store: '제로월드 홍대점',
-        region: '홍대',
+        name: '안산 코노',
+        store: '꿈소풍 안산 1호점',
+        region: '안산',
         horror: 3,
-        img: 'https://zerohongdae.com/storage/m09Dw0A46eZbIlxCKOgXcp5b02QB6UmfrSTzAtbi.jpg',
-        url: 'https://zerohongdae.com/reservation'
+        price: '22,000원',
+        img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg',
+        url: 'https://dreampicnicescape.com/reservation'
       },
       {
-        name: '깜방탈출 : WAY OUT',
-        store: '제로월드 홍대점',
-        region: '홍대',
-        horror: 2,
-        img: 'https://zerohongdae.com/storage/04dAAb57MJKD0poJ4VnlsJIL9EDWrYMzq6hTCRYi.jpg',
-        url: 'https://zerohongdae.com/reservation'
-      },
-      {
-        name: '사랑...하는...감?',
-        store: '제로월드 홍대점',
-        region: '홍대',
+        name: '4F:마지막기록',
+        store: '블랙헤이븐',
+        region: '안양',
         horror: 3,
-        img: 'https://zerohongdae.com/storage/NZSXGtMhy5Rod5fwRFqpP9edW6ggmNvFSAytmlDP.jpg',
-        url: 'https://zerohongdae.com/reservation'
+        price: '36,000원',
+        img: 'https://naverbooking-phinf.pstatic.net/20260107_118/1767765334755BQIVB_PNG/4F_%C6%F7%BD%BA%C5%CD.png',
+        url: 'https://naver.me/x4G63doR'
       },
       {
-        name: 'ALIVE',
-        store: '제로월드 홍대점',
+        name: '피안화',
+        store: '플레이33 홍대점',
         region: '홍대',
+        horror: 3.5,
+        price: '34,000원',
+        img: 'https://play33.kr/storage/theme/2026_04/08/zLbaL5XoQXS0iPpYNjAdvI1UDIjCAICv9Vkx1VmE.jpg',
+        url: 'https://play33.kr/reservation?branch=4&theme'
+      },
+      {
+        name: 'AYAKO',
+        store: '후즈데어',
+        region: '강남',
+        horror: 3,
+        price: '35,000원',
+        img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNjAzMTlfMjEw%2FMDAxNzczODgzMTgzNjU0.Uk-003QLkBYQ9epaPvMC9lZdhlQSYkKb5sB_KQT1T8Ig.9pcPtPWfxITknEYPtJodGoFW9EMas6Vl2LVwCV4-m2Ug.JPEG%2F900%EF%BC%BFScreenshot%EF%BC%BF20260319%EF%BC%BF101703%EF%BC%BFInstagram.jpg%2F900x903',
+        url: 'https://www.keyescape.com/reservation1.php?zizum_num=23&theme_num=71&theme_info_num=63'
+      },
+      {
+        name: '나포리탄',
+        store: '둠이스케이프 1호점',
+        region: '인천',
         horror: 5,
-        img: 'https://zerohongdae.com/storage/9ibzZ5mUK63r5DvwjODh9e64heWXtFG8rxFili3P.jpg',
-        url: 'https://zerohongdae.com/reservation'
+        price: '28,000원',
+        img: 'https://doomescape.com/file/theme/29_3290704845.png',
+        url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=1'
       },
       {
-        name: '쓰여진 문장 속에 구원이 없다면',
-        store: '단편선 성수',
-        region: '강남',
+        name: '허수아비',
+        store: '둠이스케이프 FEAR점',
+        region: '수원',
+        horror: 4,
+        price: '31,000원',
+        img: 'https://doomescape.com/file/theme/34_4437239922.png',
+        url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=4'
+      },
+      {
+        name: '생존자',
+        store: '넥스트에디션 건대2호점',
+        region: '건대',
+        horror: 1,
+        price: '29,000원',
+        img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20241126_87%2F17325572345753Uf9a_JPEG%2FKakaoTalk_Photo_2024-11-26-02-53-12.jpeg',
+        url: 'https://map.naver.com/p/search/%EB%84%A5%EC%8A%A4%ED%8A%B8%EC%97%90%EB%94%94%EC%85%98/place/1163403341'
+      },
+      {
+        name: '신촌성심병원',
+        store: '나의신방',
+        region: '신촌',
         horror: 2,
-        img: 'https://cdn.imweb.me/thumbnail/20240425/a5df26f311549.png',
-        url: 'https://dpsnnn-s.imweb.me/reserve_ss'
+        price: '200,000원 (팀당)',
+        img: 'https://xn--910bj3tlmfz4e.com/file/theme/7_a.jpg',
+        url: 'https://xn--910bj3tlmfz4e.com/layout/res/home.php?go=rev.make&s_theme_num=7'
       },
       {
-        name: '존재할 자격',
-        store: '단편선 성수',
-        region: '강남',
+        name: 'STAGE',
+        store: '에필로그',
+        region: '대학로',
         horror: 3,
-        img: 'https://cdn.imweb.me/thumbnail/20240425/4b91bd6f19d9d.png',
-        url: 'https://dpsnnn-s.imweb.me/reserve_ss'
+        price: '30,000원',
+        img: 'https://epilogueescape.com/file/theme/3_a.jpg',
+        url: 'https://epilogueescape.com/layout/res/home.php?go=rev.make&s_theme_num=3'
       },
       {
-        name: '쥐와 파시스트와 마지막 한 장',
-        store: '단편선 성수',
-        region: '강남',
-        horror: 2,
-        img: 'https://cdn.imweb.me/thumbnail/20240623/0b00a78ea96e7.jpg',
-        url: 'https://dpsnnn-s.imweb.me/reserve_ss'
-      },
-      {
-        name: '뱃사람의 별',
-        store: '단편선 성수',
-        region: '강남',
+        name: '창귀',
+        store: '체셔하우스',
+        region: '신림',
         horror: 3,
-        img: 'https://cdn.imweb.me/thumbnail/20240425/8b8cf215fd5ac.jpeg',
-        url: 'https://dpsnnn-s.imweb.me/reserve_ss'
+        price: '25,000원',
+        img: 'https://naverbooking-phinf.pstatic.net/20250813_71/1755024935361d6xMc_PNG/image.png',
+        url: 'https://map.naver.com/p/entry/place/2043391014'
       },
     ];
 
     let currentRegion = '전체';
     let currentHorror = '전체';
 
-    function horrorEmoji(level) {
-      return '💀'.repeat(level);
+    function horrorDisplay(level) {
+      const full = Math.floor(level);
+      const half = level % 1 !== 0;
+      return '💀'.repeat(full) + (half ? '👻' : '') + ` ${level}`;
     }
 
     function renderThemes() {
@@ -380,8 +385,9 @@
             <div class="theme-card-store">${t.store}</div>
             <div class="theme-card-meta">
               <span class="theme-card-region">${t.region}</span>
-              <span class="horror-level">${horrorEmoji(t.horror)}</span>
+              <span class="horror-level">${horrorDisplay(t.horror)}</span>
             </div>
+            <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
             <a class="reserve-btn" href="${t.url}" target="_blank">예약하기</a>
           </div>
         </div>
