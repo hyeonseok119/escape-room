@@ -50,7 +50,6 @@
       color: #ffffff;
       text-shadow: 0 0 20px #ff000088, 0 0 40px #ff000044;
       letter-spacing: 4px;
-      line-height: 1.2;
     }
 
     .hero-title span { color: #ff0000; }
@@ -62,16 +61,13 @@
       letter-spacing: 2px;
     }
 
-    /* 검색 버튼 */
     .search-icon-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 20px; right: 20px;
       background: none;
       border: 1px solid #3a0000;
       border-radius: 50%;
-      width: 38px;
-      height: 38px;
+      width: 38px; height: 38px;
       cursor: pointer;
       font-size: 1.1rem;
       color: #ff6666;
@@ -81,11 +77,8 @@
       transition: background-color 0.2s;
     }
 
-    .search-icon-btn:hover {
-      background-color: #1a0000;
-    }
+    .search-icon-btn:hover { background-color: #1a0000; }
 
-    /* 검색창 오버레이 */
     .search-overlay {
       display: none;
       position: fixed;
@@ -97,9 +90,7 @@
       align-items: center;
     }
 
-    .search-overlay.active {
-      display: flex;
-    }
+    .search-overlay.active { display: flex; }
 
     .search-box {
       width: 90%;
@@ -121,9 +112,7 @@
       outline: none;
     }
 
-    .search-box input::placeholder {
-      color: #666666;
-    }
+    .search-box input::placeholder { color: #666666; }
 
     .search-close {
       align-self: flex-end;
@@ -135,7 +124,6 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    /* 필터 */
     .filter-section {
       padding: 24px 16px;
       max-width: 900px;
@@ -151,11 +139,7 @@
       margin-bottom: 8px;
     }
 
-    .filter-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .filter-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .filter-btn {
       padding: 6px 14px;
@@ -175,7 +159,6 @@
       color: #ffffff;
     }
 
-    /* 테마 그리드 */
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -185,13 +168,8 @@
       padding: 0 16px 60px;
     }
 
-    @media (min-width: 600px) {
-      .theme-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (min-width: 900px) {
-      .theme-grid { grid-template-columns: repeat(4, 1fr); }
-    }
+    @media (min-width: 600px) { .theme-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 900px) { .theme-grid { grid-template-columns: repeat(4, 1fr); } }
 
     .theme-card {
       background-color: #111111;
@@ -210,29 +188,17 @@
     }
 
     .theme-card img {
-      width: 100%;
-      height: 120px;
+      width: 100%; height: 120px;
       object-fit: cover;
     }
 
     .theme-card-body {
-      padding: 12px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      padding: 12px; flex: 1;
+      display: flex; flex-direction: column; gap: 6px;
     }
 
-    .theme-card-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .theme-card-store {
-      font-size: 0.75rem;
-      color: #888888;
-    }
+    .theme-card-name { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
+    .theme-card-store { font-size: 0.75rem; color: #888888; }
 
     .theme-card-meta {
       display: flex;
@@ -251,12 +217,16 @@
     }
 
     .horror-level { font-size: 0.75rem; color: #ff4444; }
-
     .theme-card-price { font-size: 0.78rem; color: #aaaaaa; }
+
+    .theme-rating {
+      font-size: 0.82rem;
+      color: #ffaa00;
+    }
 
     .reserve-btn {
       display: block;
-      margin-top: 10px;
+      margin-top: 6px;
       padding: 8px;
       background-color: #1a0000;
       border: 1px solid #ff0000;
@@ -269,10 +239,24 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    .reserve-btn:hover {
-      background-color: #ff0000;
-      color: #ffffff;
+    .reserve-btn:hover { background-color: #ff0000; color: #ffffff; }
+
+    .rating-btn {
+      display: block;
+      margin-top: 4px;
+      padding: 8px;
+      background-color: #111111;
+      border: 1px solid #ffaa00;
+      border-radius: 6px;
+      color: #ffaa00;
+      text-align: center;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      font-family: 'Noto Serif KR', serif;
     }
+
+    .rating-btn:hover { background-color: #ffaa00; color: #000000; }
 
     .no-result {
       grid-column: 1 / -1;
@@ -280,6 +264,117 @@
       color: #555555;
       padding: 60px 0;
       font-size: 0.9rem;
+    }
+
+    /* 평점 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: #111111;
+      border: 1px solid #ff0000;
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 90%;
+      max-width: 440px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .question-group {
+      margin-bottom: 20px;
+    }
+
+    .question-label {
+      font-size: 0.85rem;
+      color: #cccccc;
+      margin-bottom: 10px;
+    }
+
+    .star-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .star {
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #444444;
+      transition: color 0.15s;
+    }
+
+    .star.active { color: #ffaa00; }
+
+    .question-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .option-btn {
+      padding: 6px 14px;
+      border: 1px solid #3a0000;
+      border-radius: 20px;
+      background-color: #1a0000;
+      color: #aaaaaa;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .option-btn.selected {
+      background-color: #ff0000;
+      border-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .modal-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      margin-top: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .modal-submit:hover { background-color: #cc0000; }
+
+    .modal-close-btn {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      color: #888888;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -294,7 +389,6 @@
     <div class="hero-desc">당신이 두려워할 공포 방탈출 테마를 찾아드립니다</div>
   </div>
 
-  <!-- 검색 오버레이 -->
   <div class="search-overlay" id="searchOverlay" onclick="closeSearchOutside(event)">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="테마명 또는 매장명 검색..." oninput="renderThemes()">
@@ -320,7 +414,6 @@
         <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
       </div>
     </div>
-
     <div class="filter-group">
       <div class="filter-label">👻 공포도</div>
       <div class="filter-buttons" id="horrorFilter">
@@ -340,102 +433,116 @@
 
   <div class="theme-grid" id="themeGrid"></div>
 
-  <script>
+  <!-- 평점 모달 -->
+  <div class="modal-overlay" id="ratingModal" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <div class="modal-title" id="modalThemeName"></div>
+
+      <div class="question-group">
+        <div class="question-label">⭐ 전체 만족도</div>
+        <div class="star-row" id="starRow">
+          <span class="star" onclick="setStar(1)">★</span>
+          <span class="star" onclick="setStar(2)">★</span>
+          <span class="star" onclick="setStar(3)">★</span>
+          <span class="star" onclick="setStar(4)">★</span>
+          <span class="star" onclick="setStar(5)">★</span>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">👻 실제 공포도는 어땠나요?</div>
+        <div class="question-options" id="q_horror">
+          <button class="option-btn" onclick="selectOption('q_horror','별로 안 무서움')">별로 안 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','적당히 무서움')">적당히 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','많이 무서움')">많이 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','극한의 공포')">극한의 공포</button>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">🧩 문제 난이도는?</div>
+        <div class="question-options" id="q_difficulty">
+          <button class="option-btn" onclick="selectOption('q_difficulty','쉬움')">쉬움</button>
+          <button class="option-btn" onclick="selectOption('q_difficulty','보통')">보통</button>
+          <button class="option-btn" onclick="selectOption('q_difficulty','어려움')">어려움</button>
+          <button class="option-btn" onclick="selectOption('q_difficulty','매우 어려움')">매우 어려움</button>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">👥 몇 명이서 했나요?</div>
+        <div class="question-options" id="q_members">
+          <button class="option-btn" onclick="selectOption('q_members','1인')">1인</button>
+          <button class="option-btn" onclick="selectOption('q_members','2인')">2인</button>
+          <button class="option-btn" onclick="selectOption('q_members','3인')">3인</button>
+          <button class="option-btn" onclick="selectOption('q_members','4인 이상')">4인 이상</button>
+        </div>
+      </div>
+
+      <div class="question-group">
+        <div class="question-label">🏆 탈출 성공 여부</div>
+        <div class="question-options" id="q_result">
+          <button class="option-btn" onclick="selectOption('q_result','탈출 성공 🎉')">탈출 성공 🎉</button>
+          <button class="option-btn" onclick="selectOption('q_result','탈출 실패 💀')">탈출 실패 💀</button>
+        </div>
+      </div>
+
+      <button class="modal-submit" onclick="submitRating()">평점 등록하기</button>
+      <button class="modal-close-btn" onclick="closeModal()">닫기</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDH698vreJanicluYtFSW31TgH6EWeGoLg",
+      authDomain: "gongteguide.firebaseapp.com",
+      projectId: "gongteguide",
+      storageBucket: "gongteguide.firebasestorage.app",
+      messagingSenderId: "1038963240281",
+      appId: "1:1038963240281:web:75d7cd8cdf90d736657048"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const themes = [
-      {
-        name: '안산 코노',
-        store: '꿈소풍 안산 1호점',
-        region: '안산',
-        horror: 3,
-        price: '22,000원',
-        img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg',
-        url: 'https://dreampicnicescape.com/reservation'
-      },
-      {
-        name: '4F:마지막기록',
-        store: '블랙헤이븐',
-        region: '안양',
-        horror: 3,
-        price: '36,000원',
-        img: 'https://naverbooking-phinf.pstatic.net/20260107_118/1767765334755BQIVB_PNG/4F_%C6%F7%BD%BA%C5%CD.png',
-        url: 'https://naver.me/x4G63doR'
-      },
-      {
-        name: '피안화',
-        store: '플레이33 홍대점',
-        region: '홍대',
-        horror: 3.5,
-        price: '34,000원',
-        img: 'https://play33.kr/storage/theme/2026_04/08/zLbaL5XoQXS0iPpYNjAdvI1UDIjCAICv9Vkx1VmE.jpg',
-        url: 'https://play33.kr/reservation?branch=4&theme'
-      },
-      {
-        name: 'AYAKO',
-        store: '후즈데어',
-        region: '강남',
-        horror: 3,
-        price: '35,000원',
-        img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNjAzMTlfMjEw%2FMDAxNzczODgzMTgzNjU0.Uk-003QLkBYQ9epaPvMC9lZdhlQSYkKb5sB_KQT1T8Ig.9pcPtPWfxITknEYPtJodGoFW9EMas6Vl2LVwCV4-m2Ug.JPEG%2F900%EF%BC%BFScreenshot%EF%BC%BF20260319%EF%BC%BF101703%EF%BC%BFInstagram.jpg%2F900x903',
-        url: 'https://www.keyescape.com/reservation1.php?zizum_num=23&theme_num=71&theme_info_num=63'
-      },
-      {
-        name: '나폴리탄',
-        store: '둠이스케이프 1호점',
-        region: '인천',
-        horror: 5,
-        price: '28,000원',
-        img: 'https://doomescape.com/file/theme/29_3290704845.png',
-        url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=1'
-      },
-      {
-        name: '허수아비',
-        store: '둠이스케이프 FEAR점',
-        region: '수원',
-        horror: 4,
-        price: '31,000원',
-        img: 'https://doomescape.com/file/theme/34_4437239922.png',
-        url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=4'
-      },
-      {
-        name: '생존자',
-        store: '넥스트에디션 건대2호점',
-        region: '건대',
-        horror: 1,
-        price: '29,000원',
-        img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20241126_87%2F17325572345753Uf9a_JPEG%2FKakaoTalk_Photo_2024-11-26-02-53-12.jpeg',
-        url: 'https://map.naver.com/p/search/%EB%84%A5%EC%8A%A4%ED%8A%B8%EC%97%90%EB%94%94%EC%85%98/place/1163403341'
-      },
-      {
-        name: '신촌성심병원',
-        store: '나의신방',
-        region: '신촌',
-        horror: 2,
-        price: '200,000원 (팀당)',
-        img: 'https://xn--910bj3tlmfz4e.com/file/theme/7_a.jpg',
-        url: 'https://xn--910bj3tlmfz4e.com/layout/res/home.php?go=rev.make&s_theme_num=7'
-      },
-      {
-        name: 'STAGE',
-        store: '에필로그',
-        region: '대학로',
-        horror: 3,
-        price: '30,000원',
-        img: 'https://epilogueescape.com/file/theme/3_a.jpg',
-        url: 'https://epilogueescape.com/layout/res/home.php?go=rev.make&s_theme_num=3'
-      },
-      {
-        name: '창귀',
-        store: '체셔하우스',
-        region: '신림',
-        horror: 3,
-        price: '25,000원',
-        img: 'https://naverbooking-phinf.pstatic.net/20250813_71/1755024935361d6xMc_PNG/image.png',
-        url: 'https://map.naver.com/p/entry/place/2043391014'
-      },
+      { name: '안산 코노', store: '꿈소풍 안산 1호점', region: '안산', horror: 3, price: '22,000원', img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg', url: 'https://dreampicnicescape.com/reservation' },
+      { name: '4F:마지막기록', store: '블랙헤이븐', region: '안양', horror: 3, price: '36,000원', img: 'https://naverbooking-phinf.pstatic.net/20260107_118/1767765334755BQIVB_PNG/4F_%C6%F7%BD%BA%C5%CD.png', url: 'https://naver.me/x4G63doR' },
+      { name: '피안화', store: '플레이33 홍대점', region: '홍대', horror: 3.5, price: '34,000원', img: 'https://play33.kr/storage/theme/2026_04/08/zLbaL5XoQXS0iPpYNjAdvI1UDIjCAICv9Vkx1VmE.jpg', url: 'https://play33.kr/reservation?branch=4&theme' },
+      { name: 'AYAKO', store: '후즈데어', region: '강남', horror: 3, price: '35,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNjAzMTlfMjEw%2FMDAxNzczODgzMTgzNjU0.Uk-003QLkBYQ9epaPvMC9lZdhlQSYkKb5sB_KQT1T8Ig.9pcPtPWfxITknEYPtJodGoFW9EMas6Vl2LVwCV4-m2Ug.JPEG%2F900%EF%BC%BFScreenshot%EF%BC%BF20260319%EF%BC%BF101703%EF%BC%BFInstagram.jpg%2F900x903', url: 'https://www.keyescape.com/reservation1.php?zizum_num=23&theme_num=71&theme_info_num=63' },
+      { name: '나폴리탄', store: '둠이스케이프 1호점', region: '인천', horror: 5, price: '28,000원', img: 'https://doomescape.com/file/theme/29_3290704845.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=1' },
+      { name: '허수아비', store: '둠이스케이프 FEAR점', region: '수원', horror: 4, price: '31,000원', img: 'https://doomescape.com/file/theme/34_4437239922.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=4' },
+      { name: '생존자', store: '넥스트에디션 건대2호점', region: '건대', horror: 1, price: '29,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20241126_87%2F17325572345753Uf9a_JPEG%2FKakaoTalk_Photo_2024-11-26-02-53-12.jpeg', url: 'https://map.naver.com/p/search/%EB%84%A5%EC%8A%A4%ED%8A%B8%EC%97%90%EB%94%94%EC%85%98/place/1163403341' },
+      { name: '신촌성심병원', store: '나의신방', region: '신촌', horror: 2, price: '200,000원 (팀당)', img: 'https://xn--910bj3tlmfz4e.com/file/theme/7_a.jpg', url: 'https://xn--910bj3tlmfz4e.com/layout/res/home.php?go=rev.make&s_theme_num=7' },
+      { name: 'STAGE', store: '에필로그', region: '대학로', horror: 3, price: '30,000원', img: 'https://epilogueescape.com/file/theme/3_a.jpg', url: 'https://epilogueescape.com/layout/res/home.php?go=rev.make&s_theme_num=3' },
+      { name: '창귀', store: '체셔하우스', region: '신림', horror: 3, price: '25,000원', img: 'https://naverbooking-phinf.pstatic.net/20250813_71/1755024935361d6xMc_PNG/image.png', url: 'https://map.naver.com/p/entry/place/2043391014' },
     ];
 
     let currentRegion = '전체';
     let currentHorror = '전체';
+    let ratings = {};
+    let currentTheme = null;
+    let currentStar = 0;
+    let selectedOptions = {};
+
+    // 평점 불러오기
+    async function loadRatings() {
+      const snapshot = await getDocs(collection(db, 'ratings'));
+      const temp = {};
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (!temp[d.theme]) temp[d.theme] = [];
+        temp[d.theme].push(d.star);
+      });
+      Object.keys(temp).forEach(k => {
+        const arr = temp[k];
+        ratings[k] = (arr.reduce((a,b) => a+b, 0) / arr.length).toFixed(1);
+      });
+      renderThemes();
+    }
 
     function horrorDisplay(level) {
       const full = Math.floor(level);
@@ -443,7 +550,7 @@
       return '💀'.repeat(full) + (half ? '👻' : '') + ` ${level}`;
     }
 
-    function renderThemes() {
+    window.renderThemes = function() {
       const keyword = (document.getElementById('searchInput').value || '').toLowerCase();
       const grid = document.getElementById('themeGrid');
       const filtered = themes.filter(t => {
@@ -458,24 +565,32 @@
         return;
       }
 
-      grid.innerHTML = filtered.map(t => `
-        <div class="theme-card">
-          <img src="${t.img}" alt="${t.name}">
-          <div class="theme-card-body">
-            <div class="theme-card-name">${t.name}</div>
-            <div class="theme-card-store">${t.store}</div>
-            <div class="theme-card-meta">
-              <span class="theme-card-region">${t.region}</span>
-              <span class="horror-level">${horrorDisplay(t.horror)}</span>
+      grid.innerHTML = filtered.map(t => {
+        const avg = ratings[t.name];
+        const ratingHtml = avg
+          ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
+          : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
+        return `
+          <div class="theme-card">
+            <img src="${t.img}" alt="${t.name}">
+            <div class="theme-card-body">
+              <div class="theme-card-name">${t.name}</div>
+              <div class="theme-card-store">${t.store}</div>
+              <div class="theme-card-meta">
+                <span class="theme-card-region">${t.region}</span>
+                <span class="horror-level">${horrorDisplay(t.horror)}</span>
+              </div>
+              <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
+              ${ratingHtml}
+              <a class="reserve-btn" href="${t.url}" target="_blank">예약하기</a>
+              <button class="rating-btn" onclick="openRatingModal('${t.name}')">⭐ 평점 남기기</button>
             </div>
-            <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
-            <a class="reserve-btn" href="${t.url}" target="_blank">예약하기</a>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    function setFilter(type, value, btn) {
+    window.setFilter = function(type, value, btn) {
       if (type === 'region') {
         currentRegion = value;
         document.querySelectorAll('#regionFilter .filter-btn').forEach(b => b.classList.remove('active'));
@@ -487,22 +602,78 @@
       renderThemes();
     }
 
-    function openSearch() {
+    window.openSearch = function() {
       document.getElementById('searchOverlay').classList.add('active');
       document.getElementById('searchInput').focus();
     }
 
-    function closeSearch() {
+    window.closeSearch = function() {
       document.getElementById('searchOverlay').classList.remove('active');
     }
 
-    function closeSearchOutside(event) {
-      if (event.target === document.getElementById('searchOverlay')) {
-        closeSearch();
+    window.closeSearchOutside = function(event) {
+      if (event.target === document.getElementById('searchOverlay')) closeSearch();
+    }
+
+    window.openRatingModal = function(themeName) {
+      currentTheme = themeName;
+      currentStar = 0;
+      selectedOptions = {};
+      document.getElementById('modalThemeName').textContent = `⭐ ${themeName} 평점 남기기`;
+      document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('ratingModal').classList.add('active');
+    }
+
+    window.closeModal = function() {
+      document.getElementById('ratingModal').classList.remove('active');
+    }
+
+    window.closeModalOutside = function(event) {
+      if (event.target === document.getElementById('ratingModal')) closeModal();
+    }
+
+    window.setStar = function(n) {
+      currentStar = n;
+      document.querySelectorAll('.star').forEach((s, i) => {
+        s.classList.toggle('active', i < n);
+      });
+    }
+
+    window.selectOption = function(groupId, value) {
+      selectedOptions[groupId] = value;
+      document.querySelectorAll(`#${groupId} .option-btn`).forEach(b => {
+        b.classList.toggle('selected', b.textContent === value);
+      });
+    }
+
+    window.submitRating = async function() {
+      if (!currentStar) return alert('별점을 선택해주세요!');
+      if (!selectedOptions['q_horror']) return alert('실제 공포도를 선택해주세요!');
+      if (!selectedOptions['q_difficulty']) return alert('문제 난이도를 선택해주세요!');
+      if (!selectedOptions['q_members']) return alert('인원을 선택해주세요!');
+      if (!selectedOptions['q_result']) return alert('탈출 성공 여부를 선택해주세요!');
+
+      try {
+        await addDoc(collection(db, 'ratings'), {
+          theme: currentTheme,
+          star: currentStar,
+          horror: selectedOptions['q_horror'],
+          difficulty: selectedOptions['q_difficulty'],
+          members: selectedOptions['q_members'],
+          result: selectedOptions['q_result'],
+          createdAt: new Date()
+        });
+        alert('평점이 등록됐어요! 감사합니다 😊');
+        closeModal();
+        await loadRatings();
+      } catch(e) {
+        alert('오류가 발생했어요. 다시 시도해주세요.');
+        console.error(e);
       }
     }
 
-    renderThemes();
+    loadRatings();
   </script>
 
 </body>
