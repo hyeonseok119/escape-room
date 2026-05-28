@@ -13,8 +13,64 @@
       background-color: #0a0a0a;
       color: #e0e0e0;
       font-family: 'Noto Serif KR', serif;
+      padding-bottom: 70px;
     }
 
+    /* 하단 탭 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%;
+      background-color: #0f0000;
+      border-top: 1px solid #3a0000;
+      display: flex;
+      z-index: 998;
+    }
+
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: none;
+      background: none;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .nav-tab:hover { background-color: #1a0000; }
+
+    .nav-tab.active { background-color: #1a0000; }
+
+    .nav-tab .tab-icon { font-size: 1.3rem; }
+
+    .nav-tab .tab-label {
+      font-size: 0.65rem;
+      color: #666666;
+      margin-top: 3px;
+    }
+
+    .nav-tab.active .tab-label { color: #ff0000; }
+
+    /* 페이지 */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* 공통 준비중 */
+    .coming-soon {
+      text-align: center;
+      padding: 100px 20px;
+      color: #444444;
+    }
+
+    .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
+    .coming-soon h2 { font-size: 1.2rem; color: #666666; margin-bottom: 8px; }
+    .coming-soon p { font-size: 0.85rem; }
+
+    /* ===== 홈 페이지 ===== */
     .sponsor-bar {
       position: fixed;
       top: 0; left: 0;
@@ -124,7 +180,6 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    /* 필터 섹션 */
     .filter-section {
       max-width: 900px;
       margin: 0 auto;
@@ -163,9 +218,7 @@
       transition: transform 0.2s;
     }
 
-    .filter-toggle-btn.open .arrow {
-      transform: rotate(180deg);
-    }
+    .filter-toggle-btn.open .arrow { transform: rotate(180deg); }
 
     .filter-dropdown {
       display: none;
@@ -178,11 +231,7 @@
 
     .filter-dropdown.open { display: block; }
 
-    .filter-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .filter-options { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .filter-btn {
       padding: 6px 14px;
@@ -207,7 +256,6 @@
       flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 16px;
-      min-height: 0;
     }
 
     .active-tag {
@@ -231,14 +279,13 @@
       padding: 0;
     }
 
-    /* 테마 그리드 */
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 16px 80px;
+      padding: 0 16px 20px;
     }
 
     @media (min-width: 600px) { .theme-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -440,71 +487,118 @@
 
   <div class="sponsor-bar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
-  <div class="hero">
-    <button class="search-icon-btn" onclick="openSearch()">🔍</button>
-    <div class="hero-subtitle">— HORROR THEME GUIDE —</div>
-    <div class="hero-title">공<span>테</span>가이드</div>
-    <div class="hero-desc">당신이 두려워할 공포 방탈출 테마를 찾아드립니다</div>
-  </div>
-
-  <div class="search-overlay" id="searchOverlay" onclick="closeSearchOutside(event)">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="테마명 또는 매장명 검색..." oninput="renderThemes()">
-      <button class="search-close" onclick="closeSearch()">✕ 닫기</button>
-    </div>
-  </div>
-
-  <div class="filter-section">
-    <div class="filter-toggle-row">
-      <button class="filter-toggle-btn" id="regionToggle" onclick="toggleFilter('region')">
-        📍 지역 <span class="arrow">▼</span>
-      </button>
-      <button class="filter-toggle-btn" id="horrorToggle" onclick="toggleFilter('horror')">
-        👻 공포도 <span class="arrow">▼</span>
-      </button>
+  <!-- 홈 페이지 -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <button class="search-icon-btn" onclick="openSearch()">🔍</button>
+      <div class="hero-subtitle">— HORROR THEME GUIDE —</div>
+      <div class="hero-title">공<span>테</span>가이드</div>
+      <div class="hero-desc">당신이 두려워할 공포 방탈출 테마를 찾아드립니다</div>
     </div>
 
-    <div class="filter-dropdown" id="regionDropdown">
-      <div class="filter-options" id="regionFilter">
-        <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
-        <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
-        <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
-        <button class="filter-btn" onclick="setFilter('region','건대',this)">건대</button>
-        <button class="filter-btn" onclick="setFilter('region','대학로',this)">대학로</button>
-        <button class="filter-btn" onclick="setFilter('region','잠실',this)">잠실</button>
-        <button class="filter-btn" onclick="setFilter('region','신촌',this)">신촌</button>
-        <button class="filter-btn" onclick="setFilter('region','신림',this)">신림</button>
-        <button class="filter-btn" onclick="setFilter('region','인천',this)">인천</button>
-        <button class="filter-btn" onclick="setFilter('region','수원',this)">수원</button>
-        <button class="filter-btn" onclick="setFilter('region','안산',this)">안산</button>
-        <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
+    <div class="search-overlay" id="searchOverlay" onclick="closeSearchOutside(event)">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="테마명 또는 매장명 검색..." oninput="renderThemes()">
+        <button class="search-close" onclick="closeSearch()">✕ 닫기</button>
       </div>
     </div>
 
-    <div class="filter-dropdown" id="horrorDropdown">
-      <div class="filter-options" id="horrorFilter">
-        <button class="filter-btn active" onclick="setFilter('horror','전체',this)">전체</button>
-        <button class="filter-btn" onclick="setFilter('horror',1,this)">💀 1</button>
-        <button class="filter-btn" onclick="setFilter('horror',1.5,this)">💀 1.5</button>
-        <button class="filter-btn" onclick="setFilter('horror',2,this)">💀💀 2</button>
-        <button class="filter-btn" onclick="setFilter('horror',2.5,this)">💀💀 2.5</button>
-        <button class="filter-btn" onclick="setFilter('horror',3,this)">💀💀💀 3</button>
-        <button class="filter-btn" onclick="setFilter('horror',3.5,this)">💀💀💀 3.5</button>
-        <button class="filter-btn" onclick="setFilter('horror',4,this)">💀💀💀💀 4</button>
-        <button class="filter-btn" onclick="setFilter('horror',4.5,this)">💀💀💀💀 4.5</button>
-        <button class="filter-btn" onclick="setFilter('horror',5,this)">💀💀💀💀💀 5</button>
+    <div class="filter-section">
+      <div class="filter-toggle-row">
+        <button class="filter-toggle-btn" id="regionToggle" onclick="toggleFilter('region')">
+          📍 지역 <span class="arrow">▼</span>
+        </button>
+        <button class="filter-toggle-btn" id="horrorToggle" onclick="toggleFilter('horror')">
+          👻 공포도 <span class="arrow">▼</span>
+        </button>
       </div>
+      <div class="filter-dropdown" id="regionDropdown">
+        <div class="filter-options" id="regionFilter">
+          <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
+          <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
+          <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
+          <button class="filter-btn" onclick="setFilter('region','건대',this)">건대</button>
+          <button class="filter-btn" onclick="setFilter('region','대학로',this)">대학로</button>
+          <button class="filter-btn" onclick="setFilter('region','잠실',this)">잠실</button>
+          <button class="filter-btn" onclick="setFilter('region','신촌',this)">신촌</button>
+          <button class="filter-btn" onclick="setFilter('region','신림',this)">신림</button>
+          <button class="filter-btn" onclick="setFilter('region','인천',this)">인천</button>
+          <button class="filter-btn" onclick="setFilter('region','수원',this)">수원</button>
+          <button class="filter-btn" onclick="setFilter('region','안산',this)">안산</button>
+          <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
+        </div>
+      </div>
+      <div class="filter-dropdown" id="horrorDropdown">
+        <div class="filter-options" id="horrorFilter">
+          <button class="filter-btn active" onclick="setFilter('horror','전체',this)">전체</button>
+          <button class="filter-btn" onclick="setFilter('horror',1,this)">💀 1</button>
+          <button class="filter-btn" onclick="setFilter('horror',1.5,this)">💀 1.5</button>
+          <button class="filter-btn" onclick="setFilter('horror',2,this)">💀💀 2</button>
+          <button class="filter-btn" onclick="setFilter('horror',2.5,this)">💀💀 2.5</button>
+          <button class="filter-btn" onclick="setFilter('horror',3,this)">💀💀💀 3</button>
+          <button class="filter-btn" onclick="setFilter('horror',3.5,this)">💀💀💀 3.5</button>
+          <button class="filter-btn" onclick="setFilter('horror',4,this)">💀💀💀💀 4</button>
+          <button class="filter-btn" onclick="setFilter('horror',4.5,this)">💀💀💀💀 4.5</button>
+          <button class="filter-btn" onclick="setFilter('horror',5,this)">💀💀💀💀💀 5</button>
+        </div>
+      </div>
+      <div class="active-filters" id="activeFilters"></div>
     </div>
 
-    <div class="active-filters" id="activeFilters"></div>
+    <div class="theme-grid" id="themeGrid"></div>
   </div>
 
-  <div class="theme-grid" id="themeGrid"></div>
+  <!-- 커뮤니티 페이지 -->
+  <div class="page" id="page-community">
+    <div class="coming-soon">
+      <div class="icon">💬</div>
+      <h2>커뮤니티</h2>
+      <p>테마 후기 게시판이 곧 열립니다</p>
+    </div>
+  </div>
 
+  <!-- 랭킹 페이지 -->
+  <div class="page" id="page-ranking">
+    <div class="coming-soon">
+      <div class="icon">🏆</div>
+      <h2>랭킹</h2>
+      <p>평점 랭킹이 곧 열립니다</p>
+    </div>
+  </div>
+
+  <!-- 마이페이지 -->
+  <div class="page" id="page-mypage">
+    <div class="coming-soon">
+      <div class="icon">👤</div>
+      <h2>마이페이지</h2>
+      <p>로그인 기능이 곧 추가됩니다</p>
+    </div>
+  </div>
+
+  <!-- 하단 탭 -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" onclick="switchTab('home', this)">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">홈</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('community', this)">
+      <span class="tab-icon">💬</span>
+      <span class="tab-label">커뮤니티</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('ranking', this)">
+      <span class="tab-icon">🏆</span>
+      <span class="tab-label">랭킹</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('mypage', this)">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">마이페이지</span>
+    </button>
+  </nav>
+
+  <!-- 평점 모달 -->
   <div class="modal-overlay" id="ratingModal" onclick="closeModalOutside(event)">
     <div class="modal">
       <div class="modal-title" id="modalThemeName"></div>
-
       <div class="question-group">
         <div class="question-label">⭐ 전체 만족도</div>
         <div class="star-row" id="starRow">
@@ -515,7 +609,6 @@
           <span class="star" onclick="setStar(5)">★</span>
         </div>
       </div>
-
       <div class="question-group">
         <div class="question-label">👻 실제 공포도는 어땠나요?</div>
         <div class="question-options" id="q_horror">
@@ -525,7 +618,6 @@
           <button class="option-btn" onclick="selectOption('q_horror','극한의 공포')">극한의 공포</button>
         </div>
       </div>
-
       <div class="question-group">
         <div class="question-label">🧩 문제 난이도는?</div>
         <div class="question-options" id="q_difficulty">
@@ -535,7 +627,6 @@
           <button class="option-btn" onclick="selectOption('q_difficulty','매우 어려움')">매우 어려움</button>
         </div>
       </div>
-
       <div class="question-group">
         <div class="question-label">👥 몇 명이서 했나요?</div>
         <div class="question-options" id="q_members">
@@ -545,7 +636,6 @@
           <button class="option-btn" onclick="selectOption('q_members','4인 이상')">4인 이상</button>
         </div>
       </div>
-
       <div class="question-group">
         <div class="question-label">🏆 탈출 성공 여부</div>
         <div class="question-options" id="q_result">
@@ -553,7 +643,6 @@
           <button class="option-btn" onclick="selectOption('q_result','탈출 실패 💀')">탈출 실패 💀</button>
         </div>
       </div>
-
       <button class="modal-submit" onclick="submitRating()">평점 등록하기</button>
       <button class="modal-close-btn" onclick="closeModal()">닫기</button>
     </div>
@@ -619,12 +708,8 @@
     function updateActiveFilters() {
       const container = document.getElementById('activeFilters');
       let html = '';
-      if (currentRegion !== '전체') {
-        html += `<div class="active-tag">📍 ${currentRegion} <button onclick="clearFilter('region')">✕</button></div>`;
-      }
-      if (currentHorror !== '전체') {
-        html += `<div class="active-tag">👻 공포도 ${currentHorror} <button onclick="clearFilter('horror')">✕</button></div>`;
-      }
+      if (currentRegion !== '전체') html += `<div class="active-tag">📍 ${currentRegion} <button onclick="clearFilter('region')">✕</button></div>`;
+      if (currentHorror !== '전체') html += `<div class="active-tag">👻 공포도 ${currentHorror} <button onclick="clearFilter('horror')">✕</button></div>`;
       container.innerHTML = html;
     }
 
@@ -652,6 +737,15 @@
         dropdown.classList.add('open');
         toggle.classList.add('open');
       }
+    }
+
+    window.switchTab = function(tab, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + tab).classList.add('active');
+      btn.classList.add('active');
+      // 스폰서 배너는 홈에서만
+      document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
     }
 
     window.renderThemes = function() {
