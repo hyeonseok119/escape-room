@@ -124,22 +124,65 @@
       font-family: 'Noto Serif KR', serif;
     }
 
+    /* 필터 섹션 */
     .filter-section {
-      padding: 24px 16px;
       max-width: 900px;
       margin: 0 auto;
+      padding: 16px 16px 0;
     }
 
-    .filter-group { margin-bottom: 16px; }
-
-    .filter-label {
-      font-size: 0.8rem;
-      color: #ff0000;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
+    .filter-toggle-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
-    .filter-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border: 1px solid #3a0000;
+      border-radius: 20px;
+      background-color: #1a0000;
+      color: #aaaaaa;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .filter-toggle-btn.open {
+      background-color: #ff0000;
+      border-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .filter-toggle-btn .arrow {
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+
+    .filter-toggle-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .filter-dropdown {
+      display: none;
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .filter-dropdown.open { display: block; }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
     .filter-btn {
       padding: 6px 14px;
@@ -159,13 +202,43 @@
       color: #ffffff;
     }
 
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      min-height: 0;
+    }
+
+    .active-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background-color: #2a0000;
+      border: 1px solid #ff0000;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: #ff6666;
+    }
+
+    .active-tag button {
+      background: none;
+      border: none;
+      color: #ff6666;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0;
+    }
+
+    /* 테마 그리드 */
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 16px 60px;
+      padding: 0 16px 80px;
     }
 
     @media (min-width: 600px) { .theme-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -179,6 +252,7 @@
       display: flex;
       flex-direction: column;
       transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
     }
 
     .theme-card:hover {
@@ -187,10 +261,7 @@
       border-color: #ff0000;
     }
 
-    .theme-card img {
-      width: 100%; height: 120px;
-      object-fit: cover;
-    }
+    .theme-card img { width: 100%; height: 120px; object-fit: cover; }
 
     .theme-card-body {
       padding: 12px; flex: 1;
@@ -218,11 +289,7 @@
 
     .horror-level { font-size: 0.75rem; color: #ff4444; }
     .theme-card-price { font-size: 0.78rem; color: #aaaaaa; }
-
-    .theme-rating {
-      font-size: 0.82rem;
-      color: #ffaa00;
-    }
+    .theme-rating { font-size: 0.82rem; color: #ffaa00; }
 
     .reserve-btn {
       display: block;
@@ -299,9 +366,7 @@
       text-align: center;
     }
 
-    .question-group {
-      margin-bottom: 20px;
-    }
+    .question-group { margin-bottom: 20px; }
 
     .question-label {
       font-size: 0.85rem;
@@ -309,10 +374,7 @@
       margin-bottom: 10px;
     }
 
-    .star-row {
-      display: flex;
-      gap: 8px;
-    }
+    .star-row { display: flex; gap: 8px; }
 
     .star {
       font-size: 1.6rem;
@@ -323,11 +385,7 @@
 
     .star.active { color: #ffaa00; }
 
-    .question-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .question-options { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .option-btn {
       padding: 6px 14px;
@@ -397,9 +455,17 @@
   </div>
 
   <div class="filter-section">
-    <div class="filter-group">
-      <div class="filter-label">📍 지역</div>
-      <div class="filter-buttons" id="regionFilter">
+    <div class="filter-toggle-row">
+      <button class="filter-toggle-btn" id="regionToggle" onclick="toggleFilter('region')">
+        📍 지역 <span class="arrow">▼</span>
+      </button>
+      <button class="filter-toggle-btn" id="horrorToggle" onclick="toggleFilter('horror')">
+        👻 공포도 <span class="arrow">▼</span>
+      </button>
+    </div>
+
+    <div class="filter-dropdown" id="regionDropdown">
+      <div class="filter-options" id="regionFilter">
         <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
         <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
         <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
@@ -414,9 +480,9 @@
         <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
       </div>
     </div>
-    <div class="filter-group">
-      <div class="filter-label">👻 공포도</div>
-      <div class="filter-buttons" id="horrorFilter">
+
+    <div class="filter-dropdown" id="horrorDropdown">
+      <div class="filter-options" id="horrorFilter">
         <button class="filter-btn active" onclick="setFilter('horror','전체',this)">전체</button>
         <button class="filter-btn" onclick="setFilter('horror',1,this)">💀 1</button>
         <button class="filter-btn" onclick="setFilter('horror',1.5,this)">💀 1.5</button>
@@ -429,11 +495,12 @@
         <button class="filter-btn" onclick="setFilter('horror',5,this)">💀💀💀💀💀 5</button>
       </div>
     </div>
+
+    <div class="active-filters" id="activeFilters"></div>
   </div>
 
   <div class="theme-grid" id="themeGrid"></div>
 
-  <!-- 평점 모달 -->
   <div class="modal-overlay" id="ratingModal" onclick="closeModalOutside(event)">
     <div class="modal">
       <div class="modal-title" id="modalThemeName"></div>
@@ -494,7 +561,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDH698vreJanicluYtFSW31TgH6EWeGoLg",
@@ -528,7 +595,6 @@
     let currentStar = 0;
     let selectedOptions = {};
 
-    // 평점 불러오기
     async function loadRatings() {
       const snapshot = await getDocs(collection(db, 'ratings'));
       const temp = {};
@@ -548,6 +614,44 @@
       const full = Math.floor(level);
       const half = level % 1 !== 0;
       return '💀'.repeat(full) + (half ? '👻' : '') + ` ${level}`;
+    }
+
+    function updateActiveFilters() {
+      const container = document.getElementById('activeFilters');
+      let html = '';
+      if (currentRegion !== '전체') {
+        html += `<div class="active-tag">📍 ${currentRegion} <button onclick="clearFilter('region')">✕</button></div>`;
+      }
+      if (currentHorror !== '전체') {
+        html += `<div class="active-tag">👻 공포도 ${currentHorror} <button onclick="clearFilter('horror')">✕</button></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    window.clearFilter = function(type) {
+      if (type === 'region') {
+        currentRegion = '전체';
+        document.querySelectorAll('#regionFilter .filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('#regionFilter .filter-btn').classList.add('active');
+      } else {
+        currentHorror = '전체';
+        document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('#horrorFilter .filter-btn').classList.add('active');
+      }
+      updateActiveFilters();
+      renderThemes();
+    }
+
+    window.toggleFilter = function(type) {
+      const dropdown = document.getElementById(type + 'Dropdown');
+      const toggle = document.getElementById(type + 'Toggle');
+      const isOpen = dropdown.classList.contains('open');
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.filter-toggle-btn').forEach(b => b.classList.remove('open'));
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        toggle.classList.add('open');
+      }
     }
 
     window.renderThemes = function() {
@@ -599,7 +703,9 @@
         document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => b.classList.remove('active'));
       }
       btn.classList.add('active');
+      updateActiveFilters();
       renderThemes();
+      toggleFilter(type);
     }
 
     window.openSearch = function() {
