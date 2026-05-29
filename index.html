@@ -472,50 +472,13 @@
       font-family: 'Noto Serif KR', serif;
       margin-top: 8px;
     }
-
-    /* 마이페이지 프로필 스타일 추가 */
-    .profile-card {
-      background-color: #111;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 16px;
-      text-align: center;
-    }
-    .profile-img {
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-      border: 2px solid #ff0000;
-    }
-    .nickname-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    .nickname-input {
-      background: #1a0000;
-      border: 1px solid #ff0000;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-family: 'Noto Serif KR', serif;
-    }
-    .my-rating-list { padding: 0 16px; }
-    .my-rating-card {
-      background: #1a0000;
-      border-left: 4px solid #ff0000;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-    }
   </style>
 </head>
 <body>
 
   <div class="sponsor-bar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
+  <!-- 홈 -->
   <div class="page active" id="page-home">
     <div class="hero">
       <button class="search-icon-btn" onclick="openSearch()">🔍</button>
@@ -576,6 +539,7 @@
     <div class="theme-grid" id="themeGrid"></div>
   </div>
 
+  <!-- 커뮤니티 -->
   <div class="page" id="page-community">
     <div class="coming-soon">
       <div class="icon">💬</div>
@@ -584,6 +548,7 @@
     </div>
   </div>
 
+  <!-- 랭킹 -->
   <div class="page" id="page-ranking">
     <div class="coming-soon">
       <div class="icon">🏆</div>
@@ -592,17 +557,16 @@
     </div>
   </div>
 
+  <!-- 마이페이지 -->
   <div class="page" id="page-mypage">
-    <div id="mypage-content">
-      <div class="coming-soon">
-        <div class="icon">👤</div>
-        <h2>마이페이지</h2>
-        <p>로그인 후 이용할 수 있습니다</p>
-        <button class="modal-submit" onclick="login()" style="width:200px; margin-top:20px;">구글 로그인</button>
-      </div>
+    <div class="coming-soon">
+      <div class="icon">👤</div>
+      <h2>마이페이지</h2>
+      <p>로그인 기능이 곧 추가됩니다</p>
     </div>
   </div>
 
+  <!-- 하단 탭 -->
   <nav class="bottom-nav">
     <button class="nav-tab active" onclick="switchTab('home', this)">
       <span class="tab-label">홈</span>
@@ -618,6 +582,7 @@
     </button>
   </nav>
 
+  <!-- 평점 모달 -->
   <div class="modal-overlay" id="ratingModal" onclick="closeModalOutside(event)">
     <div class="modal">
       <div class="modal-title" id="modalThemeName"></div>
@@ -672,8 +637,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDH698vreJanicluYtFSW31TgH6EWeGoLg",
@@ -686,8 +650,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
     const themes = [
       { name: '안산 코노', store: '꿈소풍 안산 1호점', region: '안산', horror: 3, price: '22,000원', img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg', url: 'https://dreampicnicescape.com/reservation' },
@@ -708,77 +670,6 @@
     let currentTheme = null;
     let currentStar = 0;
     let selectedOptions = {};
-    let currentUser = null;
-
-    // --- 로그인 관련 함수 ---
-    window.login = async function() {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (e) { console.error(e); }
-    }
-
-    window.logout = async function() {
-      await signOut(auth);
-      location.reload();
-    }
-
-    window.updateNickname = async function() {
-      const newNick = document.getElementById('nickInput').value;
-      if(!newNick) return alert('닉네임을 입력해주세요');
-      await setDoc(doc(db, 'users', currentUser.uid), { nickname: newNick }, { merge: true });
-      alert('닉네임이 변경되었습니다');
-      renderMyPage();
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      if (user) {
-        await renderMyPage();
-      }
-      renderThemes();
-    });
-
-    // --- 마이페이지 렌더링 ---
-    window.renderMyPage = async function() {
-      const container = document.getElementById('mypage-content');
-      if (!currentUser) return;
-
-      // 닉네임 가져오기
-      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-      const nickname = userDoc.exists() ? userDoc.data().nickname : currentUser.displayName;
-
-      // 내가 쓴 평점 가져오기
-      const q = query(collection(db, 'ratings'), where('uid', '==', currentUser.uid));
-      const snap = await getDocs(q);
-      
-      let ratingsHtml = '';
-      snap.forEach(d => {
-        const data = d.data();
-        ratingsHtml += `
-          <div class="my-rating-card">
-            <div style="font-weight:bold">${data.theme}</div>
-            <div style="color:#ffaa00">⭐ ${data.star}점</div>
-            <div style="font-size:0.75rem; color:#888">${data.horror} | ${data.result}</div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = `
-        <div class="profile-card">
-          <img src="${currentUser.photoURL}" class="profile-img">
-          <div style="font-size:1.1rem; font-weight:bold">${nickname}</div>
-          <div class="nickname-row">
-            <input type="text" id="nickInput" class="nickname-input" placeholder="새 닉네임">
-            <button onclick="updateNickname()" class="option-btn" style="border-color:#ff0000; color:#ff0000">변경</button>
-          </div>
-          <button onclick="logout()" style="background:none; border:none; color:#555; margin-top:15px; cursor:pointer; font-size:0.8rem">로그아웃</button>
-        </div>
-        <div class="my-rating-list">
-          <h3 style="margin-bottom:15px; color:#ff0000; font-size:1rem">내가 남긴 평점 목록</h3>
-          ${ratingsHtml || '<p style="color:#444; text-align:center">아직 남긴 평점이 없습니다.</p>'}
-        </div>
-      `;
-    }
 
     async function loadRatings() {
       const snapshot = await getDocs(collection(db, 'ratings'));
@@ -841,7 +732,6 @@
       document.getElementById('page-' + tab).classList.add('active');
       btn.classList.add('active');
       document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
-      if(tab === 'mypage') renderMyPage();
     }
 
     window.renderThemes = function() {
@@ -912,7 +802,6 @@
     }
 
     window.openRatingModal = function(themeName) {
-      if(!currentUser) return alert('로그인 후 평점을 남길 수 있습니다.');
       currentTheme = themeName;
       currentStar = 0;
       selectedOptions = {};
@@ -945,7 +834,6 @@
     }
 
     window.submitRating = async function() {
-      if (!currentUser) return alert('로그인이 필요합니다!');
       if (!currentStar) return alert('별점을 선택해주세요!');
       if (!selectedOptions['q_horror']) return alert('실제 공포도를 선택해주세요!');
       if (!selectedOptions['q_difficulty']) return alert('문제 난이도를 선택해주세요!');
@@ -953,10 +841,7 @@
       if (!selectedOptions['q_result']) return alert('탈출 성공 여부를 선택해주세요!');
 
       try {
-        // 중복 등록 방지 핵심: 문서 ID를 '사용자UID_테마명'으로 고정
-        const docId = `${currentUser.uid}_${currentTheme}`;
-        await setDoc(doc(db, 'ratings', docId), {
-          uid: currentUser.uid,
+        await addDoc(collection(db, 'ratings'), {
           theme: currentTheme,
           star: currentStar,
           horror: selectedOptions['q_horror'],
