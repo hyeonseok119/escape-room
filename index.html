@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>공테가이드</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap');
 
@@ -265,6 +266,7 @@
       display: flex;
       flex-direction: column;
       transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
     }
 
     .theme-card:hover {
@@ -280,7 +282,7 @@
       display: flex; flex-direction: column; gap: 6px;
     }
 
-    .theme-card-name { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
+    .theme-card-name { font-size: 0.9rem; font-weight: 700; color: #ffffff; cursor: pointer; }
     .theme-card-store { font-size: 0.75rem; color: #888888; }
 
     .theme-card-meta {
@@ -387,13 +389,123 @@
     .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
     .coming-soon h2 { font-size: 1.2rem; color: #666666; margin-bottom: 8px; }
 
+    /* 상세창 모달 */
+    .detail-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .detail-modal-overlay.active { display: flex; }
+
+    .detail-modal {
+      background: #0a0a0a;
+      border: 1px solid #ff0000;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .detail-header {
+      border-bottom: 1px solid #2a0000;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .detail-title { font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+    .detail-store { font-size: 0.85rem; color: #888888; }
+
+    .detail-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .detail-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background-color: #1a0000;
+      border: 1px solid #3a0000;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: #ff6666;
+    }
+
+    .chart-section {
+      margin-bottom: 24px;
+    }
+
+    .chart-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 250px;
+      margin-bottom: 20px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #1a0000;
+      font-size: 0.85rem;
+    }
+
+    .stat-label { color: #aaaaaa; }
+    .stat-value { color: #ff0000; font-weight: 700; }
+
+    .detail-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: none;
+      border: none;
+      color: #888888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .user-info {
+      display: none;
+      padding: 12px 16px;
+      background-color: #111111;
+      border-bottom: 1px solid #2a0000;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #aaaaaa;
+    }
+
+    .user-info.show { display: block; }
+
+    .user-info .user-name { color: #ff0000; font-weight: 700; }
+
+    /* 평점 모달 */
     .modal-overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.85);
-      z-index: 1000;
+      z-index: 1001;
       justify-content: center;
       align-items: center;
     }
@@ -470,7 +582,6 @@
       cursor: pointer;
       font-family: 'Noto Serif KR', serif;
       margin-top: 8px;
-      transition: background-color 0.2s;
     }
 
     .modal-submit:hover { background-color: #cc0000; }
@@ -487,20 +598,6 @@
       font-family: 'Noto Serif KR', serif;
       margin-top: 8px;
     }
-
-    .user-info {
-      display: none;
-      padding: 12px 16px;
-      background-color: #111111;
-      border-bottom: 1px solid #2a0000;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #aaaaaa;
-    }
-
-    .user-info.show { display: block; }
-
-    .user-info .user-name { color: #ff0000; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -608,6 +705,64 @@
     <button class="nav-tab" onclick="switchTab('mypage', this)">마이페이지</button>
   </nav>
 
+  <!-- 상세 정보 모달 -->
+  <div class="detail-modal-overlay" id="detailModal" onclick="closeDetailOutside(event)">
+    <div class="detail-modal">
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      <div class="detail-header">
+        <div class="detail-title" id="detailTitle"></div>
+        <div class="detail-store" id="detailStore"></div>
+        <div class="detail-meta" id="detailMeta"></div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">⭐ 별점 분포</div>
+        <div class="chart-container">
+          <canvas id="starChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">👻 공포도 체감</div>
+        <div class="chart-container">
+          <canvas id="horrorChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">🧩 난이도 분포</div>
+        <div class="chart-container">
+          <canvas id="difficultyChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">👥 인원 분포</div>
+        <div class="chart-container">
+          <canvas id="memberChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">🏆 탈출 성공률</div>
+        <div class="stat-row">
+          <span class="stat-label">성공</span>
+          <span class="stat-value" id="successRate">0%</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">실패</span>
+          <span class="stat-value" id="failureRate">0%</span>
+        </div>
+      </div>
+
+      <div class="stat-row" style="border-bottom: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #2a0000;">
+        <span class="stat-label">총 평가 수</span>
+        <span class="stat-value" id="totalRatings">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 평점 모달 -->
   <div class="modal-overlay" id="ratingModal" onclick="closeModalOutside(event)">
     <div class="modal">
       <div class="modal-title" id="modalThemeName"></div>
@@ -695,11 +850,13 @@
     let currentRegion = '전체';
     let currentHorror = '전체';
     let ratings = {};
+    let allRatingsData = [];
     let currentTheme = null;
     let currentStar = 0;
     let selectedOptions = {};
     let currentUser = null;
     let userRatings = new Set();
+    let charts = {};
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
@@ -712,7 +869,6 @@
         userInfo.classList.add('show');
         document.getElementById('userName').textContent = user.displayName || '사용자';
         
-        // 사용자가 남긴 평점 로드
         const q = query(collection(db, 'ratings'), where('userId', '==', user.uid));
         const snapshot = await getDocs(q);
         userRatings.clear();
@@ -744,11 +900,15 @@
     async function loadRatings() {
       const snapshot = await getDocs(collection(db, 'ratings'));
       const temp = {};
+      allRatingsData = [];
+      
       snapshot.forEach(doc => {
         const d = doc.data();
+        allRatingsData.push(d);
         if (!temp[d.theme]) temp[d.theme] = [];
         temp[d.theme].push(d.star);
       });
+      
       Object.keys(temp).forEach(k => {
         const arr = temp[k];
         ratings[k] = (arr.reduce((a,b) => a+b, 0) / arr.length).toFixed(1);
@@ -830,7 +990,7 @@
           <div class="theme-card">
             <img src="${t.img}" alt="${t.name}">
             <div class="theme-card-body">
-              <div class="theme-card-name">${t.name}</div>
+              <div class="theme-card-name" onclick="openDetail('${t.name}')" style="text-decoration: underline;">${t.name}</div>
               <div class="theme-card-store">${t.store}</div>
               <div class="theme-card-meta">
                 <span class="theme-card-region">${t.region}</span>
@@ -871,6 +1031,154 @@
 
     window.closeSearchOutside = function(event) {
       if (event.target === document.getElementById('searchOverlay')) closeSearch();
+    }
+
+    window.openDetail = function(themeName) {
+      const theme = themes.find(t => t.name === themeName);
+      if (!theme) return;
+
+      document.getElementById('detailTitle').textContent = theme.name;
+      document.getElementById('detailStore').textContent = theme.store;
+      
+      const metaHtml = `
+        <span class="detail-tag">📍 ${theme.region}</span>
+        <span class="detail-tag">💰 ${theme.price}</span>
+        <span class="detail-tag">${horrorDisplay(theme.horror)}</span>
+      `;
+      document.getElementById('detailMeta').innerHTML = metaHtml;
+
+      const themeRatings = allRatingsData.filter(r => r.theme === themeName);
+      
+      if (themeRatings.length === 0) {
+        document.getElementById('totalRatings').textContent = '0';
+        document.getElementById('successRate').textContent = '0%';
+        document.getElementById('failureRate').textContent = '0%';
+        clearCharts();
+        document.getElementById('detailModal').classList.add('active');
+        return;
+      }
+
+      document.getElementById('totalRatings').textContent = themeRatings.length;
+
+      // 별점 분포
+      const starDist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+      themeRatings.forEach(r => starDist[r.star]++);
+
+      // 공포도 분포
+      const horrorDist = {
+        '별로 안 무서움': 0,
+        '적당히 무서움': 0,
+        '많이 무서움': 0,
+        '극한의 공포': 0
+      };
+      themeRatings.forEach(r => horrorDist[r.horror]++);
+
+      // 난이도 분포
+      const diffDist = {
+        '쉬움': 0,
+        '보통': 0,
+        '어려움': 0,
+        '매우 어려움': 0
+      };
+      themeRatings.forEach(r => diffDist[r.difficulty]++);
+
+      // 인원 분포
+      const memberDist = {
+        '1인': 0,
+        '2인': 0,
+        '3인': 0,
+        '4인 이상': 0
+      };
+      themeRatings.forEach(r => memberDist[r.members]++);
+
+      // 탈출 성공률
+      const successCount = themeRatings.filter(r => r.result === '탈출 성공 🎉').length;
+      const failureCount = themeRatings.length - successCount;
+      const successPercent = Math.round((successCount / themeRatings.length) * 100);
+      const failurePercent = 100 - successPercent;
+      
+      document.getElementById('successRate').textContent = successPercent + '%';
+      document.getElementById('failureRate').textContent = failurePercent + '%';
+
+      drawChart('starChart', '별점', Object.keys(starDist), Object.values(starDist), '#ffaa00');
+      drawChart('horrorChart', '공포도', Object.keys(horrorDist), Object.values(horrorDist), '#ff6666');
+      drawChart('difficultyChart', '난이도', Object.keys(diffDist), Object.values(diffDist), '#ff0000');
+      drawChart('memberChart', '인원', Object.keys(memberDist), Object.values(memberDist), '#ff3333');
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function drawChart(canvasId, label, labels, data, color) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      
+      if (charts[canvasId]) {
+        charts[canvasId].destroy();
+      }
+
+      charts[canvasId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: label,
+            data: data,
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.max(...data) + 1,
+              ticks: {
+                stepSize: 1,
+                color: '#888888'
+              },
+              grid: {
+                color: '#1a0000'
+              }
+            },
+            x: {
+              ticks: {
+                color: '#888888',
+                font: {
+                  size: 11
+                }
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function clearCharts() {
+      Object.keys(charts).forEach(key => {
+        if (charts[key]) {
+          charts[key].destroy();
+          delete charts[key];
+        }
+      });
+    }
+
+    window.closeDetail = function() {
+      clearCharts();
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    window.closeDetailOutside = function(event) {
+      if (event.target === document.getElementById('detailModal')) closeDetail();
     }
 
     window.openRatingModal = function(themeName) {
