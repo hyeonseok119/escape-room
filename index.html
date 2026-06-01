@@ -282,7 +282,7 @@
       display: flex; flex-direction: column; gap: 6px;
     }
 
-    .theme-card-name { font-size: 0.9rem; font-weight: 700; color: #ffffff; cursor: pointer; }
+    .theme-card-name { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
     .theme-card-store { font-size: 0.75rem; color: #888888; }
 
     .theme-card-meta {
@@ -389,7 +389,95 @@
     .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
     .coming-soon h2 { font-size: 1.2rem; color: #666666; margin-bottom: 8px; }
 
-    /* 상세창 모달 */
+    /* 마이페이지 */
+    .mypage-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .mypage-empty {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .mypage-empty .icon { font-size: 3rem; margin-bottom: 16px; color: #444444; }
+    .mypage-empty h2 { font-size: 1.2rem; color: #666666; margin-bottom: 16px; }
+
+    .home-btn {
+      padding: 10px 24px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: background-color 0.2s;
+    }
+
+    .home-btn:hover { background-color: #cc0000; }
+
+    .rating-card {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rating-card:hover {
+      background-color: #1a1a1a;
+      border-color: #ff0000;
+      box-shadow: 0 4px 12px rgba(255,0,0,0.2);
+    }
+
+    .rating-card-left { flex: 1; }
+    .rating-card-right { display: flex; gap: 12px; align-items: center; }
+
+    .rating-card-title { font-size: 1rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+
+    .rating-card-info {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: #aaaaaa;
+    }
+
+    .rating-card-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .rating-card-label { color: #666666; font-size: 0.75rem; }
+    .rating-card-value { color: #ff6666; font-weight: 700; }
+
+    .rating-card-star { font-size: 1.2rem; color: #ffaa00; }
+
+    .rating-card-date { font-size: 0.75rem; color: #666666; }
+
+    .delete-btn {
+      padding: 8px 14px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 6px;
+      color: #ff0000;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .delete-btn:hover { background-color: #ff0000; color: #ffffff; }
+
+    /* 상세 모달 */
     .detail-modal-overlay {
       display: none;
       position: fixed;
@@ -615,6 +703,7 @@
     <span class="user-name" id="userName"></span>님 환영합니다!
   </div>
 
+  <!-- 홈 -->
   <div class="page active" id="page-home">
     <div class="hero">
       <div class="hero-subtitle">— HORROR THEME GUIDE —</div>
@@ -674,6 +763,7 @@
     <div class="theme-grid" id="themeGrid"></div>
   </div>
 
+  <!-- 커뮤니티 -->
   <div class="page" id="page-community">
     <div class="coming-soon">
       <div class="icon">💬</div>
@@ -682,6 +772,7 @@
     </div>
   </div>
 
+  <!-- 랭킹 -->
   <div class="page" id="page-ranking">
     <div class="coming-soon">
       <div class="icon">🏆</div>
@@ -690,14 +781,12 @@
     </div>
   </div>
 
+  <!-- 마이페이지 -->
   <div class="page" id="page-mypage">
-    <div class="coming-soon">
-      <div class="icon">👤</div>
-      <h2>마이페이지</h2>
-      <p>로그인 기능이 곧 추가됩니다</p>
-    </div>
+    <div id="mypageContent"></div>
   </div>
 
+  <!-- 하단 탭 -->
   <nav class="bottom-nav">
     <button class="nav-tab active" onclick="switchTab('home', this)">홈</button>
     <button class="nav-tab" onclick="switchTab('community', this)">커뮤니티</button>
@@ -817,7 +906,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -851,6 +940,7 @@
     let currentHorror = '전체';
     let ratings = {};
     let allRatingsData = [];
+    let userRatingsData = [];
     let currentTheme = null;
     let currentStar = 0;
     let selectedOptions = {};
@@ -872,16 +962,20 @@
         const q = query(collection(db, 'ratings'), where('userId', '==', user.uid));
         const snapshot = await getDocs(q);
         userRatings.clear();
+        userRatingsData = [];
         snapshot.forEach(doc => {
           userRatings.add(doc.data().theme);
+          userRatingsData.push({ id: doc.id, ...doc.data() });
         });
       } else {
         loginBtn.classList.remove('logged-in');
         loginBtn.textContent = '로그인';
         userInfo.classList.remove('show');
         userRatings.clear();
+        userRatingsData = [];
       }
       renderThemes();
+      renderMypage();
     });
 
     window.handleLogin = async function() {
@@ -962,6 +1056,7 @@
       document.getElementById('page-' + tab).classList.add('active');
       btn.classList.add('active');
       document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
+      if (tab === 'mypage') renderMypage();
     }
 
     window.renderThemes = function() {
@@ -987,10 +1082,10 @@
         const hasRated = userRatings.has(t.name);
         const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
         return `
-          <div class="theme-card">
+          <div class="theme-card" onclick="openDetail('${t.name}')">
             <img src="${t.img}" alt="${t.name}">
             <div class="theme-card-body">
-              <div class="theme-card-name" onclick="openDetail('${t.name}')" style="text-decoration: underline;">${t.name}</div>
+              <div class="theme-card-name">${t.name}</div>
               <div class="theme-card-store">${t.store}</div>
               <div class="theme-card-meta">
                 <span class="theme-card-region">${t.region}</span>
@@ -998,8 +1093,8 @@
               </div>
               <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
               ${ratingHtml}
-              <a class="reserve-btn" href="${t.url}" target="_blank">예약하기</a>
-              <button class="rating-btn" onclick="openRatingModal('${t.name}')" ${!currentUser || hasRated ? 'disabled' : ''}>${btnText}</button>
+              <a class="reserve-btn" href="${t.url}" target="_blank" onclick="event.stopPropagation()">예약하기</a>
+              <button class="rating-btn" onclick="event.stopPropagation(); openRatingModal('${t.name}')" ${!currentUser || hasRated ? 'disabled' : ''}>${btnText}</button>
             </div>
           </div>
         `;
@@ -1060,11 +1155,9 @@
 
       document.getElementById('totalRatings').textContent = themeRatings.length;
 
-      // 별점 분포
       const starDist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
       themeRatings.forEach(r => starDist[r.star]++);
 
-      // 공포도 분포
       const horrorDist = {
         '별로 안 무서움': 0,
         '적당히 무서움': 0,
@@ -1073,7 +1166,6 @@
       };
       themeRatings.forEach(r => horrorDist[r.horror]++);
 
-      // 난이도 분포
       const diffDist = {
         '쉬움': 0,
         '보통': 0,
@@ -1082,7 +1174,6 @@
       };
       themeRatings.forEach(r => diffDist[r.difficulty]++);
 
-      // 인원 분포
       const memberDist = {
         '1인': 0,
         '2인': 0,
@@ -1091,7 +1182,6 @@
       };
       themeRatings.forEach(r => memberDist[r.members]++);
 
-      // 탈출 성공률
       const successCount = themeRatings.filter(r => r.result === '탈출 성공 🎉').length;
       const failureCount = themeRatings.length - successCount;
       const successPercent = Math.round((successCount / themeRatings.length) * 100);
@@ -1179,6 +1269,100 @@
 
     window.closeDetailOutside = function(event) {
       if (event.target === document.getElementById('detailModal')) closeDetail();
+    }
+
+    window.renderMypage = function() {
+      const container = document.getElementById('mypageContent');
+
+      if (!currentUser) {
+        container.innerHTML = `
+          <div class="mypage-empty">
+            <div class="icon">🔒</div>
+            <h2>로그인이 필요합니다</h2>
+            <p style="margin-bottom: 20px; color: #666666;">로그인 후 당신이 남긴 평점을 확인해보세요</p>
+            <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (userRatingsData.length === 0) {
+        container.innerHTML = `
+          <div class="mypage-empty">
+            <div class="icon">⭐</div>
+            <h2>아직 평점을 남기지 않았어요</h2>
+            <p style="margin-bottom: 20px; color: #666666;">홈에서 테마를 찾아 평점을 남겨보세요</p>
+            <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
+          </div>
+        `;
+        return;
+      }
+
+      // 최신순 정렬
+      const sorted = [...userRatingsData].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      const html = `
+        <div class="mypage-content">
+          ${sorted.map(rating => {
+            const date = new Date(rating.createdAt.seconds * 1000).toLocaleDateString('ko-KR');
+            return `
+              <div class="rating-card" onclick="openDetail('${rating.theme}')">
+                <div class="rating-card-left">
+                  <div class="rating-card-title">${rating.theme}</div>
+                  <div class="rating-card-info">
+                    <div class="rating-card-item">
+                      <span class="rating-card-label">별점</span>
+                      <span class="rating-card-star">${'⭐'.repeat(rating.star)}</span>
+                    </div>
+                    <div class="rating-card-item">
+                      <span class="rating-card-label">공포도</span>
+                      <span class="rating-card-value">${rating.horror}</span>
+                    </div>
+                    <div class="rating-card-item">
+                      <span class="rating-card-label">난이도</span>
+                      <span class="rating-card-value">${rating.difficulty}</span>
+                    </div>
+                    <div class="rating-card-item">
+                      <span class="rating-card-label">인원</span>
+                      <span class="rating-card-value">${rating.members}</span>
+                    </div>
+                    <div class="rating-card-item">
+                      <span class="rating-card-label">결과</span>
+                      <span class="rating-card-value">${rating.result}</span>
+                    </div>
+                  </div>
+                  <div class="rating-card-date">📅 ${date}</div>
+                </div>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteRating('${rating.id}')">삭제</button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    window.deleteRating = async function(ratingId) {
+      if (!confirm('평점을 삭제하시겠어요?')) return;
+
+      try {
+        await deleteDoc(doc(db, 'ratings', ratingId));
+        alert('평점이 삭제됐습니다');
+        const idx = userRatingsData.findIndex(r => r.id === ratingId);
+        if (idx > -1) {
+          const themeName = userRatingsData[idx].theme;
+          userRatingsData.splice(idx, 1);
+          userRatings.delete(themeName);
+        }
+        await loadRatings();
+        renderMypage();
+      } catch(e) {
+        alert('삭제에 실패했습니다');
+        console.error(e);
+      }
     }
 
     window.openRatingModal = function(themeName) {
