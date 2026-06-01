@@ -501,6 +501,7 @@
       max-width: 600px;
       max-height: 90vh;
       overflow-y: auto;
+      position: relative;
     }
 
     .detail-header {
@@ -686,6 +687,186 @@
       font-family: 'Noto Serif KR', serif;
       margin-top: 8px;
     }
+
+    /* 랭킹 페이지 */
+    .ranking-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .ranking-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .ranking-tab-btn {
+      padding: 10px 20px;
+      border: 1px solid #3a0000;
+      border-radius: 20px;
+      background-color: #1a0000;
+      color: #aaaaaa;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.2s;
+    }
+
+    .ranking-tab-btn.active {
+      background-color: #ff0000;
+      border-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .ranking-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .ranking-filter-btn {
+      padding: 6px 14px;
+      border: 1px solid #3a0000;
+      border-radius: 20px;
+      background-color: #1a0000;
+      color: #aaaaaa;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .ranking-filter-btn:hover, .ranking-filter-btn.active {
+      background-color: #ff0000;
+      border-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .top-3-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .top-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .top-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .top-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .top-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
+      padding: 20px;
+      color: #ffffff;
+    }
+
+    .top-card-rank {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffaa00;
+      margin-bottom: 8px;
+    }
+
+    .top-card-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .top-card-score {
+      font-size: 0.9rem;
+      color: #ff6666;
+    }
+
+    .top-card-region {
+      font-size: 0.8rem;
+      color: #aaaaaa;
+      margin-top: 4px;
+    }
+
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ranking-item:hover {
+      background-color: #1a1a1a;
+      border-color: #ff0000;
+    }
+
+    .ranking-rank {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff0000;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .ranking-info {
+      flex: 1;
+    }
+
+    .ranking-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .ranking-details {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: #aaaaaa;
+    }
+
+    .ranking-detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ranking-detail-label {
+      font-size: 0.75rem;
+      color: #666666;
+    }
+
+    .ranking-detail-value {
+      color: #ff6666;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -774,10 +955,17 @@
 
   <!-- 랭킹 -->
   <div class="page" id="page-ranking">
-    <div class="coming-soon">
-      <div class="icon">🏆</div>
-      <h2>랭킹</h2>
-      <p>평점 랭킹이 곧 열립니다</p>
+    <div class="ranking-content">
+      <div class="ranking-tabs">
+        <button class="ranking-tab-btn active" onclick="switchRankingTab('star', this)">⭐ 별점 높은순</button>
+        <button class="ranking-tab-btn" onclick="switchRankingTab('horror', this)">👻 공포도 높은순</button>
+      </div>
+
+      <div class="ranking-filter" id="rankingFilter"></div>
+
+      <div class="top-3-container" id="top3Container"></div>
+
+      <div class="ranking-list" id="rankingList"></div>
     </div>
   </div>
 
@@ -866,12 +1054,13 @@
         </div>
       </div>
       <div class="question-group">
-        <div class="question-label">👻 실제 공포도는 어땠나요?</div>
+        <div class="question-label">👻 공포도</div>
         <div class="question-options" id="q_horror">
-          <button class="option-btn" onclick="selectOption('q_horror','별로 안 무서움')">별로 안 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','적당히 무서움')">적당히 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','많이 무서움')">많이 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','극한의 공포')">극한의 공포</button>
+          <button class="option-btn" onclick="selectOption('q_horror','1')">1 - 거의 안 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','2')">2 - 약간 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','3')">3 - 적당히 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','4')">4 - 많이 무서움</button>
+          <button class="option-btn" onclick="selectOption('q_horror','5')">5 - 극한의 공포</button>
         </div>
       </div>
       <div class="question-group">
@@ -947,6 +1136,10 @@
     let currentUser = null;
     let userRatings = new Set();
     let charts = {};
+    let currentRankingTab = 'star';
+    let currentRankingRegion = '전체';
+
+    const regions = ['전체', '강남', '홍대', '건대', '대학로', '잠실', '신촌', '신림', '인천', '수원', '안산', '안양'];
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
@@ -1008,6 +1201,7 @@
         ratings[k] = (arr.reduce((a,b) => a+b, 0) / arr.length).toFixed(1);
       });
       renderThemes();
+      renderRanking();
     }
 
     function horrorDisplay(level) {
@@ -1057,6 +1251,22 @@
       btn.classList.add('active');
       document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
       if (tab === 'mypage') renderMypage();
+      if (tab === 'ranking') renderRanking();
+    }
+
+    window.switchRankingTab = function(tab, btn) {
+      currentRankingTab = tab;
+      document.querySelectorAll('.ranking-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentRankingRegion = '전체';
+      renderRanking();
+    }
+
+    window.setRankingRegion = function(region, btn) {
+      currentRankingRegion = region;
+      document.querySelectorAll('.ranking-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderRanking();
     }
 
     window.renderThemes = function() {
@@ -1159,10 +1369,11 @@
       themeRatings.forEach(r => starDist[r.star]++);
 
       const horrorDist = {
-        '별로 안 무서움': 0,
-        '적당히 무서움': 0,
-        '많이 무서움': 0,
-        '극한의 공포': 0
+        '1': 0,
+        '2': 0,
+        '3': 0,
+        '4': 0,
+        '5': 0
       };
       themeRatings.forEach(r => horrorDist[r.horror]++);
 
@@ -1191,7 +1402,7 @@
       document.getElementById('failureRate').textContent = failurePercent + '%';
 
       drawChart('starChart', '별점', Object.keys(starDist), Object.values(starDist), '#ffaa00');
-      drawChart('horrorChart', '공포도', Object.keys(horrorDist), Object.values(horrorDist), '#ff6666');
+      drawChart('horrorChart', '공포도', ['1점', '2점', '3점', '4점', '5점'], Object.values(horrorDist), '#ff6666');
       drawChart('difficultyChart', '난이도', Object.keys(diffDist), Object.values(diffDist), '#ff0000');
       drawChart('memberChart', '인원', Object.keys(memberDist), Object.values(memberDist), '#ff3333');
 
@@ -1298,9 +1509,8 @@
         return;
       }
 
-      // 최신순 정렬
       const sorted = [...userRatingsData].sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        return new Date(b.createdAt.seconds * 1000) - new Date(a.createdAt.seconds * 1000);
       });
 
       const html = `
@@ -1318,7 +1528,7 @@
                     </div>
                     <div class="rating-card-item">
                       <span class="rating-card-label">공포도</span>
-                      <span class="rating-card-value">${rating.horror}</span>
+                      <span class="rating-card-value">${rating.horror}점</span>
                     </div>
                     <div class="rating-card-item">
                       <span class="rating-card-label">난이도</span>
@@ -1365,6 +1575,86 @@
       }
     }
 
+    window.renderRanking = function() {
+      const filterContainer = document.getElementById('rankingFilter');
+      const top3Container = document.getElementById('top3Container');
+      const listContainer = document.getElementById('rankingList');
+
+      // 필터 버튼 렌더
+      filterContainer.innerHTML = regions.map(region => {
+        const isActive = region === currentRankingRegion ? 'active' : '';
+        return `<button class="ranking-filter-btn ${isActive}" onclick="setRankingRegion('${region}', this)">${region}</button>`;
+      }).join('');
+
+      // 데이터 필터링 및 정렬
+      const filtered = allRatingsData.filter(r => {
+        const theme = themes.find(t => t.name === r.theme);
+        return !theme || currentRankingRegion === '전체' || theme.region === currentRankingRegion;
+      });
+
+      // 테마별 평균 계산
+      const themeScores = {};
+      themes.forEach(t => {
+        const themeRatings = filtered.filter(r => r.theme === t.name);
+        if (themeRatings.length > 0) {
+          if (currentRankingTab === 'star') {
+            const avg = themeRatings.reduce((sum, r) => sum + r.star, 0) / themeRatings.length;
+            themeScores[t.name] = { score: parseFloat(avg.toFixed(2)), image: t.img, region: t.region, count: themeRatings.length };
+          } else {
+            const avg = themeRatings.reduce((sum, r) => sum + parseInt(r.horror), 0) / themeRatings.length;
+            themeScores[t.name] = { score: parseFloat(avg.toFixed(2)), image: t.img, region: t.region, count: themeRatings.length };
+          }
+        }
+      });
+
+      // 정렬
+      const sorted = Object.entries(themeScores)
+        .sort((a, b) => b[1].score - a[1].score)
+        .map(([name, data], idx) => ({ name, rank: idx + 1, ...data }));
+
+      if (sorted.length === 0) {
+        top3Container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px 0;">평점이 없습니다</div>';
+        listContainer.innerHTML = '';
+        return;
+      }
+
+      // 1-3위
+      const top3 = sorted.slice(0, 3);
+      const ranks = ['🥇', '🥈', '🥉'];
+      top3Container.innerHTML = top3.map((item, idx) => `
+        <div class="top-card" onclick="openDetail('${item.name}')">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="top-card-overlay">
+            <div class="top-card-rank">${ranks[idx]} ${item.rank}위</div>
+            <div class="top-card-name">${item.name}</div>
+            <div class="top-card-score">${currentRankingTab === 'star' ? '⭐' : '👻'} ${item.score}점</div>
+            <div class="top-card-region">📍 ${item.region}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // 4위 이하
+      const rest = sorted.slice(3);
+      listContainer.innerHTML = rest.map(item => `
+        <div class="ranking-item" onclick="openDetail('${item.name}')">
+          <div class="ranking-rank">#${item.rank}</div>
+          <div class="ranking-info">
+            <div class="ranking-name">${item.name}</div>
+            <div class="ranking-details">
+              <div class="ranking-detail-item">
+                <span class="ranking-detail-label">별점</span>
+                <span class="ranking-detail-value">⭐ ${ratings[item.name] || '없음'}</span>
+              </div>
+              <div class="ranking-detail-item">
+                <span class="ranking-detail-label">공포도</span>
+                <span class="ranking-detail-value">👻 ${item.score}점</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     window.openRatingModal = function(themeName) {
       if (!currentUser) {
         alert('로그인 후 평점을 남길 수 있습니다.');
@@ -1401,13 +1691,13 @@
     window.selectOption = function(groupId, value) {
       selectedOptions[groupId] = value;
       document.querySelectorAll(`#${groupId} .option-btn`).forEach(b => {
-        b.classList.toggle('selected', b.textContent === value);
+        b.classList.toggle('selected', b.textContent.includes(value));
       });
     }
 
     window.submitRating = async function() {
       if (!currentStar) return alert('별점을 선택해주세요!');
-      if (!selectedOptions['q_horror']) return alert('실제 공포도를 선택해주세요!');
+      if (!selectedOptions['q_horror']) return alert('공포도를 선택해주세요!');
       if (!selectedOptions['q_difficulty']) return alert('문제 난이도를 선택해주세요!');
       if (!selectedOptions['q_members']) return alert('인원을 선택해주세요!');
       if (!selectedOptions['q_result']) return alert('탈출 성공 여부를 선택해주세요!');
