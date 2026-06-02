@@ -765,20 +765,28 @@
 
     .top-card.rank-1 img {
       width: 100%;
-      height: 250px;
+      height: 180px;
       object-fit: cover;
     }
 
     .top-card.rank-2 img {
       width: 100%;
-      height: 180px;
+      height: 150px;
       object-fit: cover;
     }
 
     .top-card.rank-3 img {
       width: 100%;
-      height: 150px;
+      height: 120px;
       object-fit: cover;
+    }
+
+    .top-card.rank-1 .top-card-overlay,
+    .top-card.rank-2 .top-card-overlay,
+    .top-card.rank-3 .top-card-overlay {
+      position: relative;
+      background: #1a0000;
+      padding: 12px;
     }
 
     .top-card-overlay {
@@ -792,10 +800,10 @@
     }
 
     .top-card-rank {
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #ffaa00;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .top-card-name {
@@ -2192,7 +2200,7 @@
           content: content,
           userId: currentUser.uid,
           userName: currentUser.displayName,
-          createdAt: new Date()
+          createdAt: new Date().toISOString()
         });
         alert('한줄평이 등록됐어요! 감사합니다 😊');
         closeWriteModal();
@@ -2250,13 +2258,11 @@
       });
     }
 
-    window.selectOption = function(groupId, value) {
+   window.selectOption = function(groupId, value) {
       selectedOptions[groupId] = value;
       document.querySelectorAll(`#${groupId} .option-btn`).forEach(b => {
         b.classList.remove('selected');
-      });
-      document.querySelectorAll(`#${groupId} .option-btn`).forEach(b => {
-        if (b.textContent.includes(value) || b.onclick.toString().includes(`'${value}'`)) {
+        if (b.textContent.trim() === value.trim()) {
           b.classList.add('selected');
         }
       });
@@ -2290,7 +2296,7 @@
             content: oneline,
             userId: currentUser.uid,
             userName: currentUser.displayName,
-            createdAt: new Date()
+            createdAt: new Date().toISOString()
           });
         }
 
