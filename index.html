@@ -2645,7 +2645,7 @@
           theme: selectedThemeForWrite,
           content: content,
           userId: currentUser.uid,
-          userName: currentUser.displayName,
+          userName: userProfile.nickname || currentUser.displayName,
           createdAt: new Date().toISOString()
         });
         alert('한줄평이 등록됐어요! 감사합니다 😊');
@@ -2743,7 +2743,7 @@
             theme: currentTheme,
             content: oneline,
             userId: currentUser.uid,
-            userName: currentUser.displayName,
+            userName: userProfile.nickname || currentUser.displayName,
             createdAt: new Date().toISOString()
           });
         }
