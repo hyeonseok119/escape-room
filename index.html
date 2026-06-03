@@ -418,6 +418,123 @@
 
     .home-btn:hover { background-color: #cc0000; }
 
+    /* 프로필 섹션 */
+    .profile-section {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .profile-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .profile-edit-btn {
+      padding: 8px 16px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: background-color 0.2s;
+    }
+
+    .profile-edit-btn:hover { background-color: #cc0000; }
+
+    .profile-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #888888;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff0000;
+    }
+
+    /* 통계 섹션 */
+    .stats-section {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .stats-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    .stats-content {
+      color: #aaaaaa;
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.95rem;
+    }
+
+    /* 탭 */
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #666666;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      color: #ff0000;
+      border-bottom-color: #ff0000;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     .rating-card {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -476,6 +593,70 @@
     }
 
     .delete-btn:hover { background-color: #ff0000; color: #ffffff; }
+
+    /* 글 카드 */
+    .post-card-mypage {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .post-card-mypage:hover {
+      background-color: #1a1a1a;
+      border-color: #ff0000;
+    }
+
+    .post-info {
+      flex: 1;
+    }
+
+    .post-theme {
+      font-size: 0.75rem;
+      color: #ff6666;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .post-content {
+      font-size: 0.95rem;
+      color: #ffffff;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: #666666;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .post-delete-btn {
+      padding: 8px 12px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 6px;
+      color: #ff0000;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Noto Serif KR', serif;
+      white-space: nowrap;
+    }
+
+    .post-delete-btn:hover { background-color: #ff0000; color: #ffffff; }
 
     /* 상세 모달 */
     .detail-modal-overlay {
@@ -1168,30 +1349,6 @@
     .community-empty .icon { font-size: 3rem; margin-bottom: 16px; }
     .community-empty h2 { font-size: 1.2rem; color: #666666; margin-bottom: 16px; }
 
-    .community-view-type {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .view-type-btn {
-      padding: 8px 16px;
-      border: 1px solid #3a0000;
-      border-radius: 20px;
-      background-color: #1a0000;
-      color: #aaaaaa;
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-family: 'Noto Serif KR', serif;
-      transition: all 0.2s;
-    }
-
-    .view-type-btn.active {
-      background-color: #ff0000;
-      border-color: #ff0000;
-      color: #ffffff;
-    }
-
     .back-btn {
       padding: 8px 16px;
       background-color: #1a0000;
@@ -1205,6 +1362,84 @@
     }
 
     .back-btn:hover { background-color: #ff0000; color: #ffffff; }
+
+    /* 닉네임 변경 모달 */
+    .nickname-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1002;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .nickname-modal-overlay.active { display: flex; }
+
+    .nickname-modal {
+      background: #111111;
+      border: 1px solid #ff0000;
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .nickname-modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .nickname-input {
+      width: 100%;
+      padding: 12px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-family: 'Noto Serif KR', serif;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .nickname-input:focus { border-color: #ffaa00; }
+
+    .nickname-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nickname-save-btn {
+      flex: 1;
+      padding: 12px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .nickname-save-btn:hover { background-color: #cc0000; }
+
+    .nickname-cancel-btn {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      color: #888888;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+    }
   </style>
 </head>
 <body>
@@ -1478,9 +1713,21 @@
     </div>
   </div>
 
+  <!-- 닉네임 변경 모달 -->
+  <div class="nickname-modal-overlay" id="nicknameModal" onclick="closeNicknameModalOutside(event)">
+    <div class="nickname-modal">
+      <div class="nickname-modal-title">닉네임 변경</div>
+      <input type="text" id="nicknameInput" class="nickname-input" placeholder="새로운 닉네임을 입력해주세요">
+      <div class="nickname-buttons">
+        <button class="nickname-save-btn" onclick="saveNickname()">저장</button>
+        <button class="nickname-cancel-btn" onclick="closeNicknameModal()">취소</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -1516,11 +1763,13 @@
     let allRatingsData = [];
     let allPostsData = [];
     let userRatingsData = [];
+    let userPostsData = [];
     let currentTheme = null;
     let currentStar = 0;
     let selectedOptions = {};
     let currentUser = null;
     let userRatings = new Set();
+    let userProfile = {};
     let charts = {};
     let currentRankingTab = 'star';
     let currentRankingRegion = '전체';
@@ -1541,6 +1790,8 @@
         userInfo.classList.add('show');
         document.getElementById('userName').textContent = user.displayName || '사용자';
         
+        await loadUserProfile();
+        
         const q = query(collection(db, 'ratings'), where('userId', '==', user.uid));
         const snapshot = await getDocs(q);
         userRatings.clear();
@@ -1549,16 +1800,47 @@
           userRatings.add(doc.data().theme);
           userRatingsData.push({ id: doc.id, ...doc.data() });
         });
+
+        const qPosts = query(collection(db, 'posts'), where('userId', '==', user.uid));
+        const snapshotPosts = await getDocs(qPosts);
+        userPostsData = [];
+        snapshotPosts.forEach(doc => {
+          userPostsData.push({ id: doc.id, ...doc.data() });
+        });
       } else {
         loginBtn.classList.remove('logged-in');
         loginBtn.textContent = '로그인';
         userInfo.classList.remove('show');
         userRatings.clear();
         userRatingsData = [];
+        userPostsData = [];
+        userProfile = {};
       }
       renderThemes();
       renderMypage();
     });
+
+    async function loadUserProfile() {
+      if (!currentUser) return;
+      
+      try {
+        const userDocs = await getDocs(query(collection(db, 'userProfiles'), where('userId', '==', currentUser.uid)));
+        if (userDocs.size > 0) {
+          userProfile = { id: userDocs.docs[0].id, ...userDocs.docs[0].data() };
+        } else {
+          userProfile = {
+            userId: currentUser.uid,
+            nickname: currentUser.displayName || '사용자'
+          };
+        }
+      } catch(e) {
+        console.error('프로필 로드 오류:', e);
+        userProfile = {
+          userId: currentUser.uid,
+          nickname: currentUser.displayName || '사용자'
+        };
+      }
+    }
 
     window.handleLogin = async function() {
       try {
@@ -1883,72 +2165,153 @@
           <div class="mypage-empty">
             <div class="icon">🔒</div>
             <h2>로그인이 필요합니다</h2>
-            <p style="margin-bottom: 20px; color: #666666;">로그인 후 당신이 남긴 평점을 확인해보세요</p>
+            <p style="margin-bottom: 20px; color: #666666;">로그인 후 당신의 프로필을 확인해보세요</p>
             <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
           </div>
         `;
         return;
       }
 
-      if (userRatingsData.length === 0) {
-        container.innerHTML = `
-          <div class="mypage-empty">
-            <div class="icon">⭐</div>
-            <h2>아직 평점을 남기지 않았어요</h2>
-            <p style="margin-bottom: 20px; color: #666666;">홈에서 테마를 찾아 평점을 남겨보세요</p>
-            <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
-          </div>
-        `;
-        return;
-      }
-
-      const sorted = [...userRatingsData].sort((a, b) => {
-        const dateA = a.createdAt.seconds ? new Date(a.createdAt.seconds * 1000) : new Date(a.createdAt);
-        const dateB = b.createdAt.seconds ? new Date(b.createdAt.seconds * 1000) : new Date(b.createdAt);
-        return dateB - dateA;
-      });
+      const nickname = userProfile.nickname || currentUser.displayName || '사용자';
+      const ratingCount = userRatingsData.length;
+      const postCount = userPostsData.length;
 
       const html = `
         <div class="mypage-content">
-          ${sorted.map(rating => {
-            const dateObj = rating.createdAt.seconds ? new Date(rating.createdAt.seconds * 1000) : new Date(rating.createdAt);
-            const date = dateObj.toLocaleDateString('ko-KR');
-            return `
-              <div class="rating-card" onclick="openDetail('${rating.theme}')">
-                <div class="rating-card-left">
-                  <div class="rating-card-title">${rating.theme}</div>
-                  <div class="rating-card-info">
-                    <div class="rating-card-item">
-                      <span class="rating-card-label">별점</span>
-                      <span class="rating-card-star">${'⭐'.repeat(rating.star)}</span>
-                    </div>
-                    <div class="rating-card-item">
-                      <span class="rating-card-label">공포도</span>
-                      <span class="rating-card-value">${rating.horror}점</span>
-                    </div>
-                    <div class="rating-card-item">
-                      <span class="rating-card-label">난이도</span>
-                      <span class="rating-card-value">${rating.difficulty}</span>
-                    </div>
-                    <div class="rating-card-item">
-                      <span class="rating-card-label">인원</span>
-                      <span class="rating-card-value">${rating.members}</span>
-                    </div>
-                    <div class="rating-card-item">
-                      <span class="rating-card-label">결과</span>
-                      <span class="rating-card-value">${rating.result}</span>
-                    </div>
-                  </div>
-                  <div class="rating-card-date">📅 ${date}</div>
-                </div>
-                <button class="delete-btn" onclick="event.stopPropagation(); deleteRating('${rating.id}')">삭제</button>
+          <!-- 프로필 섹션 -->
+          <div class="profile-section">
+            <div class="profile-header">
+              <div class="profile-name">${nickname}</div>
+              <button class="profile-edit-btn" onclick="openNicknameModal()">✏️ 닉네임 변경</button>
+            </div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-label">평가한 테마</span>
+                <span class="stat-value">${ratingCount}</span>
               </div>
-            `;
-          }).join('')}
+              <div class="stat-item">
+                <span class="stat-label">남긴 글</span>
+                <span class="stat-value">${postCount}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 통계 섹션 (미래 업데이트) -->
+          <div class="stats-section">
+            <div class="stats-title">📊 전국 공포 방탈출 통계</div>
+            <div class="stats-content">
+              🔄 곧 업데이트될 예정입니다.<br>
+              전국 공테 사냥률, 공테 마스터 등의 정보가 표시됩니다.
+            </div>
+          </div>
+
+          <!-- 탭 -->
+          <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchMypageTab('ratings', this)">📝 내 평점 (${ratingCount})</button>
+            <button class="tab-btn" onclick="switchMypageTab('posts', this)">💬 내가 쓴 글 (${postCount})</button>
+          </div>
+
+          <!-- 내 평점 탭 -->
+          <div id="ratings-tab" class="tab-content active">
+            ${ratingCount === 0 ? `
+              <div class="mypage-empty">
+                <div class="icon">⭐</div>
+                <h2>아직 평점을 남기지 않았어요</h2>
+                <p style="margin-bottom: 20px; color: #666666;">홈에서 테마를 찾아 평점을 남겨보세요</p>
+              </div>
+            ` : `
+              ${userRatingsData
+                .sort((a, b) => {
+                  const dateA = a.createdAt.seconds ? new Date(a.createdAt.seconds * 1000) : new Date(a.createdAt);
+                  const dateB = b.createdAt.seconds ? new Date(b.createdAt.seconds * 1000) : new Date(b.createdAt);
+                  return dateB - dateA;
+                })
+                .map(rating => {
+                  const dateObj = rating.createdAt.seconds ? new Date(rating.createdAt.seconds * 1000) : new Date(rating.createdAt);
+                  const date = dateObj.toLocaleDateString('ko-KR');
+                  return `
+                    <div class="rating-card" onclick="openDetail('${rating.theme}')">
+                      <div class="rating-card-left">
+                        <div class="rating-card-title">${rating.theme}</div>
+                        <div class="rating-card-info">
+                          <div class="rating-card-item">
+                            <span class="rating-card-label">별점</span>
+                            <span class="rating-card-star">${'⭐'.repeat(rating.star)}</span>
+                          </div>
+                          <div class="rating-card-item">
+                            <span class="rating-card-label">공포도</span>
+                            <span class="rating-card-value">${rating.horror}점</span>
+                          </div>
+                          <div class="rating-card-item">
+                            <span class="rating-card-label">난이도</span>
+                            <span class="rating-card-value">${rating.difficulty}</span>
+                          </div>
+                          <div class="rating-card-item">
+                            <span class="rating-card-label">인원</span>
+                            <span class="rating-card-value">${rating.members}</span>
+                          </div>
+                          <div class="rating-card-item">
+                            <span class="rating-card-label">결과</span>
+                            <span class="rating-card-value">${rating.result}</span>
+                          </div>
+                        </div>
+                        <div class="rating-card-date">📅 ${date}</div>
+                      </div>
+                      <button class="delete-btn" onclick="event.stopPropagation(); deleteRating('${rating.id}')">삭제</button>
+                    </div>
+                  `;
+                })
+                .join('')}
+            `}
+          </div>
+
+          <!-- 내가 쓴 글 탭 -->
+          <div id="posts-tab" class="tab-content">
+            ${postCount === 0 ? `
+              <div class="mypage-empty">
+                <div class="icon">💬</div>
+                <h2>아직 글을 남기지 않았어요</h2>
+                <p style="margin-bottom: 20px; color: #666666;">커뮤니티에서 글을 작성해보세요</p>
+              </div>
+            ` : `
+              ${userPostsData
+                .sort((a, b) => {
+                  const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
+                  const dateB = typeof b.createdAt === 'string' ? new Date(b.createdAt) : b.createdAt;
+                  return dateB - dateA;
+                })
+                .map(post => {
+                  const dateObj = typeof post.createdAt === 'string' ? new Date(post.createdAt) : post.createdAt;
+                  const date = dateObj.toLocaleDateString('ko-KR');
+                  return `
+                    <div class="post-card-mypage">
+                      <div class="post-info">
+                        <div class="post-theme">${post.theme}</div>
+                        <div class="post-content">${post.content}</div>
+                        <div class="post-meta">
+                          <span>📅 ${date}</span>
+                        </div>
+                      </div>
+                      <div class="post-actions">
+                        <button class="post-delete-btn" onclick="deletePost('${post.id}')">삭제</button>
+                      </div>
+                    </div>
+                  `;
+                })
+                .join('')}
+            `}
+          </div>
         </div>
       `;
 
       container.innerHTML = html;
+    }
+
+    window.switchMypageTab = function(tab, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tab + '-tab').classList.add('active');
     }
 
     window.deleteRating = async function(ratingId) {
@@ -1968,6 +2331,70 @@
       } catch(e) {
         console.error('삭제 오류:', e);
         alert('삭제에 실패했습니다');
+      }
+    }
+
+    window.deletePost = async function(postId) {
+      if (!confirm('글을 삭제하시겠어요?')) return;
+
+      try {
+        await deleteDoc(doc(db, 'posts', postId));
+        userPostsData = userPostsData.filter(p => p.id !== postId);
+        renderMypage();
+        alert('글이 삭제됐습니다');
+      } catch(e) {
+        console.error('글 삭제 오류:', e);
+        alert('삭제에 실패했습니다');
+      }
+    }
+
+    window.openNicknameModal = function() {
+      document.getElementById('nicknameInput').value = userProfile.nickname || '';
+      document.getElementById('nicknameModal').classList.add('active');
+    }
+
+    window.closeNicknameModal = function() {
+      document.getElementById('nicknameModal').classList.remove('active');
+    }
+
+    window.closeNicknameModalOutside = function(event) {
+      if (event.target === document.getElementById('nicknameModal')) closeNicknameModal();
+    }
+
+    window.saveNickname = async function() {
+      const newNickname = document.getElementById('nicknameInput').value.trim();
+      
+      if (!newNickname) {
+        alert('닉네임을 입력해주세요');
+        return;
+      }
+
+      if (newNickname.length > 20) {
+        alert('닉네임은 20자 이하여야 합니다');
+        return;
+      }
+
+      try {
+        if (userProfile.id) {
+          await updateDoc(doc(db, 'userProfiles', userProfile.id), {
+            nickname: newNickname
+          });
+        } else {
+          const docRef = await addDoc(collection(db, 'userProfiles'), {
+            userId: currentUser.uid,
+            nickname: newNickname,
+            createdAt: new Date().toISOString()
+          });
+          userProfile.id = docRef.id;
+        }
+        
+        userProfile.nickname = newNickname;
+        closeNicknameModal();
+        renderMypage();
+        alert('닉네임이 변경됐습니다');
+      } catch(e) {
+        console.error('닉네임 변경 오류:', e);
+        alert('닉네임 변경에 실패했습니다');
       }
     }
 
@@ -2236,7 +2663,9 @@
       try {
         await deleteDoc(doc(db, 'posts', postId));
         allPostsData = allPostsData.filter(p => p.id !== postId);
+        userPostsData = userPostsData.filter(p => p.id !== postId);
         renderCommunity();
+        renderMypage();
         alert('글이 삭제됐습니다');
       } catch(e) {
         console.error('글 삭제 오류:', e);
