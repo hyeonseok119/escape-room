@@ -781,22 +781,18 @@
       object-fit: cover;
     }
 
-    .top-card.rank-1 .top-card-overlay,
-    .top-card.rank-2 .top-card-overlay,
-    .top-card.rank-3 .top-card-overlay {
-      position: relative;
-      background: #1a0000;
-      padding: 12px;
-    }
-
     .top-card-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
       background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
-      padding: 20px;
+      padding: 16px;
       color: #ffffff;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
 
     .top-card-rank {
@@ -807,18 +803,19 @@
     }
 
     .top-card-name {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       margin-bottom: 4px;
+      line-height: 1.2;
     }
 
     .top-card-score {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #ff6666;
     }
 
     .top-card-region {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #aaaaaa;
       margin-top: 4px;
     }
@@ -1410,36 +1407,36 @@
       <div class="question-group">
         <div class="question-label">👻 공포도</div>
         <div class="question-options" id="q_horror">
-          <button class="option-btn" onclick="selectOption('q_horror','1')">1 - 거의 안 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','2')">2 - 약간 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','3')">3 - 적당히 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','4')">4 - 많이 무서움</button>
-          <button class="option-btn" onclick="selectOption('q_horror','5')">5 - 극한의 공포</button>
+          <button class="option-btn" data-value="1" onclick="selectOption('q_horror',this)">1 - 거의 안 무서움</button>
+          <button class="option-btn" data-value="2" onclick="selectOption('q_horror',this)">2 - 약간 무서움</button>
+          <button class="option-btn" data-value="3" onclick="selectOption('q_horror',this)">3 - 적당히 무서움</button>
+          <button class="option-btn" data-value="4" onclick="selectOption('q_horror',this)">4 - 많이 무서움</button>
+          <button class="option-btn" data-value="5" onclick="selectOption('q_horror',this)">5 - 극한의 공포</button>
         </div>
       </div>
       <div class="question-group">
         <div class="question-label">🧩 문제 난이도는?</div>
         <div class="question-options" id="q_difficulty">
-          <button class="option-btn" onclick="selectOption('q_difficulty', '쉬움')">쉬움</button>
-          <button class="option-btn" onclick="selectOption('q_difficulty', '보통')">보통</button>
-          <button class="option-btn" onclick="selectOption('q_difficulty', '어려움')">어려움</button>
-          <button class="option-btn" onclick="selectOption('q_difficulty', '매우 어려움')">매우 어려움</button>
+          <button class="option-btn" data-value="쉬움" onclick="selectOption('q_difficulty',this)">쉬움</button>
+          <button class="option-btn" data-value="보통" onclick="selectOption('q_difficulty',this)">보통</button>
+          <button class="option-btn" data-value="어려움" onclick="selectOption('q_difficulty',this)">어려움</button>
+          <button class="option-btn" data-value="매우 어려움" onclick="selectOption('q_difficulty',this)">매우 어려움</button>
         </div>
       </div>
       <div class="question-group">
         <div class="question-label">👥 몇 명이서 했나요?</div>
         <div class="question-options" id="q_members">
-          <button class="option-btn" onclick="selectOption('q_members','1인')">1인</button>
-          <button class="option-btn" onclick="selectOption('q_members','2인')">2인</button>
-          <button class="option-btn" onclick="selectOption('q_members','3인')">3인</button>
-          <button class="option-btn" onclick="selectOption('q_members','4인 이상')">4인 이상</button>
+          <button class="option-btn" data-value="1인" onclick="selectOption('q_members',this)">1인</button>
+          <button class="option-btn" data-value="2인" onclick="selectOption('q_members',this)">2인</button>
+          <button class="option-btn" data-value="3인" onclick="selectOption('q_members',this)">3인</button>
+          <button class="option-btn" data-value="4인 이상" onclick="selectOption('q_members',this)">4인 이상</button>
         </div>
       </div>
       <div class="question-group">
         <div class="question-label">🏆 탈출 성공 여부</div>
         <div class="question-options" id="q_result">
-          <button class="option-btn" onclick="selectOption('q_result','탈출 성공 🎉')">탈출 성공 🎉</button>
-          <button class="option-btn" onclick="selectOption('q_result','탈출 실패 💀')">탈출 실패 💀</button>
+          <button class="option-btn" data-value="탈출 성공 🎉" onclick="selectOption('q_result',this)">탈출 성공 🎉</button>
+          <button class="option-btn" data-value="탈출 실패 💀" onclick="selectOption('q_result',this)">탈출 실패 💀</button>
         </div>
       </div>
       <div class="question-group">
@@ -1483,7 +1480,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -1598,12 +1595,21 @@
     }
 
     async function loadPosts() {
-      const snapshot = await getDocs(collection(db, 'posts'));
-      allPostsData = [];
-      snapshot.forEach(doc => {
-        allPostsData.push({ id: doc.id, ...doc.data() });
-      });
-      renderCommunity();
+      try {
+        const snapshot = await getDocs(collection(db, 'posts'));
+        allPostsData = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          allPostsData.push({ 
+            id: doc.id, 
+            ...data,
+            createdAt: typeof data.createdAt === 'string' ? new Date(data.createdAt) : data.createdAt
+          });
+        });
+        renderCommunity();
+      } catch(e) {
+        console.error('포스트 로드 오류:', e);
+      }
     }
 
     function horrorDisplay(level) {
@@ -1772,7 +1778,7 @@
       themeRatings.forEach(r => starDist[r.star]++);
 
       const horrorDist = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 };
-      themeRatings.forEach(r => horrorDist[r.horror]++);
+      themeRatings.forEach(r => horrorDist[String(r.horror)]++);
 
       const diffDist = { '쉬움': 0, '보통': 0, '어려움': 0, '매우 어려움': 0 };
       themeRatings.forEach(r => diffDist[r.difficulty]++);
@@ -1897,13 +1903,16 @@
       }
 
       const sorted = [...userRatingsData].sort((a, b) => {
-        return new Date(b.createdAt.seconds * 1000) - new Date(a.createdAt.seconds * 1000);
+        const dateA = a.createdAt.seconds ? new Date(a.createdAt.seconds * 1000) : new Date(a.createdAt);
+        const dateB = b.createdAt.seconds ? new Date(b.createdAt.seconds * 1000) : new Date(b.createdAt);
+        return dateB - dateA;
       });
 
       const html = `
         <div class="mypage-content">
           ${sorted.map(rating => {
-            const date = new Date(rating.createdAt.seconds * 1000).toLocaleDateString('ko-KR');
+            const dateObj = rating.createdAt.seconds ? new Date(rating.createdAt.seconds * 1000) : new Date(rating.createdAt);
+            const date = dateObj.toLocaleDateString('ko-KR');
             return `
               <div class="rating-card" onclick="openDetail('${rating.theme}')">
                 <div class="rating-card-left">
@@ -1947,7 +1956,6 @@
 
       try {
         await deleteDoc(doc(db, 'ratings', ratingId));
-        alert('평점이 삭제됐습니다');
         const idx = userRatingsData.findIndex(r => r.id === ratingId);
         if (idx > -1) {
           const themeName = userRatingsData[idx].theme;
@@ -1956,9 +1964,10 @@
         }
         await loadRatings();
         renderMypage();
+        alert('평점이 삭제됐습니다');
       } catch(e) {
+        console.error('삭제 오류:', e);
         alert('삭제에 실패했습니다');
-        console.error(e);
       }
     }
 
@@ -2056,7 +2065,11 @@
       const filtered = allPostsData.filter(post => {
         const theme = themes.find(t => t.name === post.theme);
         return !theme || currentCommunityFilter === '전체' || theme.region === currentCommunityFilter;
-      }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }).sort((a, b) => {
+        const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
+        const dateB = typeof b.createdAt === 'string' ? new Date(b.createdAt) : b.createdAt;
+        return dateB - dateA;
+      });
 
       if (filtered.length === 0) {
         listContainer.innerHTML = '<div class="community-empty"><div class="icon">💬</div><h2>아직 글이 없어요</h2><p>첫 번째로 글을 작성해보세요!</p></div>';
@@ -2064,7 +2077,8 @@
       }
 
       listContainer.innerHTML = filtered.map(post => {
-        const date = new Date(post.createdAt).toLocaleDateString('ko-KR');
+        const dateObj = typeof post.createdAt === 'string' ? new Date(post.createdAt) : post.createdAt;
+        const date = dateObj.toLocaleDateString('ko-KR');
         const theme = themes.find(t => t.name === post.theme);
         return `
           <div class="post-card" onclick="goToThemeBoard('${post.theme}')">
@@ -2087,7 +2101,11 @@
 
     window.renderThemeBoard = function() {
       const listContainer = document.getElementById('themePostList');
-      const filtered = allPostsData.filter(post => post.theme === currentViewTheme).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const filtered = allPostsData.filter(post => post.theme === currentViewTheme).sort((a, b) => {
+        const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
+        const dateB = typeof b.createdAt === 'string' ? new Date(b.createdAt) : b.createdAt;
+        return dateB - dateA;
+      });
 
       if (filtered.length === 0) {
         listContainer.innerHTML = '<div class="community-empty"><div class="icon">💬</div><h2>아직 글이 없어요</h2><p>이 테마의 첫 번째 후기를 남겨보세요!</p></div>';
@@ -2095,7 +2113,8 @@
       }
 
       listContainer.innerHTML = filtered.map(post => {
-        const date = new Date(post.createdAt).toLocaleDateString('ko-KR');
+        const dateObj = typeof post.createdAt === 'string' ? new Date(post.createdAt) : post.createdAt;
+        const date = dateObj.toLocaleDateString('ko-KR');
         return `
           <div class="post-card" style="cursor: default;" onmouseover="this.style.borderColor='#ff0000'" onmouseout="this.style.borderColor='#2a0000'">
             <div class="post-card-content" style="flex: 1;">
@@ -2206,8 +2225,8 @@
         closeWriteModal();
         await loadPosts();
       } catch(e) {
-        alert('등록에 실패했습니다.');
-        console.error(e);
+        console.error('글 저장 오류:', e);
+        alert('등록에 실패했습니다. 다시 시도해주세요.');
       }
     }
 
@@ -2216,11 +2235,12 @@
 
       try {
         await deleteDoc(doc(db, 'posts', postId));
+        allPostsData = allPostsData.filter(p => p.id !== postId);
+        renderCommunity();
         alert('글이 삭제됐습니다');
-        await loadPosts();
       } catch(e) {
+        console.error('글 삭제 오류:', e);
         alert('삭제에 실패했습니다');
-        console.error(e);
       }
     }
 
@@ -2258,14 +2278,13 @@
       });
     }
 
-   window.selectOption = function(groupId, value) {
+    window.selectOption = function(groupId, btn) {
+      const value = btn.getAttribute('data-value');
       selectedOptions[groupId] = value;
       document.querySelectorAll(`#${groupId} .option-btn`).forEach(b => {
         b.classList.remove('selected');
-        if (b.textContent.trim() === value.trim()) {
-          b.classList.add('selected');
-        }
       });
+      btn.classList.add('selected');
     }
 
     window.submitRating = async function() {
@@ -2287,7 +2306,7 @@
           difficulty: selectedOptions['q_difficulty'],
           members: selectedOptions['q_members'],
           result: selectedOptions['q_result'],
-          createdAt: new Date()
+          createdAt: new Date().toISOString()
         });
 
         if (oneline) {
@@ -2305,8 +2324,8 @@
         closeModal();
         await loadRatings();
       } catch(e) {
+        console.error('평점 저장 오류:', e);
         alert('오류가 발생했어요. 다시 시도해주세요.');
-        console.error(e);
       }
     }
 
