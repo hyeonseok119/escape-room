@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공테가이드 - 관리자</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #111111;
+      border-right: 1px solid #2a0000;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 20px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      background-color: #1a0000;
+      border: 1px solid #3a0000;
+      border-radius: 8px;
+      color: #aaaaaa;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background-color: #ff0000;
+      border-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    .header-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-name {
+      color: #ff0000;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 6px;
+      color: #ff0000;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .login-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .login-box {
+      background-color: #111111;
+      border: 1px solid #ff0000;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .login-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 30px;
+    }
+
+    .login-btn {
+      padding: 12px 24px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      font-weight: 700;
+    }
+
+    .login-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* 통계 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #888888;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ff0000;
+    }
+
+    /* 테이블 */
+    .table-container {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #1a0000;
+      padding: 12px;
+      text-align: left;
+      font-size: 0.9rem;
+      color: #ff0000;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #1a0000;
+      font-size: 0.9rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background-color: #1a0000;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Noto Serif KR', serif;
+      margin-right: 4px;
+    }
+
+    .edit-btn {
+      background-color: #ff0000;
+      color: #ffffff;
+    }
+
+    .delete-btn {
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      color: #ff0000;
+    }
+
+    .action-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* 폼 */
+    .form-section {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a0000;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      color: #cccccc;
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 10px;
+      background-color: #1a0000;
+      border: 1px solid #3a0000;
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #ff0000;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .submit-btn {
+      flex: 1;
+      padding: 12px;
+      background-color: #ff0000;
+      border: none;
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .submit-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .cancel-btn {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: 1px solid #333333;
+      border-radius: 6px;
+      color: #888888;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background-color: #111111;
+      border: 1px solid #ff0000;
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 20px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #888888;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #666666;
+      padding: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .main-content {
+        margin-left: 200px;
+        padding: 12px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 로그인 화면 -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <div class="login-title">공테가이드 - 관리자 페이지</div>
+      <button class="login-btn" onclick="handleAdminLogin()">구글로 로그인</button>
+    </div>
+  </div>
+
+  <!-- 관리자 페이지 -->
+  <div id="adminScreen" class="container" style="display: none;">
+    <!-- 좌측 사이드바 -->
+    <div class="sidebar">
+      <div class="sidebar-title">📊 메뉴</div>
+      <button class="nav-btn active" onclick="switchTab('dashboard', this)">대시보드</button>
+      <button class="nav-btn" onclick="switchTab('themes', this)">🎬 테마 관리</button>
+      <button class="nav-btn" onclick="switchTab('sponsors', this)">👑 스폰서 관리</button>
+      <button class="nav-btn" onclick="switchTab('community', this)">💬 커뮤니티 관리</button>
+      <button class="nav-btn" onclick="switchTab('users', this)">👥 사용자 관리</button>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content">
+      <div class="header">
+        <div class="header-title">공테가이드 관리자</div>
+        <div class="user-info">
+          <span class="user-name" id="adminName">관리자</span>
+          <button class="logout-btn" onclick="handleLogout()">로그아웃</button>
+        </div>
+      </div>
+
+      <!-- 대시보드 -->
+      <div id="dashboard" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">총 가입자</div>
+            <div class="stat-value" id="totalUsers">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">총 평점</div>
+            <div class="stat-value" id="totalRatings">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">총 게시글</div>
+            <div class="stat-value" id="totalPosts">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">등록된 테마</div>
+            <div class="stat-value" id="totalThemes">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 테마 관리 -->
+      <div id="themes" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">🎬 테마 관리</h2>
+        
+        <div class="form-section">
+          <div class="form-title">새 테마 추가</div>
+          
+          <div class="form-group">
+            <label class="form-label">테마명</label>
+            <input type="text" id="themeName" class="form-input" placeholder="테마명 입력">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">매장명</label>
+            <input type="text" id="themeStore" class="form-input" placeholder="매장명 입력">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">지역</label>
+              <select id="themeRegion" class="form-select">
+                <option value="">선택해주세요</option>
+                <option value="강남">강남</option>
+                <option value="홍대">홍대</option>
+                <option value="건대">건대</option>
+                <option value="대학로">대학로</option>
+                <option value="잠실">잠실</option>
+                <option value="신촌">신촌</option>
+                <option value="신림">신림</option>
+                <option value="인천">인천</option>
+                <option value="수원">수원</option>
+                <option value="안산">안산</option>
+                <option value="안양">안양</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">공포도 (1~5)</label>
+              <input type="number" id="themeHorror" class="form-input" min="1" max="5" step="0.5" placeholder="3">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">가격</label>
+              <input type="text" id="themePrice" class="form-input" placeholder="예: 30,000원">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">이미지 URL</label>
+              <input type="text" id="themeImg" class="form-input" placeholder="https://...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">예약 URL</label>
+            <input type="text" id="themeUrl" class="form-input" placeholder="https://...">
+          </div>
+
+          <div class="btn-group">
+            <button class="submit-btn" onclick="addTheme()">테마 추가</button>
+            <button class="cancel-btn" onclick="resetThemeForm()">초기화</button>
+          </div>
+        </div>
+
+        <h3 style="color: #ffffff; margin-top: 30px; margin-bottom: 16px;">등록된 테마 목록</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>테마명</th>
+                <th>매장</th>
+                <th>지역</th>
+                <th>공포도</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="themesList">
+              <tr>
+                <td colspan="5" style="text-align: center; color: #666666;">테마를 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 스폰서 관리 -->
+      <div id="sponsors" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">👑 스폰서 관리</h2>
+        
+        <div class="form-section">
+          <div class="form-title">Featured 카드 설정 (최대 3개)</div>
+          
+          <div class="form-group">
+            <label class="form-label">1번 Featured 테마</label>
+            <select id="sponsor1" class="form-select">
+              <option value="">선택 안함</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">2번 Featured 테마</label>
+            <select id="sponsor2" class="form-select">
+              <option value="">선택 안함</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">3번 Featured 테마</label>
+            <select id="sponsor3" class="form-select">
+              <option value="">선택 안함</option>
+            </select>
+          </div>
+
+          <div class="btn-group">
+            <button class="submit-btn" onclick="saveSponsor()">저장</button>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-title">스폰서 배너 텍스트</div>
+          
+          <div class="form-group">
+            <label class="form-label">배너 텍스트</label>
+            <input type="text" id="bannerText" class="form-input" placeholder="📢 이 자리는 스폰서 광고 배너입니다">
+          </div>
+
+          <div class="btn-group">
+            <button class="submit-btn" onclick="saveBannerText()">저장</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 커뮤니티 관리 -->
+      <div id="community" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">💬 커뮤니티 관리</h2>
+        
+        <div style="margin-bottom: 20px;">
+          <button class="nav-btn" onclick="switchCommunityTab('ratings', this)" style="width: 150px;">평점 관리</button>
+          <button class="nav-btn" onclick="switchCommunityTab('posts', this)" style="width: 150px; margin-left: 8px;">글 관리</button>
+        </div>
+
+        <div id="ratingsTab" class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>테마</th>
+                <th>사용자</th>
+                <th>별점</th>
+                <th>공포도</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="ratingsList">
+              <tr>
+                <td colspan="5" style="text-align: center; color: #666666;">평점을 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="postsTab" class="table-container" style="display: none;">
+          <table>
+            <thead>
+              <tr>
+                <th>테마</th>
+                <th>내용</th>
+                <th>작성자</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="postsList">
+              <tr>
+                <td colspan="4" style="text-align: center; color: #666666;">글을 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 사용자 관리 -->
+      <div id="users" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">👥 사용자 관리</h2>
+        
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>이메일</th>
+                <th>닉네임</th>
+                <th>가입일</th>
+                <th>평점 수</th>
+                <th>글 수</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="usersList">
+              <tr>
+                <td colspan="6" style="text-align: center; color: #666666;">사용자를 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDH698vreJanicluYtFSW31TgH6EWeGoLg",
+      authDomain: "gongteguide.firebaseapp.com",
+      projectId: "gongteguide",
+      storageBucket: "gongteguide.firebasestorage.app",
+      messagingSenderId: "1038963240281",
+      appId: "1:1038963240281:web:75d7cd8cdf90d736657048"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // ⭐ 관리자 이메일 설정 (여기서 수정!)
+    const ADMIN_EMAILS = ['relimit1927@gmail.com', 'joliga990709@gmail.com'];
+
+    let currentUser = null;
+    let allThemes = [];
+    let allRatings = [];
+    let allPosts = [];
+    let allUsers = {};
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      
+      if (user) {
+        // 관리자 확인
+        if (ADMIN_EMAILS.includes(user.email)) {
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('adminScreen').style.display = 'flex';
+          document.getElementById('adminName').textContent = user.displayName || user.email;
+          
+          // 데이터 로드
+          await loadAllData();
+        } else {
+          alert('관리자 권한이 없습니다.');
+          await signOut(auth);
+        }
+      } else {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('adminScreen').style.display = 'none';
+      }
+    });
+
+    window.handleAdminLogin = async function() {
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch(error) {
+        alert('로그인 실패: ' + error.message);
+      }
+    }
+
+    window.handleLogout = async function() {
+      try {
+        await signOut(auth);
+      } catch(error) {
+        alert('로그아웃 실패');
+      }
+    }
+
+    async function loadAllData() {
+      try {
+        // 테마 로드
+        const themesSnapshot = await getDocs(collection(db, 'themes'));
+        allThemes = [];
+        themesSnapshot.forEach(doc => {
+          allThemes.push({ id: doc.id, ...doc.data() });
+        });
+        renderThemes();
+        updateThemeSelects();
+
+        // 평점 로드
+        const ratingsSnapshot = await getDocs(collection(db, 'ratings'));
+        allRatings = [];
+        ratingsSnapshot.forEach(doc => {
+          allRatings.push({ id: doc.id, ...doc.data() });
+        });
+        renderRatings();
+
+        // 글 로드
+        const postsSnapshot = await getDocs(collection(db, 'posts'));
+        allPosts = [];
+        postsSnapshot.forEach(doc => {
+          allPosts.push({ id: doc.id, ...doc.data() });
+        });
+        renderPosts();
+
+        // 사용자 로드
+        const usersSnapshot = await getDocs(collection(db, 'userProfiles'));
+        allUsers = {};
+        usersSnapshot.forEach(doc => {
+          const data = doc.data();
+          allUsers[data.userId] = data;
+        });
+
+        // 통계 업데이트
+        updateStats();
+        renderUsers();
+      } catch(e) {
+        console.error('데이터 로드 오류:', e);
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('totalThemes').textContent = allThemes.length;
+      document.getElementById('totalRatings').textContent = allRatings.length;
+      document.getElementById('totalPosts').textContent = allPosts.length;
+
+      // 총 사용자 (고유한 userId 개수)
+      const uniqueUsers = new Set();
+      allRatings.forEach(r => uniqueUsers.add(r.userId));
+      allPosts.forEach(p => uniqueUsers.add(p.userId));
+      document.getElementById('totalUsers').textContent = uniqueUsers.size;
+    }
+
+    window.switchTab = function(tab, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tab).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    window.switchCommunityTab = function(tab, btn) {
+      if (tab === 'ratings') {
+        document.getElementById('ratingsTab').style.display = 'block';
+        document.getElementById('postsTab').style.display = 'none';
+      } else {
+        document.getElementById('ratingsTab').style.display = 'none';
+        document.getElementById('postsTab').style.display = 'block';
+      }
+      document.querySelectorAll('#community .nav-btn').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // 테마 관리
+    window.addTheme = async function() {
+      const name = document.getElementById('themeName').value;
+      const store = document.getElementById('themeStore').value;
+      const region = document.getElementById('themeRegion').value;
+      const horror = parseFloat(document.getElementById('themeHorror').value);
+      const price = document.getElementById('themePrice').value;
+      const img = document.getElementById('themeImg').value;
+      const url = document.getElementById('themeUrl').value;
+
+      if (!name || !store || !region || !horror || !price || !img || !url) {
+        alert('모든 필드를 입력해주세요');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'themes'), {
+          name, store, region, horror, price, img, url,
+          createdAt: new Date().toISOString()
+        });
+        alert('테마가 추가되었습니다');
+        resetThemeForm();
+        await loadAllData();
+      } catch(e) {
+        alert('추가 실패: ' + e.message);
+      }
+    }
+
+    window.resetThemeForm = function() {
+      document.getElementById('themeName').value = '';
+      document.getElementById('themeStore').value = '';
+      document.getElementById('themeRegion').value = '';
+      document.getElementById('themeHorror').value = '';
+      document.getElementById('themePrice').value = '';
+      document.getElementById('themeImg').value = '';
+      document.getElementById('themeUrl').value = '';
+    }
+
+    window.deleteTheme = async function(themeId) {
+      if (!confirm('이 테마를 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'themes', themeId));
+        alert('테마가 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
+    function renderThemes() {
+      const tbody = document.getElementById('themesList');
+      
+      if (allThemes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-message">등록된 테마가 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allThemes.map(theme => `
+        <tr>
+          <td>${theme.name}</td>
+          <td>${theme.store}</td>
+          <td>${theme.region}</td>
+          <td>${theme.horror}</td>
+          <td>
+            <button class="action-btn delete-btn" onclick="deleteTheme('${theme.id}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function updateThemeSelects() {
+      const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
+      const options = '<option value="">선택 안함</option>' + 
+        allThemes.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      
+      selects.forEach(id => {
+        document.getElementById(id).innerHTML = options;
+      });
+
+      // 저장된 스폰서 로드
+      loadSponsor();
+    }
+
+    window.saveSponsor = async function() {
+      const sponsor1 = document.getElementById('sponsor1').value;
+      const sponsor2 = document.getElementById('sponsor2').value;
+      const sponsor3 = document.getElementById('sponsor3').value;
+
+      try {
+        await updateDoc(doc(db, 'settings', 'sponsors'), {
+          featured: [sponsor1, sponsor2, sponsor3]
+        });
+        alert('스폰서가 저장되었습니다');
+      } catch(e) {
+        // 문서가 없으면 새로 생성
+        try {
+          await addDoc(collection(db, 'settings'), {
+            id: 'sponsors',
+            featured: [sponsor1, sponsor2, sponsor3]
+          });
+          alert('스폰서가 저장되었습니다');
+        } catch(e2) {
+          alert('저장 실패');
+        }
+      }
+    }
+
+    async function loadSponsor() {
+      try {
+        const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('id', '==', 'sponsors')));
+        if (sponsorDocs.size > 0) {
+          const featured = sponsorDocs.docs[0].data().featured;
+          if (featured[0]) document.getElementById('sponsor1').value = featured[0];
+          if (featured[1]) document.getElementById('sponsor2').value = featured[1];
+          if (featured[2]) document.getElementById('sponsor3').value = featured[2];
+        }
+      } catch(e) {
+        console.log('스폰서 로드 오류');
+      }
+    }
+
+    window.saveBannerText = async function() {
+      const bannerText = document.getElementById('bannerText').value;
+      
+      if (!bannerText) {
+        alert('배너 텍스트를 입력해주세요');
+        return;
+      }
+
+      try {
+        const settingsDocs = await getDocs(collection(db, 'settings'));
+        if (settingsDocs.size > 0) {
+          await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
+            bannerText: bannerText
+          });
+        } else {
+          await addDoc(collection(db, 'settings'), {
+            bannerText: bannerText
+          });
+        }
+        alert('배너 텍스트가 저장되었습니다');
+      } catch(e) {
+        alert('저장 실패');
+      }
+    }
+
+    // 평점 관리
+    function renderRatings() {
+      const tbody = document.getElementById('ratingsList');
+      
+      if (allRatings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-message">평점이 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allRatings.map(rating => `
+        <tr>
+          <td>${rating.theme}</td>
+          <td>${rating.userName}</td>
+          <td>⭐ ${rating.star}</td>
+          <td>${rating.horror}점</td>
+          <td>
+            <button class="action-btn delete-btn" onclick="deleteRating('${rating.id}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.deleteRating = async function(ratingId) {
+      if (!confirm('이 평점을 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'ratings', ratingId));
+        alert('평점이 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
+    // 글 관리
+    function renderPosts() {
+      const tbody = document.getElementById('postsList');
+      
+      if (allPosts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-message">글이 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allPosts.map(post => `
+        <tr>
+          <td>${post.theme}</td>
+          <td>${post.content.substring(0, 30)}...</td>
+          <td>${post.userName}</td>
+          <td>
+            <button class="action-btn delete-btn" onclick="deletePost('${post.id}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.deletePost = async function(postId) {
+      if (!confirm('이 글을 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'posts', postId));
+        alert('글이 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
+    // 사용자 관리
+    function renderUsers() {
+      const tbody = document.getElementById('usersList');
+      
+      const uniqueUsers = new Map();
+      
+      allRatings.forEach(r => {
+        if (!uniqueUsers.has(r.userId)) {
+          uniqueUsers.set(r.userId, {
+            userId: r.userId,
+            userName: r.userName,
+            ratings: 0,
+            posts: 0
+          });
+        }
+        uniqueUsers.get(r.userId).ratings++;
+      });
+
+      allPosts.forEach(p => {
+        if (!uniqueUsers.has(p.userId)) {
+          uniqueUsers.set(p.userId, {
+            userId: p.userId,
+            userName: p.userName,
+            ratings: 0,
+            posts: 0
+          });
+        }
+        uniqueUsers.get(p.userId).posts++;
+      });
+
+      if (uniqueUsers.size === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-message">사용자가 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => {
+        const profile = allUsers[user.userId];
+        const nickname = profile?.nickname || user.userName || '미정';
+        const joinDate = profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : '미정';
+        
+        return `
+          <tr>
+            <td>${user.userId.substring(0, 10)}...</td>
+            <td>${nickname}</td>
+            <td>${joinDate}</td>
+            <td>${user.ratings}</td>
+            <td>${user.posts}</td>
+            <td>
+              <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.deleteUser = async function(userId) {
+      if (!confirm('이 사용자를 삭제하시겠습니까? (모든 평점과 글도 삭제됩니다)')) return;
+      
+      try {
+        // 사용자의 모든 평점 삭제
+        const ratingsQuery = query(collection(db, 'ratings'), where('userId', '==', userId));
+        const ratingsSnapshot = await getDocs(ratingsQuery);
+        for (let doc of ratingsSnapshot.docs) {
+          await deleteDoc(doc.ref);
+        }
+
+        // 사용자의 모든 글 삭제
+        const postsQuery = query(collection(db, 'posts'), where('userId', '==', userId));
+        const postsSnapshot = await getDocs(postsQuery);
+        for (let doc of postsSnapshot.docs) {
+          await deleteDoc(doc.ref);
+        }
+
+        alert('사용자가 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+  </script>
+
+</body>
+</html>
