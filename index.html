@@ -1176,20 +1176,6 @@
       align-items: center;
     }
 
-    .post-delete-btn {
-      padding: 4px 10px;
-      background-color: #1a0000;
-      border: 1px solid #ff0000;
-      border-radius: 4px;
-      color: #ff0000;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Noto Serif KR', serif;
-    }
-
-    .post-delete-btn:hover { background-color: #ff0000; color: #ffffff; }
-
     /* 글쓰기 모달 */
     .write-modal-overlay {
       display: none;
@@ -1444,7 +1430,7 @@
 </head>
 <body>
 
-  <div class="sponsor-bar">📢 이 자리는 스폰서 광고 배너입니다</div>
+  <div class="sponsor-bar" id="sponsorBar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
   <div class="header">
     <div class="header-left">
@@ -1745,43 +1731,31 @@
     const googleProvider = new GoogleAuthProvider();
 
     let themes = [
-  { name: '안산 코노', store: '꿈소풍 안산 1호점', region: '안산', horror: 3, price: '22,000원', img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg', url: 'https://dreampicnicescape.com/reservation' },
-  { name: '4F:마지막기록', store: '블랙헤이븐', region: '안양', horror: 3, price: '36,000원', img: 'https://naverbooking-phinf.pstatic.net/20260107_118/1767765334755BQIVB_PNG/4F_%C6%F7%BD%BA%C5%CD.png', url: 'https://naver.me/x4G63doR' },
-  { name: '피안화', store: '플레이33 홍대점', region: '홍대', horror: 3.5, price: '34,000원', img: 'https://play33.kr/storage/theme/2026_04/08/zLbaL5XoQXS0iPpYNjAdvI1UDIjCAICv9Vkx1VmE.jpg', url: 'https://play33.kr/reservation?branch=4&theme' },
-  { name: 'AYAKO', store: '후즈데어', region: '강남', horror: 3, price: '35,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNjAzMTlfMjEw%2FMDAxNzczODgzMTgzNjU0.Uk-003QLkBYQ9epaPvMC9lZdhlQSYkKb5sB_KQT1T8Ig.9pcPtPWfxITknEYPtJodGoFW9EMas6Vl2LVwCV4-m2Ug.JPEG%2F900%EF%BC%BFScreenshot%EF%BC%BF20260319%EF%BC%BF101703%EF%BC%BFInstagram.jpg%2F900x903', url: 'https://www.keyescape.com/reservation1.php?zizum_num=23&theme_num=71&theme_info_num=63' },
-  { name: '나폴리탄', store: '둠이스케이프 1호점', region: '인천', horror: 5, price: '28,000원', img: 'https://doomescape.com/file/theme/29_3290704845.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=1' },
-  { name: '허수아비', store: '둠이스케이프 FEAR점', region: '수원', horror: 4, price: '31,000원', img: 'https://doomescape.com/file/theme/34_4437239922.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=4' },
-  { name: '생존자', store: '넥스트에디션 건대2호점', region: '건대', horror: 1, price: '29,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20241126_87%2F17325572345753Uf9a_JPEG%2FKakaoTalk_Photo_2024-11-26-02-53-12.jpeg', url: 'https://map.naver.com/p/search/%EB%84%A5%EC%8A%A4%ED%8A%B8%EC%97%90%EB%94%94%EC%85%98/place/1163403341' },
-  { name: '신촌성심병원', store: '나의신방', region: '신촌', horror: 2, price: '200,000원 (팀당)', img: 'https://xn--910bj3tlmfz4e.com/file/theme/7_a.jpg', url: 'https://xn--910bj3tlmfz4e.com/layout/res/home.php?go=rev.make&s_theme_num=7' },
-  { name: 'STAGE', store: '에필로그', region: '대학로', horror: 3, price: '30,000원', img: 'https://epilogueescape.com/file/theme/3_a.jpg', url: 'https://epilogueescape.com/layout/res/home.php?go=rev.make&s_theme_num=3' },
-  { name: '창귀', store: '체셔하우스', region: '신림', horror: 3, price: '25,000원', img: 'https://naverbooking-phinf.pstatic.net/20250813_71/1755024935361d6xMc_PNG/image.png', url: 'https://map.naver.com/p/entry/place/2043391014' },
-];
+      { name: '안산 코노', store: '꿈소풍 안산 1호점', region: '안산', horror: 3, price: '22,000원', img: 'https://dreampicnicescape.com/images/theme_ansan_coin.jpg', url: 'https://dreampicnicescape.com/reservation' },
+      { name: '4F:마지막기록', store: '블랙헤이븐', region: '안양', horror: 3, price: '36,000원', img: 'https://naverbooking-phinf.pstatic.net/20260107_118/1767765334755BQIVB_PNG/4F_%C6%F7%BD%BA%C5%CD.png', url: 'https://naver.me/x4G63doR' },
+      { name: '피안화', store: '플레이33 홍대점', region: '홍대', horror: 3.5, price: '34,000원', img: 'https://play33.kr/storage/theme/2026_04/08/zLbaL5XoQXS0iPpYNjAdvI1UDIjCAICv9Vkx1VmE.jpg', url: 'https://play33.kr/reservation?branch=4&theme' },
+      { name: 'AYAKO', store: '후즈데어', region: '강남', horror: 3, price: '35,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNjAzMTlfMjEw%2FMDAxNzczODgzMTgzNjU0.Uk-003QLkBYQ9epaPvMC9lZdhlQSYkKb5sB_KQT1T8Ig.9pcPtPWfxITknEYPtJodGoFW9EMas6Vl2LVwCV4-m2Ug.JPEG%2F900%EF%BC%BFScreenshot%EF%BC%BF20260319%EF%BC%BF101703%EF%BC%BFInstagram.jpg%2F900x903', url: 'https://www.keyescape.com/reservation1.php?zizum_num=23&theme_num=71&theme_info_num=63' },
+      { name: '나폴리탄', store: '둠이스케이프 1호점', region: '인천', horror: 5, price: '28,000원', img: 'https://doomescape.com/file/theme/29_3290704845.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=1' },
+      { name: '허수아비', store: '둠이스케이프 FEAR점', region: '수원', horror: 4, price: '31,000원', img: 'https://doomescape.com/file/theme/34_4437239922.png', url: 'https://doomescape.com/layout/res/home.php?go=rev.make&s_zizum=4' },
+      { name: '생존자', store: '넥스트에디션 건대2호점', region: '건대', horror: 1, price: '29,000원', img: 'https://search.pstatic.net/common/?src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20241126_87%2F17325572345753Uf9a_JPEG%2FKakaoTalk_Photo_2024-11-26-02-53-12.jpeg', url: 'https://map.naver.com/p/search/%EB%84%A5%EC%8A%A4%ED%8A%B8%EC%97%90%EB%94%94%EC%85%98/place/1163403341' },
+      { name: '신촌성심병원', store: '나의신방', region: '신촌', horror: 2, price: '200,000원 (팀당)', img: 'https://xn--910bj3tlmfz4e.com/file/theme/7_a.jpg', url: 'https://xn--910bj3tlmfz4e.com/layout/res/home.php?go=rev.make&s_theme_num=7' },
+      { name: 'STAGE', store: '에필로그', region: '대학로', horror: 3, price: '30,000원', img: 'https://epilogueescape.com/file/theme/3_a.jpg', url: 'https://epilogueescape.com/layout/res/home.php?go=rev.make&s_theme_num=3' },
+      { name: '창귀', store: '체셔하우스', region: '신림', horror: 3, price: '25,000원', img: 'https://naverbooking-phinf.pstatic.net/20250813_71/1755024935361d6xMc_PNG/image.png', url: 'https://map.naver.com/p/entry/place/2043391014' },
+    ];
 
-async function loadThemesFromFirebase() {
-  try {
-    const snapshot = await getDocs(collection(db, 'themes'));
-    snapshot.forEach(doc => {
-      const firebaseTheme = doc.data();
-      // 중복 체크
-      if (!themes.find(t => t.name === firebaseTheme.name)) {
-        themes.push(firebaseTheme);
+    async function loadThemesFromFirebase() {
+      try {
+        const snapshot = await getDocs(collection(db, 'themes'));
+        snapshot.forEach(doc => {
+          const firebaseTheme = doc.data();
+          if (!themes.find(t => t.name === firebaseTheme.name)) {
+            themes.push(firebaseTheme);
+          }
+        });
+      } catch(e) {
+        console.error('Firebase 테마 로드 오류:', e);
       }
-    });
-  } catch(e) {
-    console.error('Firebase 테마 로드 오류:', e);
-  }
-} {
-  try {
-    const snapshot = await getDocs(collection(db, 'themes'));
-    themes = [];
-    snapshot.forEach(doc => {
-      themes.push(doc.data());
-    });
-    renderThemes();
-  } catch(e) {
-    console.error('테마 로드 오류:', e);
-  }
-};
+    }
 
     let currentRegion = '전체';
     let currentHorror = '전체';
@@ -1841,7 +1815,8 @@ async function loadThemesFromFirebase() {
         userRatingsData = [];
         userPostsData = [];
         userProfile = {};
-      } await loadThemesFromFirebase(); //
+      }
+      await loadThemesFromFirebase();
       renderThemes();
       renderMypage();
     });
@@ -2683,22 +2658,6 @@ async function loadThemesFromFirebase() {
       }
     }
 
-    window.deletePost = async function(postId) {
-      if (!confirm('글을 삭제하시겠어요?')) return;
-
-      try {
-        await deleteDoc(doc(db, 'posts', postId));
-        allPostsData = allPostsData.filter(p => p.id !== postId);
-        userPostsData = userPostsData.filter(p => p.id !== postId);
-        renderCommunity();
-        renderMypage();
-        alert('글이 삭제됐습니다');
-      } catch(e) {
-        console.error('글 삭제 오류:', e);
-        alert('삭제에 실패했습니다');
-      }
-    }
-
     window.openRatingModal = function(themeName) {
       if (!currentUser) {
         alert('로그인 후 평점을 남길 수 있습니다.');
@@ -2755,7 +2714,7 @@ async function loadThemesFromFirebase() {
         await addDoc(collection(db, 'ratings'), {
           theme: currentTheme,
           userId: currentUser.uid,
-          userName: currentUser.displayName,
+          userName: userProfile.nickname || currentUser.displayName,
           star: currentStar,
           horror: selectedOptions['q_horror'],
           difficulty: selectedOptions['q_difficulty'],
