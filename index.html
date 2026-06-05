@@ -440,6 +440,11 @@
       color: #ffffff;
     }
 
+    .profile-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
     .profile-edit-btn {
       padding: 8px 16px;
       background-color: #ff0000;
@@ -453,6 +458,23 @@
     }
 
     .profile-edit-btn:hover { background-color: #cc0000; }
+
+    .profile-logout-btn {
+      padding: 8px 16px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 20px;
+      color: #ff0000;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.2s;
+    }
+
+    .profile-logout-btn:hover {
+      background-color: #ff0000;
+      color: #ffffff;
+    }
 
     .profile-stats {
       display: flex;
@@ -753,20 +775,6 @@
       cursor: pointer;
       padding: 0;
     }
-
-    .user-info {
-      display: none;
-      padding: 12px 16px;
-      background-color: #111111;
-      border-bottom: 1px solid #2a0000;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #aaaaaa;
-    }
-
-    .user-info.show { display: block; }
-
-    .user-info .user-name { color: #ff0000; font-weight: 700; }
 
     /* 평점 모달 */
     .modal-overlay {
@@ -1080,6 +1088,28 @@
       margin-bottom: 20px;
     }
 
+    .community-search-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .community-search-input {
+      flex: 1;
+      padding: 10px 12px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-family: 'Noto Serif KR', serif;
+      outline: none;
+    }
+
+    .community-search-input:focus {
+      border-color: #ffaa00;
+    }
+
     .write-btn {
       padding: 10px 20px;
       background-color: #ff0000;
@@ -1117,6 +1147,56 @@
       background-color: #ff0000;
       border-color: #ff0000;
       color: #ffffff;
+    }
+
+    .announcement-section {
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .announcement-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .announcement-card {
+      background-color: #111111;
+      border: 1px solid #2a0000;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .announcement-card:hover {
+      border-color: #ff0000;
+      background-color: #1a1a1a;
+    }
+
+    .announcement-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .announcement-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .announcement-card-content {
+      font-size: 0.8rem;
+      color: #aaaaaa;
+      line-height: 1.3;
     }
 
     .post-card {
@@ -1426,21 +1506,66 @@
       cursor: pointer;
       font-family: 'Noto Serif KR', serif;
     }
+
+    .announcement-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .announcement-modal-overlay.active { display: flex; }
+
+    .announcement-modal {
+      background: #111111;
+      border: 1px solid #ff0000;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .announcement-modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff0000;
+      margin-bottom: 16px;
+    }
+
+    .announcement-modal-content {
+      font-size: 0.95rem;
+      color: #aaaaaa;
+      line-height: 1.6;
+    }
+
+    .announcement-close-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background: none;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      color: #888888;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Noto Serif KR', serif;
+    }
   </style>
 </head>
 <body>
 
   <div class="sponsor-bar" id="sponsorBar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
-  <div class="header">
-    <div class="header-left">
-      <button class="search-icon-btn" onclick="openSearch()">🔍</button>
-    </div>
-    <button class="login-btn" id="loginBtn" onclick="handleLogin()">로그인</button>
-  </div>
-
-  <div class="user-info" id="userInfo">
-    <span class="user-name" id="userName"></span>님 환영합니다!
+  <div class="header" id="headerContainer">
+    <div class="header-left" id="headerLeft"></div>
+    <div id="headerRight"></div>
   </div>
 
   <!-- 홈 -->
@@ -1512,7 +1637,13 @@
           <button class="write-btn" onclick="openWriteModal()">✍️ 글쓰기</button>
         </div>
 
+        <div class="community-search-box">
+          <input type="text" id="communitySearchInput" class="community-search-input" placeholder="테마명, 글 내용, 작성자 검색..." oninput="filterCommunityPosts()">
+        </div>
+
         <div class="community-filter" id="communityFilter"></div>
+
+        <div id="announcementContainer"></div>
 
         <div id="communityList"></div>
       </div>
@@ -1711,6 +1842,15 @@
     </div>
   </div>
 
+  <!-- 공지사항 모달 -->
+  <div class="announcement-modal-overlay" id="announcementModal" onclick="closeAnnouncementModalOutside(event)">
+    <div class="announcement-modal">
+      <div class="announcement-modal-title" id="announcementTitle"></div>
+      <div class="announcement-modal-content" id="announcementContent"></div>
+      <button class="announcement-close-btn" onclick="closeAnnouncementModal()">닫기</button>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1762,6 +1902,7 @@
     let ratings = {};
     let allRatingsData = [];
     let allPostsData = [];
+    let allAnnouncementsData = [];
     let userRatingsData = [];
     let userPostsData = [];
     let currentTheme = null;
@@ -1776,20 +1917,41 @@
     let currentCommunityFilter = '전체';
     let currentViewTheme = null;
     let selectedThemeForWrite = null;
+    let currentCommunitySearch = '';
 
     const regions = ['전체', '강남', '홍대', '건대', '대학로', '잠실', '신촌', '신림', '인천', '수원', '안산', '안양'];
 
+    function updateHeader() {
+      const currentPageId = document.querySelector('.page.active').id;
+      const headerLeft = document.getElementById('headerLeft');
+      const headerRight = document.getElementById('headerRight');
+      
+      headerLeft.innerHTML = '';
+      headerRight.innerHTML = '';
+
+      if (currentPageId === 'page-home') {
+        headerLeft.innerHTML = '<button class="search-icon-btn" onclick="openSearch()">🔍</button>';
+      } else if (currentPageId === 'page-community') {
+        headerLeft.innerHTML = '';
+      } else if (currentPageId === 'page-ranking') {
+        headerLeft.innerHTML = '';
+      } else if (currentPageId === 'page-mypage') {
+        headerLeft.innerHTML = '';
+      }
+
+      if (currentPageId === 'page-home' || currentPageId === 'page-mypage') {
+        if (currentUser) {
+          headerRight.innerHTML = `<button class="login-btn logged-in" onclick="handleLogin()">로그아웃</button>`;
+        } else {
+          headerRight.innerHTML = `<button class="login-btn" onclick="handleLogin()">로그인</button>`;
+        }
+      }
+    }
+
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
-      const loginBtn = document.getElementById('loginBtn');
-      const userInfo = document.getElementById('userInfo');
       
       if (user) {
-        loginBtn.classList.add('logged-in');
-        loginBtn.textContent = '로그아웃';
-        userInfo.classList.add('show');
-        document.getElementById('userName').textContent = user.displayName || '사용자';
-        
         await loadUserProfile();
         
         const q = query(collection(db, 'ratings'), where('userId', '==', user.uid));
@@ -1808,14 +1970,12 @@
           userPostsData.push({ id: doc.id, ...doc.data() });
         });
       } else {
-        loginBtn.classList.remove('logged-in');
-        loginBtn.textContent = '로그인';
-        userInfo.classList.remove('show');
         userRatings.clear();
         userRatingsData = [];
         userPostsData = [];
         userProfile = {};
       }
+      updateHeader();
       await loadThemesFromFirebase();
       renderThemes();
       renderMypage();
@@ -1895,6 +2055,28 @@
       }
     }
 
+    async function loadAnnouncements() {
+      try {
+        const snapshot = await getDocs(collection(db, 'announcements'));
+        allAnnouncementsData = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          allAnnouncementsData.push({
+            id: doc.id,
+            ...data,
+            createdAt: typeof data.createdAt === 'string' ? new Date(data.createdAt) : data.createdAt
+          });
+        });
+        allAnnouncementsData.sort((a, b) => {
+          const dateA = a.createdAt;
+          const dateB = b.createdAt;
+          return dateB - dateA;
+        });
+      } catch(e) {
+        console.error('공지사항 로드 오류:', e);
+      }
+    }
+
     function horrorDisplay(level) {
       const full = Math.floor(level);
       const half = level % 1 !== 0;
@@ -1941,6 +2123,7 @@
       document.getElementById('page-' + tab).classList.add('active');
       btn.classList.add('active');
       document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
+      updateHeader();
       if (tab === 'mypage') renderMypage();
       if (tab === 'ranking') renderRanking();
       if (tab === 'community') renderCommunity();
@@ -2183,7 +2366,10 @@
           <div class="profile-section">
             <div class="profile-header">
               <div class="profile-name">${nickname}</div>
-              <button class="profile-edit-btn" onclick="openNicknameModal()">✏️ 닉네임 변경</button>
+              <div class="profile-buttons">
+                <button class="profile-edit-btn" onclick="openNicknameModal()">✏️ 닉네임 변경</button>
+                <button class="profile-logout-btn" onclick="handleLogin()">로그아웃</button>
+              </div>
             </div>
             <div class="profile-stats">
               <div class="stat-item">
@@ -2341,7 +2527,9 @@
       try {
         await deleteDoc(doc(db, 'posts', postId));
         userPostsData = userPostsData.filter(p => p.id !== postId);
+        allPostsData = allPostsData.filter(p => p.id !== postId);
         renderMypage();
+        renderCommunity();
         alert('글이 삭제됐습니다');
       } catch(e) {
         console.error('글 삭제 오류:', e);
@@ -2483,6 +2671,7 @@
 
     window.renderCommunityList = function() {
       const filterContainer = document.getElementById('communityFilter');
+      const announcementContainer = document.getElementById('announcementContainer');
       const listContainer = document.getElementById('communityList');
 
       filterContainer.innerHTML = regions.map(region => {
@@ -2490,7 +2679,33 @@
         return `<button class="community-filter-btn ${isActive}" onclick="setCommunityFilter('${region}', this)">${region}</button>`;
       }).join('');
 
+      // 공지사항 표시
+      const announcements = allAnnouncementsData;
+      if (announcements.length > 0) {
+        announcementContainer.innerHTML = `
+          <div class="announcement-section">
+            <div class="announcement-title">📢 공지사항</div>
+            ${announcements.map(ann => `
+              <div class="announcement-card" onclick="openAnnouncementModal('${ann.title}', '${ann.content}')">
+                <div class="announcement-card-title">${ann.title}</div>
+                <div class="announcement-card-content">${ann.content.substring(0, 50)}${ann.content.length > 50 ? '...' : ''}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        announcementContainer.innerHTML = '';
+      }
+
       const filtered = allPostsData.filter(post => {
+        if (currentCommunitySearch) {
+          const searchLower = currentCommunitySearch.toLowerCase();
+          const matchTheme = post.theme.toLowerCase().includes(searchLower);
+          const matchContent = post.content.toLowerCase().includes(searchLower);
+          const matchAuthor = post.userName.toLowerCase().includes(searchLower);
+          return matchTheme || matchContent || matchAuthor;
+        }
+        
         const theme = themes.find(t => t.name === post.theme);
         return !theme || currentCommunityFilter === '전체' || theme.region === currentCommunityFilter;
       }).sort((a, b) => {
@@ -2562,8 +2777,15 @@
 
     window.setCommunityFilter = function(region, btn) {
       currentCommunityFilter = region;
+      currentCommunitySearch = '';
+      document.getElementById('communitySearchInput').value = '';
       document.querySelectorAll('.community-filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      renderCommunityList();
+    }
+
+    window.filterCommunityPosts = function() {
+      currentCommunitySearch = document.getElementById('communitySearchInput').value;
       renderCommunityList();
     }
 
@@ -2658,6 +2880,20 @@
       }
     }
 
+    window.openAnnouncementModal = function(title, content) {
+      document.getElementById('announcementTitle').textContent = title;
+      document.getElementById('announcementContent').textContent = content;
+      document.getElementById('announcementModal').classList.add('active');
+    }
+
+    window.closeAnnouncementModal = function() {
+      document.getElementById('announcementModal').classList.remove('active');
+    }
+
+    window.closeAnnouncementModalOutside = function(event) {
+      if (event.target === document.getElementById('announcementModal')) closeAnnouncementModal();
+    }
+
     window.openRatingModal = function(themeName) {
       if (!currentUser) {
         alert('로그인 후 평점을 남길 수 있습니다.');
@@ -2744,6 +2980,7 @@
     }
 
     loadRatings();
+    loadAnnouncements();
   </script>
 
 </body>
