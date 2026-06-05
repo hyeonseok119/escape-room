@@ -30,55 +30,12 @@
       z-index: 999;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 36px;
-      padding: 12px 16px;
-      background: linear-gradient(180deg, #1a0000 0%, #0a0a0a 100%);
-      border-bottom: 1px solid #3a0000;
-    }
-
-    .header-left { display: flex; gap: 8px; }
-
-    .search-icon-btn {
-      background: none;
-      border: 1px solid #3a0000;
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      color: #ff6666;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s;
-    }
-
-    .search-icon-btn:hover { background-color: #1a0000; }
-
-    .login-btn {
-      padding: 6px 14px;
-      background-color: #ff0000;
-      border: none;
-      border-radius: 20px;
-      color: #ffffff;
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-family: 'Noto Serif KR', serif;
-      transition: background-color 0.2s;
-    }
-
-    .login-btn:hover { background-color: #cc0000; }
-
-    .login-btn.logged-in { background-color: #1a0000; border: 1px solid #ff0000; color: #ff0000; }
-
     .hero {
       padding: 40px 16px;
       text-align: center;
       background: linear-gradient(180deg, #1a0000 0%, #0a0a0a 100%);
       border-bottom: 1px solid #3a0000;
+      margin-top: 36px;
     }
 
     .hero-subtitle {
@@ -105,58 +62,46 @@
       letter-spacing: 2px;
     }
 
-    .search-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .search-overlay.active { display: flex; }
-
-    .search-box {
-      width: 90%;
-      max-width: 500px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 16px 20px;
-      background-color: #1a0000;
-      border: 1px solid #ff0000;
-      border-radius: 8px;
-      color: #ffffff;
-      font-size: 1.1rem;
-      font-family: 'Noto Serif KR', serif;
-      outline: none;
-    }
-
-    .search-close {
-      align-self: flex-end;
-      background: none;
-      border: none;
-      color: #888888;
-      cursor: pointer;
-      font-family: 'Noto Serif KR', serif;
-    }
-
     .filter-section {
       max-width: 900px;
       margin: 0 auto;
       padding: 16px 16px 0;
     }
 
+    .filter-top-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
     .filter-toggle-row {
       display: flex;
       gap: 10px;
       margin-bottom: 12px;
+      flex: 1;
+    }
+
+    .search-input-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .home-search-input {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #1a0000;
+      border: 1px solid #ff0000;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-family: 'Noto Serif KR', serif;
+      outline: none;
+    }
+
+    .home-search-input:focus {
+      border-color: #ffaa00;
     }
 
     .filter-toggle-btn {
@@ -172,6 +117,7 @@
       cursor: pointer;
       transition: all 0.2s;
       font-family: 'Noto Serif KR', serif;
+      white-space: nowrap;
     }
 
     .filter-toggle-btn.open {
@@ -380,16 +326,6 @@
     .page { display: none; }
     .page.active { display: block; }
 
-    .coming-soon {
-      text-align: center;
-      padding: 100px 20px;
-      color: #444444;
-    }
-
-    .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
-    .coming-soon h2 { font-size: 1.2rem; color: #666666; margin-bottom: 8px; }
-
-    /* 마이페이지 */
     .mypage-content {
       max-width: 900px;
       margin: 0 auto;
@@ -418,7 +354,6 @@
 
     .home-btn:hover { background-color: #cc0000; }
 
-    /* 프로필 섹션 */
     .profile-section {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -499,7 +434,6 @@
       color: #ff0000;
     }
 
-    /* 통계 섹션 */
     .stats-section {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -524,7 +458,6 @@
       font-size: 0.95rem;
     }
 
-    /* 탭 */
     .tab-buttons {
       display: flex;
       gap: 8px;
@@ -577,7 +510,6 @@
     }
 
     .rating-card-left { flex: 1; }
-    .rating-card-right { display: flex; gap: 12px; align-items: center; }
 
     .rating-card-title { font-size: 1rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
 
@@ -616,7 +548,6 @@
 
     .delete-btn:hover { background-color: #ff0000; color: #ffffff; }
 
-    /* 글 카드 */
     .post-card-mypage {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -680,7 +611,6 @@
 
     .post-delete-btn:hover { background-color: #ff0000; color: #ffffff; }
 
-    /* 상세 모달 */
     .detail-modal-overlay {
       display: none;
       position: fixed;
@@ -776,7 +706,6 @@
       padding: 0;
     }
 
-    /* 평점 모달 */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -877,7 +806,6 @@
       margin-top: 8px;
     }
 
-    /* 랭킹 페이지 */
     .ranking-content {
       max-width: 900px;
       margin: 0 auto;
@@ -1074,7 +1002,6 @@
       font-weight: 700;
     }
 
-    /* 커뮤니티 */
     .community-content {
       max-width: 900px;
       margin: 0 auto;
@@ -1256,7 +1183,6 @@
       align-items: center;
     }
 
-    /* 글쓰기 모달 */
     .write-modal-overlay {
       display: none;
       position: fixed;
@@ -1429,7 +1355,6 @@
 
     .back-btn:hover { background-color: #ff0000; color: #ffffff; }
 
-    /* 닉네임 변경 모달 */
     .nickname-modal-overlay {
       display: none;
       position: fixed;
@@ -1563,11 +1488,6 @@
 
   <div class="sponsor-bar" id="sponsorBar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
-  <div class="header" id="headerContainer">
-    <div class="header-left" id="headerLeft"></div>
-    <div id="headerRight"></div>
-  </div>
-
   <!-- 홈 -->
   <div class="page active" id="page-home">
     <div class="hero">
@@ -1576,14 +1496,13 @@
       <div class="hero-desc">당신이 두려워할 공포 방탈출 테마를 찾아드립니다</div>
     </div>
 
-    <div class="search-overlay" id="searchOverlay" onclick="closeSearchOutside(event)">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="테마명 또는 매장명 검색..." oninput="renderThemes()">
-        <button class="search-close" onclick="closeSearch()">✕ 닫기</button>
-      </div>
-    </div>
-
     <div class="filter-section">
+      <div class="filter-top-row">
+        <div class="search-input-box">
+          <input type="text" id="homeSearchInput" class="home-search-input" placeholder="테마명 또는 매장명 검색..." oninput="renderThemes()">
+        </div>
+      </div>
+
       <div class="filter-toggle-row">
         <button class="filter-toggle-btn" id="regionToggle" onclick="toggleFilter('region')">
           📍 지역 <span class="arrow">▼</span>
@@ -1592,6 +1511,7 @@
           👻 공포도 <span class="arrow">▼</span>
         </button>
       </div>
+
       <div class="filter-dropdown" id="regionDropdown">
         <div class="filter-options" id="regionFilter">
           <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
@@ -1608,6 +1528,7 @@
           <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
         </div>
       </div>
+
       <div class="filter-dropdown" id="horrorDropdown">
         <div class="filter-options" id="horrorFilter">
           <button class="filter-btn active" onclick="setFilter('horror','전체',this)">전체</button>
@@ -1622,6 +1543,7 @@
           <button class="filter-btn" onclick="setFilter('horror',5,this)">💀💀💀💀💀 5</button>
         </div>
       </div>
+
       <div class="active-filters" id="activeFilters"></div>
     </div>
 
@@ -1921,33 +1843,6 @@
 
     const regions = ['전체', '강남', '홍대', '건대', '대학로', '잠실', '신촌', '신림', '인천', '수원', '안산', '안양'];
 
-    function updateHeader() {
-      const currentPageId = document.querySelector('.page.active').id;
-      const headerLeft = document.getElementById('headerLeft');
-      const headerRight = document.getElementById('headerRight');
-      
-      headerLeft.innerHTML = '';
-      headerRight.innerHTML = '';
-
-      if (currentPageId === 'page-home') {
-        headerLeft.innerHTML = '<button class="search-icon-btn" onclick="openSearch()">🔍</button>';
-      } else if (currentPageId === 'page-community') {
-        headerLeft.innerHTML = '';
-      } else if (currentPageId === 'page-ranking') {
-        headerLeft.innerHTML = '';
-      } else if (currentPageId === 'page-mypage') {
-        headerLeft.innerHTML = '';
-      }
-
-      if (currentPageId === 'page-home' || currentPageId === 'page-mypage') {
-        if (currentUser) {
-          headerRight.innerHTML = `<button class="login-btn logged-in" onclick="handleLogin()">로그아웃</button>`;
-        } else {
-          headerRight.innerHTML = `<button class="login-btn" onclick="handleLogin()">로그인</button>`;
-        }
-      }
-    }
-
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       
@@ -1975,7 +1870,6 @@
         userPostsData = [];
         userProfile = {};
       }
-      updateHeader();
       await loadThemesFromFirebase();
       renderThemes();
       renderMypage();
@@ -2123,7 +2017,6 @@
       document.getElementById('page-' + tab).classList.add('active');
       btn.classList.add('active');
       document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
-      updateHeader();
       if (tab === 'mypage') renderMypage();
       if (tab === 'ranking') renderRanking();
       if (tab === 'community') renderCommunity();
@@ -2145,7 +2038,7 @@
     }
 
     window.renderThemes = function() {
-      const keyword = (document.getElementById('searchInput').value || '').toLowerCase();
+      const keyword = (document.getElementById('homeSearchInput').value || '').toLowerCase();
       const grid = document.getElementById('themeGrid');
       const filtered = themes.filter(t => {
         const regionMatch = currentRegion === '전체' || t.region === currentRegion;
@@ -2198,19 +2091,6 @@
       updateActiveFilters();
       renderThemes();
       toggleFilter(type);
-    }
-
-    window.openSearch = function() {
-      document.getElementById('searchOverlay').classList.add('active');
-      document.getElementById('searchInput').focus();
-    }
-
-    window.closeSearch = function() {
-      document.getElementById('searchOverlay').classList.remove('active');
-    }
-
-    window.closeSearchOutside = function(event) {
-      if (event.target === document.getElementById('searchOverlay')) closeSearch();
     }
 
     window.openDetail = function(themeName) {
