@@ -2037,47 +2037,64 @@
       renderRanking();
     }
 
-    window.renderThemes = function() {
-      const keyword = (document.getElementById('homeSearchInput').value || '').toLowerCase();
-      const grid = document.getElementById('themeGrid');
-      const filtered = themes.filter(t => {
-        const regionMatch = currentRegion === '전체' || t.region === currentRegion;
-        const horrorMatch = currentHorror === '전체' || t.horror === currentHorror;
-        const searchMatch = !keyword || t.name.toLowerCase().includes(keyword) || t.store.toLowerCase().includes(keyword);
-        return regionMatch && horrorMatch && searchMatch;
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '<div class="no-result">😶 해당 조건의 테마가 없어요</div>';
-        return;
-      }
-
-      grid.innerHTML = filtered.map(t => {
-        const avg = ratings[t.name];
-        const ratingHtml = avg
-          ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
-          : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
-        const hasRated = userRatings.has(t.name);
-        const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
-        return `
-          <div class="theme-card" onclick="openDetail('${t.name}')">
-            <img src="${t.img}" alt="${t.name}">
-            <div class="theme-card-body">
-              <div class="theme-card-name">${t.name}</div>
-              <div class="theme-card-store">${t.store}</div>
-              <div class="theme-card-meta">
-                <span class="theme-card-region">${t.region}</span>
-                <span class="horror-level">${horrorDisplay(t.horror)}</span>
-              </div>
-              <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
-              ${ratingHtml}
-              <a class="reserve-btn" href="${t.url}" target="_blank" onclick="event.stopPropagation()">예약하기</a>
-              <button class="rating-btn" onclick="event.stopPropagation(); openRatingModal('${t.name}')" ${!currentUser || hasRated ? 'disabled' : ''}>${btnText}</button>
-            </div>
-          </div>
-        `;
-      }).join('');
+    window.renderThemes = async function() {
+  // Featured 테마 로드
+  let featuredThemeNames = [];
+  try {
+    const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
+    if (sponsorDocs.size > 0) {
+      featuredThemeNames = sponsorDocs.docs[0].data().featured || [];
     }
+  } catch(e) {
+    console.log('Featured 로드 오류');
+  }
+
+  const keyword = (document.getElementById('homeSearchInput').value || '').toLowerCase();
+  const grid = document.getElementById('themeGrid');
+  const filtered = themes.filter(t => {
+    const regionMatch = currentRegion === '전체' || t.region === currentRegion;
+    const horrorMatch = currentHorror === '전체' || t.horror === currentHorror;
+    const searchMatch = !keyword || t.name.toLowerCase().includes(keyword) || t.store.toLowerCase().includes(keyword);
+    return regionMatch && horrorMatch && searchMatch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-result">😶 해당 조건의 테마가 없어요</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(t => {
+    const avg = ratings[t.name];
+    const ratingHtml = avg
+      ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
+      : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
+    const hasRated = userRatings.has(t.name);
+    const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
+    
+    // Featured 확인
+    const isFeatured = featuredThemeNames.includes(t.id);
+    const featuredBadge = isFeatured ? `<div style="position: absolute; top: 8px; right: 8px; background-color: #ffaa00; color: #000000; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">👑 스폰서</div>` : '';
+    
+    return `
+      <div class="theme-card" onclick="openDetail('${t.name}')" style="${isFeatured ? 'border: 2px solid #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);' : ''}">
+        ${featuredBadge}
+        <img src="${t.img}" alt="${t.name}">
+        <div class="theme-card-body">
+          <div class="theme-card-name">${t.name}</div>
+          <div class="theme-card-store">${t.store}</div>
+          <div class="theme-card-meta">
+            <span class="theme-card-region">${t.region}</span>
+            <span class="horror-level">${horrorDisplay(t.horror)}</span>
+          </div>
+          <div class="theme-card-price">💰 ${t.price || '가격 미정'}</div>
+          ${ratingHtml}
+          <a class="reserve-btn" href="${t.url}" target="_blank" onclick="event.stopPropagation()">예약하기</a>
+          <button class="rating-btn" onclick="event.stopPropagation(); openRatingModal('${t.name}')" ${!currentUser || hasRated ? 'disabled' : ''}>${btnText}</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
     window.setFilter = function(type, value, btn) {
       if (type === 'region') {
@@ -2864,6 +2881,19 @@
 
     loadRatings();
     loadAnnouncements();
+    async function loadSponsorSettings() {
+      try {
+        const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'banner')));
+        if (settingsDocs.size > 0) {
+          const bannerText = settingsDocs.docs[0].data().bannerText;
+          document.getElementById('sponsorBar').textContent = bannerText;
+        }
+      } catch(e) {
+        console.log('스폰서 배너 로드 오류');
+      }
+    }
+
+    loadSponsorSettings();
   </script>
 
 </body>
