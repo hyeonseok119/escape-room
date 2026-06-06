@@ -333,54 +333,16 @@
       font-family: 'Noto Serif KR', serif;
     }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal {
-      background-color: #111111;
-      border: 1px solid #ff0000;
-      border-radius: 12px;
-      padding: 24px;
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #ff0000;
-      margin-bottom: 20px;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: none;
-      border: none;
-      color: #888888;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
     .empty-message {
       text-align: center;
       color: #666666;
       padding: 40px;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
     }
 
     @media (max-width: 768px) {
@@ -420,9 +382,10 @@
       <div class="sidebar-title">📊 메뉴</div>
       <button class="nav-btn active" onclick="switchTab('dashboard', this)">대시보드</button>
       <button class="nav-btn" onclick="switchTab('themes', this)">🎬 테마 관리</button>
-      <button class="nav-btn" onclick="switchTab('sponsors', this)">👑 스폰서 관리</button>
-      <button class="nav-btn" onclick="switchTab('community', this)">💬 커뮤니티 관리</button>
-      <button class="nav-btn" onclick="switchTab('users', this)">👥 사용자 관리</button>
+      <button class="nav-btn" onclick="switchTab('announcements', this)">📢 공지사항</button>
+      <button class="nav-btn" onclick="switchTab('sponsors', this)">👑 스폰서</button>
+      <button class="nav-btn" onclick="switchTab('community', this)">💬 커뮤니티</button>
+      <button class="nav-btn" onclick="switchTab('users', this)">👥 사용자</button>
     </div>
 
     <!-- 메인 콘텐츠 -->
@@ -543,6 +506,49 @@
         </div>
       </div>
 
+      <!-- 공지사항 관리 -->
+      <div id="announcements" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">📢 공지사항 관리</h2>
+        
+        <div class="form-section">
+          <div class="form-title">새 공지사항 추가</div>
+          
+          <div class="form-group">
+            <label class="form-label">제목</label>
+            <input type="text" id="announcementTitle" class="form-input" placeholder="공지사항 제목 입력">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">내용</label>
+            <textarea id="announcementContent" class="form-textarea" placeholder="공지사항 내용 입력"></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button class="submit-btn" onclick="addAnnouncement()">공지사항 추가</button>
+            <button class="cancel-btn" onclick="resetAnnouncementForm()">초기화</button>
+          </div>
+        </div>
+
+        <h3 style="color: #ffffff; margin-top: 30px; margin-bottom: 16px;">공지사항 목록</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>제목</th>
+                <th>내용</th>
+                <th>작성일</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="announcementsList">
+              <tr>
+                <td colspan="4" style="text-align: center; color: #666666;">공지사항을 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- 스폰서 관리 -->
       <div id="sponsors" class="tab-content">
         <h2 style="color: #ffffff; margin-bottom: 20px;">👑 스폰서 관리</h2>
@@ -594,9 +600,9 @@
       <div id="community" class="tab-content">
         <h2 style="color: #ffffff; margin-bottom: 20px;">💬 커뮤니티 관리</h2>
         
-        <div style="margin-bottom: 20px;">
+        <div class="tab-buttons">
           <button class="nav-btn" onclick="switchCommunityTab('ratings', this)" style="width: 150px;">평점 관리</button>
-          <button class="nav-btn" onclick="switchCommunityTab('posts', this)" style="width: 150px; margin-left: 8px;">글 관리</button>
+          <button class="nav-btn" onclick="switchCommunityTab('posts', this)" style="width: 150px;">글 관리</button>
         </div>
 
         <div id="ratingsTab" class="table-container">
@@ -683,7 +689,6 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // ⭐ 관리자 이메일 설정 (여기서 수정!)
     const ADMIN_EMAILS = ['relimit1927@gmail.com', 'joliga990709@gmail.com'];
 
     let currentUser = null;
@@ -691,18 +696,17 @@
     let allRatings = [];
     let allPosts = [];
     let allUsers = {};
+    let allAnnouncements = [];
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       
       if (user) {
-        // 관리자 확인
         if (ADMIN_EMAILS.includes(user.email)) {
           document.getElementById('loginScreen').style.display = 'none';
           document.getElementById('adminScreen').style.display = 'flex';
           document.getElementById('adminName').textContent = user.displayName || user.email;
           
-          // 데이터 로드
           await loadAllData();
         } else {
           alert('관리자 권한이 없습니다.');
@@ -741,6 +745,14 @@
         renderThemes();
         updateThemeSelects();
 
+        // 공지사항 로드
+        const announcementsSnapshot = await getDocs(collection(db, 'announcements'));
+        allAnnouncements = [];
+        announcementsSnapshot.forEach(doc => {
+          allAnnouncements.push({ id: doc.id, ...doc.data() });
+        });
+        renderAnnouncements();
+
         // 평점 로드
         const ratingsSnapshot = await getDocs(collection(db, 'ratings'));
         allRatings = [];
@@ -778,7 +790,6 @@
       document.getElementById('totalRatings').textContent = allRatings.length;
       document.getElementById('totalPosts').textContent = allPosts.length;
 
-      // 총 사용자 (고유한 userId 개수)
       const uniqueUsers = new Set();
       allRatings.forEach(r => uniqueUsers.add(r.userId));
       allPosts.forEach(p => uniqueUsers.add(p.userId));
@@ -885,8 +896,71 @@
         document.getElementById(id).innerHTML = options;
       });
 
-      // 저장된 스폰서 로드
       loadSponsor();
+    }
+
+    // 공지사항 관리
+    window.addAnnouncement = async function() {
+      const title = document.getElementById('announcementTitle').value;
+      const content = document.getElementById('announcementContent').value;
+
+      if (!title || !content) {
+        alert('제목과 내용을 입력해주세요');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'announcements'), {
+          title,
+          content,
+          createdAt: new Date().toISOString()
+        });
+        alert('공지사항이 추가되었습니다');
+        resetAnnouncementForm();
+        await loadAllData();
+      } catch(e) {
+        alert('추가 실패: ' + e.message);
+      }
+    }
+
+    window.resetAnnouncementForm = function() {
+      document.getElementById('announcementTitle').value = '';
+      document.getElementById('announcementContent').value = '';
+    }
+
+    window.deleteAnnouncement = async function(announcementId) {
+      if (!confirm('이 공지사항을 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'announcements', announcementId));
+        alert('공지사항이 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
+    function renderAnnouncements() {
+      const tbody = document.getElementById('announcementsList');
+      
+      if (allAnnouncements.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-message">공지사항이 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allAnnouncements.map(ann => {
+        const date = new Date(ann.createdAt).toLocaleDateString('ko-KR');
+        return `
+          <tr>
+            <td>${ann.title}</td>
+            <td>${ann.content.substring(0, 30)}...</td>
+            <td>${date}</td>
+            <td>
+              <button class="action-btn delete-btn" onclick="deleteAnnouncement('${ann.id}')">삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     window.saveSponsor = async function() {
@@ -895,29 +969,28 @@
       const sponsor3 = document.getElementById('sponsor3').value;
 
       try {
-        await updateDoc(doc(db, 'settings', 'sponsors'), {
-          featured: [sponsor1, sponsor2, sponsor3]
-        });
-        alert('스폰서가 저장되었습니다');
-      } catch(e) {
-        // 문서가 없으면 새로 생성
-        try {
-          await addDoc(collection(db, 'settings'), {
-            id: 'sponsors',
+        const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
+        if (settingsDocs.size > 0) {
+          await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
             featured: [sponsor1, sponsor2, sponsor3]
           });
-          alert('스폰서가 저장되었습니다');
-        } catch(e2) {
-          alert('저장 실패');
+        } else {
+          await addDoc(collection(db, 'settings'), {
+            type: 'sponsors',
+            featured: [sponsor1, sponsor2, sponsor3]
+          });
         }
+        alert('스폰서가 저장되었습니다');
+      } catch(e) {
+        alert('저장 실패');
       }
     }
 
     async function loadSponsor() {
       try {
-        const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('id', '==', 'sponsors')));
+        const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
         if (sponsorDocs.size > 0) {
-          const featured = sponsorDocs.docs[0].data().featured;
+          const featured = sponsorDocs.docs[0].data().featured || ['', '', ''];
           if (featured[0]) document.getElementById('sponsor1').value = featured[0];
           if (featured[1]) document.getElementById('sponsor2').value = featured[1];
           if (featured[2]) document.getElementById('sponsor3').value = featured[2];
@@ -936,13 +1009,14 @@
       }
 
       try {
-        const settingsDocs = await getDocs(collection(db, 'settings'));
+        const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'banner')));
         if (settingsDocs.size > 0) {
           await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
             bannerText: bannerText
           });
         } else {
           await addDoc(collection(db, 'settings'), {
+            type: 'banner',
             bannerText: bannerText
           });
         }
@@ -1027,9 +1101,13 @@
       
       allRatings.forEach(r => {
         if (!uniqueUsers.has(r.userId)) {
+          const profile = allUsers[r.userId];
           uniqueUsers.set(r.userId, {
             userId: r.userId,
+            email: profile?.userId || 'N/A',
             userName: r.userName,
+            nickname: profile?.nickname || r.userName,
+            joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
             ratings: 0,
             posts: 0
           });
@@ -1039,9 +1117,13 @@
 
       allPosts.forEach(p => {
         if (!uniqueUsers.has(p.userId)) {
+          const profile = allUsers[p.userId];
           uniqueUsers.set(p.userId, {
             userId: p.userId,
+            email: profile?.userId || 'N/A',
             userName: p.userName,
+            nickname: profile?.nickname || p.userName,
+            joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
             ratings: 0,
             posts: 0
           });
@@ -1054,38 +1136,30 @@
         return;
       }
 
-      tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => {
-        const profile = allUsers[user.userId];
-        const nickname = profile?.nickname || user.userName || '미정';
-        const joinDate = profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : '미정';
-        
-        return `
-          <tr>
-            <td>${user.userId.substring(0, 10)}...</td>
-            <td>${nickname}</td>
-            <td>${joinDate}</td>
-            <td>${user.ratings}</td>
-            <td>${user.posts}</td>
-            <td>
-              <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => `
+        <tr>
+          <td>${user.userId.substring(0, 15)}...</td>
+          <td>${user.nickname}</td>
+          <td>${user.joinDate}</td>
+          <td>${user.ratings}</td>
+          <td>${user.posts}</td>
+          <td>
+            <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
     }
 
     window.deleteUser = async function(userId) {
       if (!confirm('이 사용자를 삭제하시겠습니까? (모든 평점과 글도 삭제됩니다)')) return;
       
       try {
-        // 사용자의 모든 평점 삭제
         const ratingsQuery = query(collection(db, 'ratings'), where('userId', '==', userId));
         const ratingsSnapshot = await getDocs(ratingsQuery);
         for (let doc of ratingsSnapshot.docs) {
           await deleteDoc(doc.ref);
         }
 
-        // 사용자의 모든 글 삭제
         const postsQuery = query(collection(db, 'posts'), where('userId', '==', userId));
         const postsSnapshot = await getDocs(postsQuery);
         for (let doc of postsSnapshot.docs) {
