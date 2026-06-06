@@ -2222,19 +2222,22 @@
     }
 
     window.renderMypage = function() {
-      const container = document.getElementById('mypageContent');
+  const container = document.getElementById('mypageContent');
 
-      if (!currentUser) {
-        container.innerHTML = `
-          <div class="mypage-empty">
-            <div class="icon">🔒</div>
-            <h2>로그인이 필요합니다</h2>
-            <p style="margin-bottom: 20px; color: #666666;">로그인 후 당신의 프로필을 확인해보세요</p>
-            <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
-          </div>
-        `;
-        return;
-      }
+  if (!currentUser) {
+    container.innerHTML = `
+      <div class="mypage-empty">
+        <div class="icon">🔒</div>
+        <h2>로그인이 필요합니다</h2>
+        <p style="margin-bottom: 20px; color: #666666;">로그인 후 당신의 프로필을 확인해보세요</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="home-btn" onclick="handleLogin()">로그인</button>
+          <button class="home-btn" onclick="switchTab('home', document.querySelectorAll('.nav-tab')[0])">홈으로 이동</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
 
       const nickname = userProfile.nickname || currentUser.displayName || '사용자';
       const ratingCount = userRatingsData.length;
