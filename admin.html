@@ -887,11 +887,25 @@
       `).join('');
     }
 
-    function updateThemeSelects() {
+   function updateThemeSelects() {
   const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
-  // 테마명으로 옵션 만들기 (ID 대신 테마명 사용)
+  
+  // Firebase themes + hardcoded themes 합치기
+  const allThemeNames = [];
+  
+  // hardcoded 테마 추가
+  allThemeNames.push('안산 코노', '4F:마지막기록', '피안화', 'AYAKO', '나폴리탄', '허수아비', '생존자', '신촌성심병원', 'STAGE', '창귀');
+  
+  // Firebase 테마 추가
+  allThemes.forEach(t => {
+    if (t.name && !allThemeNames.includes(t.name)) {
+      allThemeNames.push(t.name);
+    }
+  });
+  
+  // 드롭다운 생성 (테마명으로)
   const options = '<option value="">선택 안함</option>' + 
-    allThemes.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+    allThemeNames.map(name => `<option value="${name}">${name}</option>`).join('');
   
   selects.forEach(id => {
     document.getElementById(id).innerHTML = options;
