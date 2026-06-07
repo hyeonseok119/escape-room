@@ -988,12 +988,14 @@
     if (settingsDocs.size > 0) {
       await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
         type: 'sponsors',
-        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
+        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
+        order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
       });
     } else {
       await addDoc(collection(db, 'settings'), {
         type: 'sponsors',
-        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
+        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
+        order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
       });
     }
     alert('스폰서가 저장되었습니다');
