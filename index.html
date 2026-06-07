@@ -2040,13 +2040,16 @@
     window.renderThemes = async function() {
   // Featured 테마 로드
   let featuredThemeNames = [];
-  try {
+ try {
     const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
     if (sponsorDocs.size > 0) {
-      featuredThemeNames = sponsorDocs.docs[0].data().featured || [];
+      const featured = sponsorDocs.docs[0].data().featured;
+      if (featured && Array.isArray(featured)) {
+        featuredThemeNames = featured.filter(f => f && f !== '');
+      }
     }
   } catch(e) {
-    console.log('Featured 로드 오류');
+    console.log('Featured 로드 오류:', e);
   }
 
   const keyword = (document.getElementById('homeSearchInput').value || '').toLowerCase();
@@ -2882,17 +2885,18 @@
     loadRatings();
     loadAnnouncements();
     async function loadSponsorSettings() {
-      try {
-        const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'banner')));
-        if (settingsDocs.size > 0) {
-          const bannerText = settingsDocs.docs[0].data().bannerText;
-          document.getElementById('sponsorBar').textContent = bannerText;
-        }
-      } catch(e) {
-        console.log('스폰서 배너 로드 오류');
+  try {
+    const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'banner')));
+    if (settingsDocs.size > 0) {
+      const bannerText = settingsDocs.docs[0].data().bannerText;
+      if (bannerText) {
+        document.getElementById('sponsorBar').textContent = bannerText;
       }
     }
-
+  } catch(e) {
+    console.log('스폰서 배너 로드 오류:', e);
+  }
+}
     loadSponsorSettings();
   </script>
 
