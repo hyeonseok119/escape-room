@@ -888,16 +888,17 @@
     }
 
     function updateThemeSelects() {
-      const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
-      const options = '<option value="">선택 안함</option>' + 
-        allThemes.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-      
-      selects.forEach(id => {
-        document.getElementById(id).innerHTML = options;
-      });
+  const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
+  // 테마명으로 옵션 만들기 (ID 대신 테마명 사용)
+  const options = '<option value="">선택 안함</option>' + 
+    allThemes.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+  
+  selects.forEach(id => {
+    document.getElementById(id).innerHTML = options;
+  });
 
-      loadSponsor();
-    }
+  loadSponsor();
+}
 
     // 공지사항 관리
     window.addAnnouncement = async function() {
