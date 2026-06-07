@@ -854,7 +854,58 @@
       document.getElementById('themeUrl').value = '';
     }
 
-    window.deleteTheme = async function(themeId) {
+   window.editTheme = function(themeId) {
+  const theme = allThemes.find(t => t.id === themeId);
+  if (!theme) return;
+  
+  document.getElementById('themeName').value = theme.name;
+  document.getElementById('themeStore').value = theme.store;
+  document.getElementById('themeRegion').value = theme.region;
+  document.getElementById('themeHorror').value = theme.horror;
+  document.getElementById('themePrice').value = theme.price;
+  document.getElementById('themeImg').value = theme.img;
+  document.getElementById('themeUrl').value = theme.url;
+  
+  // 저장 버튼 텍스트 변경
+  const submitBtn = document.querySelector('#themes .submit-btn');
+  submitBtn.textContent = '테마 수정';
+  submitBtn.onclick = () => updateTheme(themeId);
+  
+  // 초기화 버튼 변경
+  const cancelBtn = document.querySelector('#themes .cancel-btn');
+  cancelBtn.textContent = '취소';
+  cancelBtn.onclick = () => resetThemeForm();
+}
+
+window.updateTheme = async function(themeId) {
+  const name = document.getElementById('themeName').value;
+  const store = document.getElementById('themeStore').value;
+  const region = document.getElementById('themeRegion').value;
+  const horror = parseFloat(document.getElementById('themeHorror').value);
+  const price = document.getElementById('themePrice').value;
+  const img = document.getElementById('themeImg').value;
+  const url = document.getElementById('themeUrl').value;
+
+  if (!name || !store || !region || !horror || !price || !img || !url) {
+    alert('모든 필드를 입력해주세요');
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, 'themes', themeId), {
+      name, store, region, horror, price, img, url
+    });
+    alert('테마가 수정되었습니다');
+    resetThemeForm();
+    await loadAllData();
+    // 버튼 원래대로 복구
+    const submitBtn = document.querySelector('#themes .submit-btn');
+    submitBtn.textContent = '테마 추가';
+    submitBtn.onclick = () => addTheme();
+  } catch(e) {
+    alert('수정 실패: ' + e.message);
+  }
+}
       if (!confirm('이 테마를 삭제하시겠습니까?')) return;
       
       try {
@@ -867,25 +918,26 @@
     }
 
     function renderThemes() {
-      const tbody = document.getElementById('themesList');
-      
-      if (allThemes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="empty-message">등록된 테마가 없습니다</td></tr>';
-        return;
-      }
+  const tbody = document.getElementById('themesList');
+  
+  if (allThemes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-message">등록된 테마가 없습니다</td></tr>';
+    return;
+  }
 
-      tbody.innerHTML = allThemes.map(theme => `
-        <tr>
-          <td>${theme.name}</td>
-          <td>${theme.store}</td>
-          <td>${theme.region}</td>
-          <td>${theme.horror}</td>
-          <td>
-            <button class="action-btn delete-btn" onclick="deleteTheme('${theme.id}')">삭제</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+  tbody.innerHTML = allThemes.map(theme => `
+    <tr>
+      <td>${theme.name}</td>
+      <td>${theme.store}</td>
+      <td>${theme.region}</td>
+      <td>${theme.horror}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick="editTheme('${theme.id}')">수정</button>
+        <button class="action-btn delete-btn" onclick="deleteTheme('${theme.id}')">삭제</button>
+      </td>
+    </tr>
+  `).join('');
+}
 
    function updateThemeSelects() {
   const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
