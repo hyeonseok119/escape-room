@@ -2038,9 +2038,9 @@
     }
 
     window.renderThemes = async function() {
-  // Featured 테마 로드
+  // Featured 테마명 로드
   let featuredThemeNames = [];
- try {
+  try {
     const sponsorDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
     if (sponsorDocs.size > 0) {
       const featured = sponsorDocs.docs[0].data().featured;
@@ -2074,12 +2074,12 @@
     const hasRated = userRatings.has(t.name);
     const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
     
-    // Featured 확인
-    const isFeatured = featuredThemeNames.includes(t.id);
+    // Featured 확인 (테마명으로 비교)
+    const isFeatured = featuredThemeNames.includes(t.name);
     const featuredBadge = isFeatured ? `<div style="position: absolute; top: 8px; right: 8px; background-color: #ffaa00; color: #000000; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">👑 스폰서</div>` : '';
     
     return `
-      <div class="theme-card" onclick="openDetail('${t.name}')" style="${isFeatured ? 'border: 2px solid #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);' : ''}">
+      <div class="theme-card" onclick="openDetail('${t.name}')" style="${isFeatured ? 'border: 2px solid #ffaa00; box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);' : 'border: 1px solid #2a0000;'}">
         ${featuredBadge}
         <img src="${t.img}" alt="${t.name}">
         <div class="theme-card-body">
