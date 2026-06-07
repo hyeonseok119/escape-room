@@ -154,7 +154,6 @@
       display: block;
     }
 
-    /* 통계 */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -182,7 +181,6 @@
       color: #ff0000;
     }
 
-    /* 테이블 */
     .table-container {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -244,7 +242,6 @@
       opacity: 0.8;
     }
 
-    /* 폼 */
     .form-section {
       background-color: #111111;
       border: 1px solid #2a0000;
@@ -425,7 +422,7 @@
         <h2 style="color: #ffffff; margin-bottom: 20px;">🎬 테마 관리</h2>
         
         <div class="form-section">
-          <div class="form-title">새 테마 추가</div>
+          <div class="form-title" id="themeFormTitle">새 테마 추가</div>
           
           <div class="form-group">
             <label class="form-label">테마명</label>
@@ -480,8 +477,8 @@
           </div>
 
           <div class="btn-group">
-            <button class="submit-btn" onclick="addTheme()">테마 추가</button>
-            <button class="cancel-btn" onclick="resetThemeForm()">초기화</button>
+            <button class="submit-btn" id="themeSubmitBtn" onclick="addTheme()">테마 추가</button>
+            <button class="cancel-btn" id="themeCancelBtn" onclick="resetThemeForm()">초기화</button>
           </div>
         </div>
 
@@ -697,6 +694,7 @@
     let allPosts = [];
     let allUsers = {};
     let allAnnouncements = [];
+    let editingThemeId = null;
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
@@ -844,7 +842,56 @@
       }
     }
 
+    window.editTheme = function(themeId) {
+      const theme = allThemes.find(t => t.id === themeId);
+      if (!theme) return;
+      
+      editingThemeId = themeId;
+      
+      document.getElementById('themeName').value = theme.name;
+      document.getElementById('themeStore').value = theme.store;
+      document.getElementById('themeRegion').value = theme.region;
+      document.getElementById('themeHorror').value = theme.horror;
+      document.getElementById('themePrice').value = theme.price;
+      document.getElementById('themeImg').value = theme.img;
+      document.getElementById('themeUrl').value = theme.url;
+      
+      document.getElementById('themeFormTitle').textContent = '테마 수정';
+      document.getElementById('themeSubmitBtn').textContent = '테마 수정';
+      document.getElementById('themeSubmitBtn').onclick = () => updateTheme();
+      document.getElementById('themeCancelBtn').textContent = '취소';
+    }
+
+    window.updateTheme = async function() {
+      if (!editingThemeId) return;
+      
+      const name = document.getElementById('themeName').value;
+      const store = document.getElementById('themeStore').value;
+      const region = document.getElementById('themeRegion').value;
+      const horror = parseFloat(document.getElementById('themeHorror').value);
+      const price = document.getElementById('themePrice').value;
+      const img = document.getElementById('themeImg').value;
+      const url = document.getElementById('themeUrl').value;
+
+      if (!name || !store || !region || !horror || !price || !img || !url) {
+        alert('모든 필드를 입력해주세요');
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, 'themes', editingThemeId), {
+          name, store, region, horror, price, img, url
+        });
+        alert('테마가 수정되었습니다');
+        resetThemeForm();
+        await loadAllData();
+      } catch(e) {
+        alert('수정 실패: ' + e.message);
+      }
+    }
+
     window.resetThemeForm = function() {
+      editingThemeId = null;
       document.getElementById('themeName').value = '';
       document.getElementById('themeStore').value = '';
       document.getElementById('themeRegion').value = '';
@@ -852,60 +899,14 @@
       document.getElementById('themePrice').value = '';
       document.getElementById('themeImg').value = '';
       document.getElementById('themeUrl').value = '';
+      
+      document.getElementById('themeFormTitle').textContent = '새 테마 추가';
+      document.getElementById('themeSubmitBtn').textContent = '테마 추가';
+      document.getElementById('themeSubmitBtn').onclick = () => addTheme();
+      document.getElementById('themeCancelBtn').textContent = '초기화';
     }
 
-   window.editTheme = function(themeId) {
-  const theme = allThemes.find(t => t.id === themeId);
-  if (!theme) return;
-  
-  document.getElementById('themeName').value = theme.name;
-  document.getElementById('themeStore').value = theme.store;
-  document.getElementById('themeRegion').value = theme.region;
-  document.getElementById('themeHorror').value = theme.horror;
-  document.getElementById('themePrice').value = theme.price;
-  document.getElementById('themeImg').value = theme.img;
-  document.getElementById('themeUrl').value = theme.url;
-  
-  // 저장 버튼 텍스트 변경
-  const submitBtn = document.querySelector('#themes .submit-btn');
-  submitBtn.textContent = '테마 수정';
-  submitBtn.onclick = () => updateTheme(themeId);
-  
-  // 초기화 버튼 변경
-  const cancelBtn = document.querySelector('#themes .cancel-btn');
-  cancelBtn.textContent = '취소';
-  cancelBtn.onclick = () => resetThemeForm();
-}
-
-window.updateTheme = async function(themeId) {
-  const name = document.getElementById('themeName').value;
-  const store = document.getElementById('themeStore').value;
-  const region = document.getElementById('themeRegion').value;
-  const horror = parseFloat(document.getElementById('themeHorror').value);
-  const price = document.getElementById('themePrice').value;
-  const img = document.getElementById('themeImg').value;
-  const url = document.getElementById('themeUrl').value;
-
-  if (!name || !store || !region || !horror || !price || !img || !url) {
-    alert('모든 필드를 입력해주세요');
-    return;
-  }
-
-  try {
-    await updateDoc(doc(db, 'themes', themeId), {
-      name, store, region, horror, price, img, url
-    });
-    alert('테마가 수정되었습니다');
-    resetThemeForm();
-    await loadAllData();
-    // 버튼 원래대로 복구
-    const submitBtn = document.querySelector('#themes .submit-btn');
-    submitBtn.textContent = '테마 추가';
-    submitBtn.onclick = () => addTheme();
-  } catch(e) {
-    alert('수정 실패: ' + e.message);
-  }
-}
+    window.deleteTheme = async function(themeId) {
       if (!confirm('이 테마를 삭제하시겠습니까?')) return;
       
       try {
@@ -918,53 +919,48 @@ window.updateTheme = async function(themeId) {
     }
 
     function renderThemes() {
-  const tbody = document.getElementById('themesList');
-  
-  if (allThemes.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-message">등록된 테마가 없습니다</td></tr>';
-    return;
-  }
+      const tbody = document.getElementById('themesList');
+      
+      if (allThemes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-message">등록된 테마가 없습니다</td></tr>';
+        return;
+      }
 
-  tbody.innerHTML = allThemes.map(theme => `
-    <tr>
-      <td>${theme.name}</td>
-      <td>${theme.store}</td>
-      <td>${theme.region}</td>
-      <td>${theme.horror}</td>
-      <td>
-        <button class="action-btn edit-btn" onclick="editTheme('${theme.id}')">수정</button>
-        <button class="action-btn delete-btn" onclick="deleteTheme('${theme.id}')">삭제</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-   function updateThemeSelects() {
-  const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
-  
-  // Firebase themes + hardcoded themes 합치기
-  const allThemeNames = [];
-  
-  // hardcoded 테마 추가
-  allThemeNames.push('안산 코노', '4F:마지막기록', '피안화', 'AYAKO', '나폴리탄', '허수아비', '생존자', '신촌성심병원', 'STAGE', '창귀');
-  
-  // Firebase 테마 추가
-  allThemes.forEach(t => {
-    if (t.name && !allThemeNames.includes(t.name)) {
-      allThemeNames.push(t.name);
+      tbody.innerHTML = allThemes.map(theme => `
+        <tr>
+          <td>${theme.name}</td>
+          <td>${theme.store}</td>
+          <td>${theme.region}</td>
+          <td>${theme.horror}</td>
+          <td>
+            <button class="action-btn edit-btn" onclick="editTheme('${theme.id}')">수정</button>
+            <button class="action-btn delete-btn" onclick="deleteTheme('${theme.id}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
     }
-  });
-  
-  // 드롭다운 생성 (테마명으로)
-  const options = '<option value="">선택 안함</option>' + 
-    allThemeNames.map(name => `<option value="${name}">${name}</option>`).join('');
-  
-  selects.forEach(id => {
-    document.getElementById(id).innerHTML = options;
-  });
 
-  loadSponsor();
-}
+    function updateThemeSelects() {
+      const selects = ['sponsor1', 'sponsor2', 'sponsor3'];
+      
+      const allThemeNames = [];
+      allThemeNames.push('안산 코노', '4F:마지막기록', '피안화', 'AYAKO', '나폴리탄', '허수아비', '생존자', '신촌성심병원', 'STAGE', '창귀');
+      
+      allThemes.forEach(t => {
+        if (t.name && !allThemeNames.includes(t.name)) {
+          allThemeNames.push(t.name);
+        }
+      });
+      
+      const options = '<option value="">선택 안함</option>' + 
+        allThemeNames.map(name => `<option value="${name}">${name}</option>`).join('');
+      
+      selects.forEach(id => {
+        document.getElementById(id).innerHTML = options;
+      });
+
+      loadSponsor();
+    }
 
     // 공지사항 관리
     window.addAnnouncement = async function() {
@@ -1031,30 +1027,30 @@ window.updateTheme = async function(themeId) {
     }
 
     window.saveSponsor = async function() {
-  const sponsor1 = document.getElementById('sponsor1').value;
-  const sponsor2 = document.getElementById('sponsor2').value;
-  const sponsor3 = document.getElementById('sponsor3').value;
+      const sponsor1 = document.getElementById('sponsor1').value;
+      const sponsor2 = document.getElementById('sponsor2').value;
+      const sponsor3 = document.getElementById('sponsor3').value;
 
-  try {
-    const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
-    if (settingsDocs.size > 0) {
-      await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
-        type: 'sponsors',
-        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
-        order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
-      });
-    } else {
-      await addDoc(collection(db, 'settings'), {
-        type: 'sponsors',
-        featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
-        order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
-      });
+      try {
+        const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'sponsors')));
+        if (settingsDocs.size > 0) {
+          await updateDoc(doc(db, 'settings', settingsDocs.docs[0].id), {
+            type: 'sponsors',
+            featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
+            order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
+          });
+        } else {
+          await addDoc(collection(db, 'settings'), {
+            type: 'sponsors',
+            featured: [sponsor1 || '', sponsor2 || '', sponsor3 || ''],
+            order: [sponsor1 || '', sponsor2 || '', sponsor3 || '']
+          });
+        }
+        alert('스폰서가 저장되었습니다');
+      } catch(e) {
+        alert('저장 실패: ' + e.message);
+      }
     }
-    alert('스폰서가 저장되었습니다');
-  } catch(e) {
-    alert('저장 실패: ' + e.message);
-  }
-}
 
     async function loadSponsor() {
       try {
