@@ -205,15 +205,16 @@
     @media (min-width: 900px) { .theme-grid { grid-template-columns: repeat(4, 1fr); } }
 
     .theme-card {
-      background-color: #111111;
-      border: 1px solid #2a0000;
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
+  background-color: #111111;
+  border: 1px solid #2a0000;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  position: relative;  /* ← 이 줄 추가! */
+}
 
     .theme-card:hover {
       transform: translateY(-4px);
