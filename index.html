@@ -2089,6 +2089,17 @@ window.switchTab = function(tab, btn) {
   const endIdx = startIdx + THEMES_PER_PAGE;
   const paginatedThemes = sorted.slice(startIdx, endIdx);
   const totalPages = Math.ceil(sorted.length / THEMES_PER_PAGE);
+  // 페이지 버튼
+  let pageButtonsHtml = '';
+  if (totalPages > 1) {
+    pageButtonsHtml = `
+      <div style="text-align: center; margin-top: 20px; padding: 20px 0; grid-column: 1 / -1;">
+        <button onclick="goToThemePage(${window.currentThemePage - 1})" ${window.currentThemePage === 1 ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">← 이전</button>
+        <span style="margin: 0 16px; color: #888888;">페이지 ${window.currentThemePage} / ${totalPages}</span>
+        <button onclick="goToThemePage(${window.currentThemePage + 1})" ${window.currentThemePage === totalPages ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">다음 →</button>
+      </div>
+    `;
+  }
 
   if (sorted.length === 0) {
     grid.innerHTML = '<div class="no-result">😶 해당 조건의 테마가 없어요</div>';
@@ -2137,7 +2148,7 @@ window.switchTab = function(tab, btn) {
         </div>
       </div>
     `;
-  }).join('');
+  }).join('') + pageButtonsHtml;
 }
 
     window.setFilter = function(type, value, btn) {
