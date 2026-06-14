@@ -2012,7 +2012,13 @@
       }
     }
 
-    window.switchTab = function(tab, btn) {
+    window.goToThemePage = function(page) {
+  window.currentThemePage = page;
+  renderThemes();
+  window.scrollTo(0, 0);
+}
+
+window.switchTab = function(tab, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
       document.getElementById('page-' + tab).classList.add('active');
@@ -2039,6 +2045,9 @@
     }
 
     window.renderThemes = async function() {
+  // 현재 페이지 번호 (없으면 1로 설정)
+  if (!window.currentThemePage) window.currentThemePage = 1;
+  const THEMES_PER_PAGE = 10;
   // Featured 테마명 로드
   let featuredThemeNames = [];
   let themeOrder = [];
@@ -2075,12 +2084,38 @@
   // Featured + 나머지 합치기
   const sorted = [...featured, ...notFeatured];
 
+  // 페이지네이션 설정
+  if (!window.currentThemePage) window.currentThemePage = 1;
+  const THEMES_PER_PAGE = 10;
+  const startIdx = (window.currentThemePage - 1) * THEMES_PER_PAGE;
+  const endIdx = startIdx + THEMES_PER_PAGE;
+  const paginatedThemes = sorted.slice(startIdx, endIdx);
+  const totalPages = Math.ceil(sorted.length / THEMES_PER_PAGE);
+
   if (sorted.length === 0) {
     grid.innerHTML = '<div class="no-result">😶 해당 조건의 테마가 없어요</div>';
     return;
   }
 
-  grid.innerHTML = sorted.map(t => {
+  // 페이지 버튼
+  let pageButtonsHtml = '';
+  if (totalPages > 1) {
+    pageButtonsHtml = `
+      <div style="text-align: center; margin-top: 20px; padding: 20px 0; grid-column: 1 / -1;">
+        <button onclick="goToThemePage(${window.currentThemePage - 1})" ${window.currentThemePage === 1 ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">← 이전</button>
+        <span style="margin: 0 16px; color: #888888;">페이지 ${window.currentThemePage} / ${totalPages}</span>
+        <button onclick="goToThemePage(${window.currentThemePage + 1})" ${window.currentThemePage === totalPages ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">다음 →</button>
+      </div>
+    `;
+  }
+
+  grid.innerHTML = paginatedThemes.map(t => {
+    const avg = ratings[t.name];
+    const ratingHtml = avg
+      ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
+      : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
+    const hasRated = userRatings.has(t.name);
+    const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
     const avg = ratings[t.name];
     const ratingHtml = avg
       ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
