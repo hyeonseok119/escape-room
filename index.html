@@ -2114,7 +2114,6 @@ window.switchTab = function(tab, btn) {
       : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
     const hasRated = userRatings.has(t.name);
     const btnText = hasRated ? '이미 평점을 남겼어요' : '⭐ 평점 남기기';
-    const avg = ratings[t.name];
     const ratingHtml = avg
       ? `<div class="theme-rating">⭐ ${avg} / 5.0</div>`
       : `<div class="theme-rating" style="color:#555">아직 평점 없음</div>`;
