@@ -1820,8 +1820,8 @@
       }
     }
 
-    let currentRegion = '전체';
-    let currentHorror = '전체';
+    let currentRegions = [];
+let currentHorrors = [];
     let ratings = {};
     let allRatingsData = [];
     let allPostsData = [];
@@ -1971,34 +1971,44 @@
         console.error('공지사항 로드 오류:', e);
       }
     }
-
+function updateActiveFilters() {
+  const container = document.getElementById('activeFilters');
+  let html = '';
+  
+  currentRegions.forEach(region => {
+    html += `<div class="active-tag">📍 ${region} <button onclick="clearFilter('region', '${region}')">✕</button></div>`;
+  });
+  
+  currentHorrors.forEach(horror => {
+    if (!isNaN(horror)) {
+      html += `<div class="active-tag">👻 공포도 ${horror} <button onclick="clearFilter('horror', ${horror})">✕</button></div>`;
+    }
+  });
+  
+  container.innerHTML = html;
+}
     function horrorDisplay(level) {
       const full = Math.floor(level);
       const half = level % 1 !== 0;
       return '💀'.repeat(full) + (half ? '👻' : '') + ` ${level}`;
     }
 
-    function updateActiveFilters() {
-      const container = document.getElementById('activeFilters');
-      let html = '';
-      if (currentRegion !== '전체') html += `<div class="active-tag">📍 ${currentRegion} <button onclick="clearFilter('region')">✕</button></div>`;
-      if (currentHorror !== '전체') html += `<div class="active-tag">👻 공포도 ${currentHorror} <button onclick="clearFilter('horror')">✕</button></div>`;
-      container.innerHTML = html;
-    }
 
-    window.clearFilter = function(type) {
-      if (type === 'region') {
-        currentRegion = '전체';
-        document.querySelectorAll('#regionFilter .filter-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('#regionFilter .filter-btn').classList.add('active');
-      } else {
-        currentHorror = '전체';
-        document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('#horrorFilter .filter-btn').classList.add('active');
-      }
-      updateActiveFilters();
-      renderThemes();
-    }
+    window.clearFilter = function(type, value) {
+  if (type === 'region') {
+    currentRegions = currentRegions.filter(r => r !== value);
+    document.querySelectorAll('#regionFilter .filter-btn').forEach(b => {
+      if (b.textContent.trim() === value) b.classList.remove('active');
+    });
+  } else {
+    currentHorrors = currentHorrors.filter(h => h !== value);
+    document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => {
+      if (b.getAttribute('data-value') == value) b.classList.remove('active');
+    });
+  }
+  updateActiveFilters();
+  renderThemes();
+}
 
     window.toggleFilter = function(type) {
       const dropdown = document.getElementById(type + 'Dropdown');
@@ -2073,8 +2083,8 @@ window.switchTab = function(tab, btn) {
   const keyword = (document.getElementById('homeSearchInput').value || '').toLowerCase();
   const grid = document.getElementById('themeGrid');
   const filtered = themes.filter(t => {
-    const regionMatch = currentRegion === '전체' || t.region === currentRegion;
-    const horrorMatch = currentHorror === '전체' || t.horror === currentHorror;
+  const regionMatch = currentRegions.length === 0 || currentRegions.includes(t.region);
+const horrorMatch = currentHorrors.length === 0 || currentHorrors.includes(t.horror);
     const searchMatch = !keyword || t.name.toLowerCase().includes(keyword) || t.store.toLowerCase().includes(keyword);
     return regionMatch && horrorMatch && searchMatch;
   });
@@ -2084,6 +2094,9 @@ window.switchTab = function(tab, btn) {
   const notFeatured = filtered.filter(t => !themeOrder.includes(t.name));
   
   featured.sort((a, b) => themeOrder.indexOf(a.name) - themeOrder.indexOf(b.name));
+  
+  // notFeatured를 매장명 ㄱㄴㄷ 순으로 정렬
+  notFeatured.sort((a, b) => a.store.localeCompare(b.store, 'ko'));
   
   const sorted = [...featured, ...notFeatured];
 
@@ -2144,73 +2157,162 @@ window.switchTab = function(tab, btn) {
 }
 
     window.setFilter = function(type, value, btn) {
-      if (type === 'region') {
-        currentRegion = value;
-        document.querySelectorAll('#regionFilter .filter-btn').forEach(b => b.classList.remove('active'));
+  if (value === '전체') {
+    if (type === 'region') {
+      currentRegions = [];
+    } else {
+      currentHorrors = [];
+    }
+  } else {
+    if (type === 'region') {
+      const index = currentRegions.indexOf(value);
+      if (index > -1) {
+        currentRegions.splice(index, 1);
       } else {
-        currentHorror = value;
-        document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => b.classList.remove('active'));
+        currentRegions.push(value);
       }
-      btn.classList.add('active');
-      updateActiveFilters();
-      renderThemes();
-      toggleFilter(type);
-    }
-
-    window.openDetail = function(themeName) {
-      const theme = themes.find(t => t.name === themeName);
-      if (!theme) return;
-
-      document.getElementById('detailTitle').textContent = theme.name;
-      document.getElementById('detailStore').textContent = theme.store;
-      
-      const metaHtml = `
-        <span class="detail-tag">📍 ${theme.region}</span>
-        <span class="detail-tag">💰 ${theme.price}</span>
-        <span class="detail-tag">${horrorDisplay(theme.horror)}</span>
-      `;
-      document.getElementById('detailMeta').innerHTML = metaHtml;
-
-      const themeRatings = allRatingsData.filter(r => r.theme === themeName);
-      
-      if (themeRatings.length === 0) {
-        document.getElementById('totalRatings').textContent = '0';
-        document.getElementById('successRate').textContent = '0%';
-        document.getElementById('failureRate').textContent = '0%';
-        clearCharts();
-        document.getElementById('detailModal').classList.add('active');
-        return;
+    } else {
+      const horrorVal = parseFloat(value);
+      const index = currentHorrors.findIndex(h => parseFloat(h) === horrorVal);
+      if (index > -1) {
+        currentHorrors.splice(index, 1);
+      } else {
+        currentHorrors.push(horrorVal);
       }
-
-      document.getElementById('totalRatings').textContent = themeRatings.length;
-
-      const starDist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-      themeRatings.forEach(r => starDist[r.star]++);
-
-      const horrorDist = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 };
-      themeRatings.forEach(r => horrorDist[String(r.horror)]++);
-
-      const diffDist = { '쉬움': 0, '보통': 0, '어려움': 0, '매우 어려움': 0 };
-      themeRatings.forEach(r => diffDist[r.difficulty]++);
-
-      const memberDist = { '1인': 0, '2인': 0, '3인': 0, '4인 이상': 0 };
-      themeRatings.forEach(r => memberDist[r.members]++);
-
-      const successCount = themeRatings.filter(r => r.result === '탈출 성공 🎉').length;
-      const failureCount = themeRatings.length - successCount;
-      const successPercent = Math.round((successCount / themeRatings.length) * 100);
-      const failurePercent = 100 - successPercent;
-      
-      document.getElementById('successRate').textContent = successPercent + '%';
-      document.getElementById('failureRate').textContent = failurePercent + '%';
-
-      drawChart('starChart', '별점', Object.keys(starDist), Object.values(starDist), '#ffaa00');
-      drawChart('horrorChart', '공포도', ['1점', '2점', '3점', '4점', '5점'], Object.values(horrorDist), '#ff6666');
-      drawChart('difficultyChart', '난이도', Object.keys(diffDist), Object.values(diffDist), '#ff0000');
-      drawChart('memberChart', '인원', Object.keys(memberDist), Object.values(memberDist), '#ff3333');
-
-      document.getElementById('detailModal').classList.add('active');
     }
+  }
+  
+  refreshFilterUI();
+  updateActiveFilters();
+  renderThemes();
+}
+
+function refreshFilterUI() {
+  // 지역 필터 버튼
+  document.querySelectorAll('#regionFilter .filter-btn').forEach(b => {
+    const region = b.textContent.trim();
+    if (region === '전체') {
+      if (currentRegions.length === 0) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    } else {
+      if (currentRegions.includes(region)) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    }
+  });
+  
+  // 공포도 필터 버튼
+  document.querySelectorAll('#horrorFilter .filter-btn').forEach(b => {
+    const label = b.textContent.trim();
+    
+    if (label === '전체') {
+      if (currentHorrors.length === 0) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    } else {
+      // 버튼 텍스트에서 숫자 추출 (💀 제거)
+      const horrorText = label.replace(/💀/g, '').trim();
+      const horror = parseFloat(horrorText);
+      
+      if (!isNaN(horror) && currentHorrors.some(h => parseFloat(h) === horror)) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    }
+  });
+}
+
+   window.openDetail = function(themeName) {
+  const theme = themes.find(t => t.name === themeName);
+  if (!theme) return;
+
+  const themeRatings = allRatingsData.filter(r => r.theme === themeName);
+  
+  if (themeRatings.length === 0) {
+    // 평점 없는 경우: 별도 모달 표시
+    const noRatingModal = document.createElement('div');
+noRatingModal.className = 'detail-modal-overlay';
+noRatingModal.style.display = 'flex';
+noRatingModal.style.zIndex = '9999';
+noRatingModal.onclick = function(e) {
+  if (e.target === this) this.remove();
+};
+    noRatingModal.innerHTML = `
+      <div class="detail-modal">
+        <button class="detail-close" onclick="this.closest('.detail-modal-overlay').remove()">✕</button>
+        <div class="detail-header">
+          <div class="detail-title">${theme.name}</div>
+          <div class="detail-store">${theme.store}</div>
+          <div class="detail-meta">
+            <span class="detail-tag">📍 ${theme.region}</span>
+            <span class="detail-tag">💰 ${theme.price}</span>
+            <span class="detail-tag">${horrorDisplay(theme.horror)}</span>
+          </div>
+        </div>
+        
+        <div style="text-align: center; padding: 60px 20px;">
+          <div style="font-size: 3rem; margin-bottom: 20px;">⭐</div>
+          <h2 style="color: #ff0000; font-size: 1.3rem; margin-bottom: 12px;">아직 평점이 없어요</h2>
+          <p style="color: #888888; font-size: 0.95rem; margin-bottom: 30px; line-height: 1.5;">
+            이 테마의 첫 번째 평가자가 되어보세요!<br>
+            솔직한 평점과 후기로 다른 사람들을 도와주세요.
+          </p>
+          <button style="padding: 12px 32px; background-color: #ff0000; border: none; border-radius: 20px; color: #ffffff; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Noto Serif KR', serif; transition: all 0.2s; margin-top: 20px;" onmouseover="this.style.backgroundColor='#cc0000'" onmouseout="this.style.backgroundColor='#ff0000'" onclick="this.closest('.detail-modal-overlay').remove(); openRatingModal('${themeName}')">⭐ 평점 남기기</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(noRatingModal);
+    return;
+  }
+
+  // 평점 있는 경우: 기존 모달 사용
+  document.getElementById('detailTitle').textContent = theme.name;
+  document.getElementById('detailStore').textContent = theme.store;
+  
+  const metaHtml = `
+    <span class="detail-tag">📍 ${theme.region}</span>
+    <span class="detail-tag">💰 ${theme.price}</span>
+    <span class="detail-tag">${horrorDisplay(theme.horror)}</span>
+  `;
+  document.getElementById('detailMeta').innerHTML = metaHtml;
+
+  document.getElementById('totalRatings').textContent = themeRatings.length;
+
+  const starDist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  themeRatings.forEach(r => starDist[r.star]++);
+
+  const horrorDist = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 };
+  themeRatings.forEach(r => horrorDist[String(r.horror)]++);
+
+  const diffDist = { '쉬움': 0, '보통': 0, '어려움': 0, '매우 어려움': 0 };
+  themeRatings.forEach(r => diffDist[r.difficulty]++);
+
+  const memberDist = { '1인': 0, '2인': 0, '3인': 0, '4인 이상': 0 };
+  themeRatings.forEach(r => memberDist[r.members]++);
+
+  const successCount = themeRatings.filter(r => r.result === '탈출 성공 🎉').length;
+  const failureCount = themeRatings.length - successCount;
+  const successPercent = Math.round((successCount / themeRatings.length) * 100);
+  const failurePercent = 100 - successPercent;
+  
+  document.getElementById('successRate').textContent = successPercent + '%';
+  document.getElementById('failureRate').textContent = failurePercent + '%';
+
+  drawChart('starChart', '별점', Object.keys(starDist), Object.values(starDist), '#ffaa00');
+  drawChart('horrorChart', '공포도', ['1점', '2점', '3점', '4점', '5점'], Object.values(horrorDist), '#ff6666');
+  drawChart('difficultyChart', '난이도', Object.keys(diffDist), Object.values(diffDist), '#ff0000');
+  drawChart('memberChart', '인원', Object.keys(memberDist), Object.values(memberDist), '#ff3333');
+
+  document.getElementById('detailModal').classList.add('active');
+}
 
     function drawChart(canvasId, label, labels, data, color) {
       const ctx = document.getElementById(canvasId).getContext('2d');
@@ -2498,42 +2600,53 @@ window.switchTab = function(tab, btn) {
     }
 
     window.saveNickname = async function() {
-      const newNickname = document.getElementById('nicknameInput').value.trim();
-      
-      if (!newNickname) {
-        alert('닉네임을 입력해주세요');
-        return;
-      }
+  const newNickname = document.getElementById('nicknameInput').value.trim();
+  
+  if (!newNickname) {
+    alert('닉네임을 입력해주세요');
+    return;
+  }
 
-      if (newNickname.length > 20) {
-        alert('닉네임은 20자 이하여야 합니다');
-        return;
-      }
+  if (newNickname.length > 20) {
+    alert('닉네임은 20자 이하여야 합니다');
+    return;
+  }
 
-      try {
-        if (userProfile.id) {
-          await updateDoc(doc(db, 'userProfiles', userProfile.id), {
-            nickname: newNickname
-          });
-        } else {
-          const docRef = await addDoc(collection(db, 'userProfiles'), {
-            userId: currentUser.uid,
-            nickname: newNickname,
-            createdAt: new Date().toISOString()
-          });
-          userProfile.id = docRef.id;
-        }
-        
-        userProfile.nickname = newNickname;
-        closeNicknameModal();
-        renderMypage();
-        alert('닉네임이 변경됐습니다');
-      } catch(e) {
-        console.error('닉네임 변경 오류:', e);
-        alert('닉네임 변경에 실패했습니다');
+  try {
+    // 중복 닉네임 확인
+    const existingDocs = await getDocs(query(collection(db, 'userProfiles'), where('nickname', '==', newNickname)));
+    
+    // 자신의 기존 닉네임이면 허용 (업데이트 시)
+    if (existingDocs.size > 0) {
+      const existingUser = existingDocs.docs[0].data();
+      if (existingUser.userId !== currentUser.uid) {
+        alert('이미 사용 중인 닉네임입니다');
+        return;
       }
     }
 
+    if (userProfile.id) {
+      await updateDoc(doc(db, 'userProfiles', userProfile.id), {
+        nickname: newNickname
+      });
+    } else {
+      const docRef = await addDoc(collection(db, 'userProfiles'), {
+        userId: currentUser.uid,
+        nickname: newNickname,
+        createdAt: new Date().toISOString()
+      });
+      userProfile.id = docRef.id;
+    }
+    
+    userProfile.nickname = newNickname;
+    closeNicknameModal();
+    renderMypage();
+    alert('닉네임이 변경됐습니다');
+  } catch(e) {
+    console.error('닉네임 변경 오류:', e);
+    alert('닉네임 변경에 실패했습니다');
+  }
+}
     window.renderRanking = function() {
       const filterContainer = document.getElementById('rankingFilter');
       const top3Container = document.getElementById('top3Container');
@@ -2583,6 +2696,7 @@ window.switchTab = function(tab, btn) {
             <div class="top-card-name">${item.name}</div>
             <div class="top-card-score">${currentRankingTab === 'star' ? '⭐' : '👻'} ${item.score}점</div>
             <div class="top-card-region">📍 ${item.region}</div>
+           <a class="reserve-btn" href="${themes.find(t => t.name === item.name)?.url || '#'}" target="_blank" onclick="event.stopPropagation()" style="position: absolute; bottom: 12px; right: 12px; padding: 6px 12px; font-size: 0.8rem; width: auto; margin: 0;">예약하기</a>
           </div>
         </div>
       `).join('');
