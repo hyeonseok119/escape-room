@@ -2007,6 +2007,7 @@ function updateActiveFilters() {
     });
   }
   updateActiveFilters();
+  window.currentThemePage = 1;
   renderThemes();
 }
 
@@ -2184,6 +2185,7 @@ const horrorMatch = currentHorrors.length === 0 || currentHorrors.includes(t.hor
   
   refreshFilterUI();
   updateActiveFilters();
+  window.currentThemePage = 1;
   renderThemes();
 }
 
