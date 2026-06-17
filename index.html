@@ -2392,6 +2392,10 @@ noRatingModal.onclick = function(e) {
     window.renderMypage = function() {
   const container = document.getElementById('mypageContent');
 
+   const totalThemes = themes.length;
+  const successThemes = new Set(userRatingsData.filter(r => r.result === '탈출 성공 🎉').map(r => r.theme)).size;
+  const huntingPercent = totalThemes > 0 ? Math.round((successThemes / totalThemes) * 100) : 0;
+
   if (!currentUser) {
     // 전국공테 사냥률 계산
   const totalThemes = themes.length;
