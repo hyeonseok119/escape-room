@@ -3072,7 +3072,13 @@ noRatingModal.onclick = function(e) {
     console.log('스폰서 배너 로드 오류:', e);
   }
 }
-    loadSponsorSettings();
+
+// 모든 함수 정의 후 마지막에 호출
+setTimeout(() => {
+  loadRatings();
+  loadAnnouncements();
+  loadSponsorSettings();
+}, 100);
   </script>
 
 </body>
