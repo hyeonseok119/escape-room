@@ -2434,12 +2434,15 @@ noRatingModal.onclick = function(e) {
             </div>
           </div>
 
-          <!-- 통계 섹션 (미래 업데이트) -->
+        <!-- 통계 섹션 -->
           <div class="stats-section">
             <div class="stats-title">📊 전국 공포 방탈출 통계</div>
-            <div class="stats-content">
-              🔄 곧 업데이트될 예정입니다.<br>
-              전국 공테 사냥률, 공테 마스터 등의 정보가 표시됩니다.
+            <div style="padding: 20px; text-align: center;">
+              <canvas id="huntingChart" width="150" height="150"></canvas>
+              <div style="margin-top: 20px;">
+                <div style="font-size: 2.5rem; font-weight: 700; color: #ff0000;">${"huntingPercent"}%</div>
+                <div style="color: #888; margin-top: 8px; font-size: 0.9rem;">성공 ${"successThemes"}개 / 전체 ${"totalThemes"}개</div>
+              </div>
             </div>
           </div>
 
@@ -3072,13 +3075,7 @@ noRatingModal.onclick = function(e) {
     console.log('스폰서 배너 로드 오류:', e);
   }
 }
-
-// 모든 함수 정의 후 마지막에 호출
-setTimeout(() => {
-  loadRatings();
-  loadAnnouncements();
-  loadSponsorSettings();
-}, 100);
+    loadSponsorSettings();
   </script>
 
 </body>
