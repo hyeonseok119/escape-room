@@ -2744,7 +2744,6 @@ noRatingModal.onclick = function(e) {
         ${announcements.map(ann => `
           <div class="announcement-card" onclick="openAnnouncementModal('${ann.title}', '${ann.content}')">
             <div class="announcement-card-title">${ann.title}</div>
-            <div class="announcement-card-content">${ann.content.substring(0, 50)}${ann.content.length > 50 ? '...' : ''}</div>
           </div>
         `).join('')}
       </div>
@@ -2816,6 +2815,7 @@ noRatingModal.onclick = function(e) {
     
 
     window.renderThemeBoard = function() {
+  let pageButtonsHtml = ''; 
       const listContainer = document.getElementById('themePostList');
       const filtered = allPostsData.filter(post => post.theme === currentViewTheme).sort((a, b) => {
         const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
