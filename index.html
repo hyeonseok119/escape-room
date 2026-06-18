@@ -2445,8 +2445,8 @@ noRatingModal.onclick = function(e) {
         <!-- 통계 섹션 -->
           <div class="stats-section">
             <div class="stats-title">📊 전국 공포 방탈출 사냥률</div>
-            <div style="padding: 20px; text-align: center;">
-              <canvas id="huntingChart" width="150" height="150"></canvas>
+          <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <canvas id="huntingChart" width="150" height="150" style="max-width: 150px;"></canvas>
               <div style="margin-top: 20px;">
                 <div style="font-size: 2.5rem; font-weight: 700; color: #ff0000;">${huntingPercent}%</div>
                 <div style="color: #888; margin-top: 8px; font-size: 0.9rem;">성공 ${successThemes}개 / 전체 ${totalThemes}개</div>
@@ -2555,14 +2555,13 @@ noRatingModal.onclick = function(e) {
 
       container.innerHTML = html;
 
-      // 사냥률 차트 그리기
       setTimeout(() => {
         const ctx = document.getElementById('huntingChart');
         if (ctx) {
           new Chart(ctx, {
             type: 'doughnut',
             data: {
-              labels: ['성공', '미도전'],
+              labels: [],
               datasets: [{
                 data: [huntingPercent, 100 - huntingPercent],
                 backgroundColor: ['#ff0000', '#333333'],
@@ -2574,16 +2573,13 @@ noRatingModal.onclick = function(e) {
               responsive: false,
               plugins: {
                 legend: {
-                  display: true,
-                  position: 'bottom',
-                  labels: { color: '#ffffff', font: { size: 12 } }
+                  display: false
                 }
               }
             }
           });
         }
       }, 100);
-    }
 
     window.switchMypageTab = function(tab, btn) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
