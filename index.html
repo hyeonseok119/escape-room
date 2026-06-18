@@ -2397,10 +2397,7 @@ noRatingModal.onclick = function(e) {
   const huntingPercent = totalThemes > 0 ? Math.round((successThemes / totalThemes) * 100) : 0;
 
   if (!currentUser) {
-    // 전국공테 사냥률 계산
-  const totalThemes = themes.length;
-  const successThemes = new Set(userRatingsData.filter(r => r.result === '탈출 성공 🎉').map(r => r.theme)).size;
-  const huntingPercent = totalThemes > 0 ? Math.round((successThemes / totalThemes) * 100) : 0;
+   
     container.innerHTML = `
       <div class="mypage-empty">
         <div class="icon">🔒</div>
@@ -2438,18 +2435,6 @@ noRatingModal.onclick = function(e) {
               <div class="stat-item">
                 <span class="stat-label">남긴 글</span>
                 <span class="stat-value">${postCount}</span>
-              </div>
-            </div>
-          </div>
-
-        <!-- 통계 섹션 -->
-          <div class="stats-section">
-            <div class="stats-title">📊 전국 공포 방탈출 사냥률</div>
-          <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <canvas id="huntingChart" width="150" height="150" style="max-width: 150px;"></canvas>
-              <div style="margin-top: 20px;">
-                <div style="font-size: 2.5rem; font-weight: 700; color: #ff0000;">${huntingPercent}%</div>
-                <div style="color: #888; margin-top: 8px; font-size: 0.9rem;">성공 ${successThemes}개 / 전체 ${totalThemes}개</div>
               </div>
             </div>
           </div>
