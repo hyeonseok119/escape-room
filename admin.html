@@ -642,21 +642,22 @@
 
       <!-- 사용자 관리 -->
       <div id="users" class="tab-content">
-        <h2 style="color: #ffffff; margin-bottom: 20px;">👥 사용자 관리</h2>
-        
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>이메일</th>
-                <th>닉네임</th>
-                <th>가입일</th>
-                <th>평점 수</th>
-                <th>글 수</th>
-                <th>작업</th>
-              </tr>
-            </thead>
-            <tbody id="usersList">
+  <h2 style="color: #ffffff; margin-bottom: 20px;">👥 사용자 관리</h2>
+  
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>이메일</th>
+          <th>닉네임</th>
+          <th>가입일</th>
+          <th>평점 수</th>
+          <th>글 수</th>
+          <th>인증리뷰어</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody id="usersList">
               <tr>
                 <td colspan="6" style="text-align: center; color: #666666;">사용자를 불러오는 중...</td>
               </tr>
@@ -1160,62 +1161,85 @@
     }
 
     // 사용자 관리
-    function renderUsers() {
-      const tbody = document.getElementById('usersList');
-      
-      const uniqueUsers = new Map();
-      
-      allRatings.forEach(r => {
-        if (!uniqueUsers.has(r.userId)) {
-          const profile = allUsers[r.userId];
-          uniqueUsers.set(r.userId, {
-            userId: r.userId,
-            email: profile?.userId || 'N/A',
-            userName: r.userName,
-            nickname: profile?.nickname || r.userName,
-            joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
-            ratings: 0,
-            posts: 0
-          });
-        }
-        uniqueUsers.get(r.userId).ratings++;
+   function renderUsers() {
+  const tbody = document.getElementById('usersList');
+  
+  const uniqueUsers = new Map();
+  
+  allRatings.forEach(r => {
+    if (!uniqueUsers.has(r.userId)) {
+      const profile = allUsers[r.userId];
+      uniqueUsers.set(r.userId, {
+        userId: r.userId,
+        email: profile?.userId || 'N/A',
+        userName: r.userName,
+        nickname: profile?.nickname || r.userName,
+        joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
+        isVerified: profile?.isVerified || false,
+        ratings: 0,
+        posts: 0
       });
-
-      allPosts.forEach(p => {
-        if (!uniqueUsers.has(p.userId)) {
-          const profile = allUsers[p.userId];
-          uniqueUsers.set(p.userId, {
-            userId: p.userId,
-            email: profile?.userId || 'N/A',
-            userName: p.userName,
-            nickname: profile?.nickname || p.userName,
-            joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
-            ratings: 0,
-            posts: 0
-          });
-        }
-        uniqueUsers.get(p.userId).posts++;
-      });
-
-      if (uniqueUsers.size === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty-message">사용자가 없습니다</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => `
-        <tr>
-          <td>${user.userId.substring(0, 15)}...</td>
-          <td>${user.nickname}</td>
-          <td>${user.joinDate}</td>
-          <td>${user.ratings}</td>
-          <td>${user.posts}</td>
-          <td>
-            <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
-          </td>
-        </tr>
-      `).join('');
     }
+    uniqueUsers.get(r.userId).ratings++;
+  });
 
+  allPosts.forEach(p => {
+    if (!uniqueUsers.has(p.userId)) {
+      const profile = allUsers[p.userId];
+      uniqueUsers.set(p.userId, {
+        userId: p.userId,
+        email: profile?.userId || 'N/A',
+        userName: p.userName,
+        nickname: profile?.nickname || p.userName,
+        joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
+        isVerified: profile?.isVerified || false,
+        ratings: 0,
+        posts: 0
+      });
+    }
+    uniqueUsers.get(p.userId).posts++;
+  });
+
+  if (uniqueUsers.size === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-message">사용자가 없습니다</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => `
+    <tr>
+      <td style="cursor: pointer; color: #ff6666;" onclick="showUserDetail('${user.userId}')">${user.userId.substring(0, 15)}...</td>
+      <td>${user.nickname}</td>
+      <td>${user.joinDate}</td>
+      <td>${user.ratings}</td>
+      <td>${user.posts}</td>
+      <td>
+        <input type="checkbox" ${user.isVerified ? 'checked' : ''} onchange="toggleVerified('${user.userId}', this.checked)" style="cursor: pointer; width: 20px; height: 20px;">
+      </td>
+      <td>
+        <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
+      </td>
+    </tr>
+  `).join('');
+}
+window.toggleVerified = async function(userId, isVerified) {
+  try {
+    const userProfileDocs = await getDocs(query(collection(db, 'userProfiles'), where('userId', '==', userId)));
+    
+    if (userProfileDocs.size > 0) {
+      await updateDoc(doc(db, 'userProfiles', userProfileDocs.docs[0].id), {
+        isVerified: isVerified
+      });
+      alert(isVerified ? '인증리뷰어로 설정되었습니다' : '인증리뷰어 해제되었습니다');
+      await loadAllData();
+    }
+  } catch(e) {
+    alert('업데이트 실패: ' + e.message);
+  }
+}
+
+window.showUserDetail = async function(userId) {
+  alert('사용자 상세보기는 다음 단계에서 추가됩니다!');
+}
     window.deleteUser = async function(userId) {
       if (!confirm('이 사용자를 삭제하시겠습니까? (모든 평점과 글도 삭제됩니다)')) return;
       
