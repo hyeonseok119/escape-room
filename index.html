@@ -37,7 +37,28 @@
       border-bottom: 1px solid #3a0000;
       margin-top: 36px;
     }
+/* 서브페이지 헤더 */
+.sub-header {
+  padding: 20px 16px;
+  text-align: center;
+  background: linear-gradient(180deg, #1a0000 0%, #0a0a0a 100%);
+  border-bottom: 1px solid #3a0000;
+  margin-top: 36px;
+}
 
+.sub-header-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.sub-header-subtitle {
+  font-size: 0.75rem;
+  color: #888888;
+  margin-top: 4px;
+  letter-spacing: 3px;
+}
     .hero-subtitle {
       font-size: 0.85rem;
       letter-spacing: 6px;
@@ -1553,6 +1574,10 @@
 
   <!-- 커뮤니티 -->
   <div class="page" id="page-community">
+    <div class="sub-header">
+      <div class="sub-header-title">공<span style="color: #ff0000;">테</span>가이드</div>
+      <div class="sub-header-subtitle">— 커뮤니티 —</div>
+    </div>
     <div class="community-content">
       <div id="communityView">
         <div class="community-header">
@@ -1581,6 +1606,10 @@
 
   <!-- 랭킹 -->
   <div class="page" id="page-ranking">
+    <div class="sub-header">
+      <div class="sub-header-title">공<span style="color: #ff0000;">테</span>가이드</div>
+      <div class="sub-header-subtitle">— 랭킹 —</div>
+    </div>
     <div class="ranking-content">
       <div class="ranking-tabs">
         <button class="ranking-tab-btn active" onclick="switchRankingTab('star', this)">⭐ 별점 높은순</button>
@@ -1597,6 +1626,10 @@
 
   <!-- 마이페이지 -->
   <div class="page" id="page-mypage">
+    <div class="sub-header">
+      <div class="sub-header-title">공<span style="color: #ff0000;">테</span>가이드</div>
+      <div class="sub-header-subtitle">— 마이페이지 —</div>
+    </div>
     <div id="mypageContent"></div>
   </div>
 
@@ -2036,15 +2069,15 @@ window.goToCommunityPage = function(page) {
 }
 
 window.switchTab = function(tab, btn) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-      document.getElementById('page-' + tab).classList.add('active');
-      btn.classList.add('active');
-      document.querySelector('.sponsor-bar').style.display = tab === 'home' ? 'block' : 'none';
-      if (tab === 'mypage') renderMypage();
-      if (tab === 'ranking') renderRanking();
-      if (tab === 'community') renderCommunity();
-    }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  btn.classList.add('active');
+  document.querySelector('.sponsor-bar').style.display = 'block'; // 항상 표시
+  if (tab === 'mypage') renderMypage();
+  if (tab === 'ranking') renderRanking();
+  if (tab === 'community') renderCommunity();
+}
 
     window.switchRankingTab = function(tab, btn) {
       currentRankingTab = tab;
@@ -2118,9 +2151,12 @@ const horrorMatch = currentHorrors.length === 0 || currentHorrors.includes(t.hor
   if (totalPages > 1) {
     pageButtonsHtml = `
       <div style="text-align: center; margin-top: 20px; padding: 20px 0; grid-column: 1 / -1;">
-        <button onclick="goToThemePage(${window.currentThemePage - 1})" ${window.currentThemePage === 1 ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">← 이전</button>
-        <span style="margin: 0 16px; color: #888888;">페이지 ${window.currentThemePage} / ${totalPages}</span>
-        <button onclick="goToThemePage(${window.currentThemePage + 1})" ${window.currentThemePage === totalPages ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">다음 →</button>
+        <button onclick="goToThemePage(1)" style="padding: 6px 12px; margin: 0 8px 12px 8px; background-color: #1a0000; color: #ff0000; border: 1px solid #ff0000; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR'; font-size: 0.85rem;">처음으로</button>
+        <div style="margin: 12px 0;">
+          <button onclick="goToThemePage(${window.currentThemePage - 1})" ${window.currentThemePage === 1 ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">← 이전</button>
+          <span style="margin: 0 16px; color: #888888;">페이지 ${window.currentThemePage} / ${totalPages}</span>
+          <button onclick="goToThemePage(${window.currentThemePage + 1})" ${window.currentThemePage === totalPages ? 'disabled style="opacity: 0.5;"' : ''} style="padding: 8px 16px; margin: 0 4px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Noto Serif KR';">다음 →</button>
+        </div>
       </div>
     `;
   }
