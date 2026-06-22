@@ -653,7 +653,6 @@
           <th>가입일</th>
           <th>평점 수</th>
           <th>글 수</th>
-          <th>인증리뷰어</th>
           <th>작업</th>
         </tr>
       </thead>
@@ -1213,15 +1212,13 @@
       <td>${user.ratings}</td>
       <td>${user.posts}</td>
       <td>
-        <input type="checkbox" ${user.isVerified ? 'checked' : ''} onchange="toggleVerified('${user.userId}', this.checked)" style="cursor: pointer; width: 20px; height: 20px;">
-      </td>
+     
       <td>
         <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
       </td>
     </tr>
   `).join('');
 }
-window.toggleVerified = async function(userId, isVerified) {
   try {
     const userProfileDocs = await getDocs(query(collection(db, 'userProfiles'), where('userId', '==', userId)));
     
