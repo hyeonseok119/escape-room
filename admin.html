@@ -1160,7 +1160,7 @@
     }
 
     // 사용자 관리
-   function renderUsers() {
+function renderUsers() {
   const tbody = document.getElementById('usersList');
   
   const uniqueUsers = new Map();
@@ -1174,7 +1174,6 @@
         userName: r.userName,
         nickname: profile?.nickname || r.userName,
         joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
-        isVerified: profile?.isVerified || false,
         ratings: 0,
         posts: 0
       });
@@ -1191,7 +1190,6 @@
         userName: p.userName,
         nickname: profile?.nickname || p.userName,
         joinDate: profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('ko-KR') : 'N/A',
-        isVerified: profile?.isVerified || false,
         ratings: 0,
         posts: 0
       });
@@ -1200,65 +1198,46 @@
   });
 
   if (uniqueUsers.size === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty-message">사용자가 없습니다</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-message">사용자가 없습니다</td></tr>';
     return;
   }
 
   tbody.innerHTML = Array.from(uniqueUsers.values()).map(user => `
     <tr>
-      <td style="cursor: pointer; color: #ff6666;" onclick="showUserDetail('${user.userId}')">${user.userId.substring(0, 15)}...</td>
+      <td>${user.userId.substring(0, 15)}...</td>
       <td>${user.nickname}</td>
       <td>${user.joinDate}</td>
       <td>${user.ratings}</td>
       <td>${user.posts}</td>
-      <td>
-     
       <td>
         <button class="action-btn delete-btn" onclick="deleteUser('${user.userId}')">삭제</button>
       </td>
     </tr>
   `).join('');
 }
+
+window.deleteUser = async function(userId) {
+  if (!confirm('이 사용자를 삭제하시겠습니까? (모든 평점과 글도 삭제됩니다)')) return;
+  
   try {
-    const userProfileDocs = await getDocs(query(collection(db, 'userProfiles'), where('userId', '==', userId)));
-    
-    if (userProfileDocs.size > 0) {
-      await updateDoc(doc(db, 'userProfiles', userProfileDocs.docs[0].id), {
-        isVerified: isVerified
-      });
-      alert(isVerified ? '인증리뷰어로 설정되었습니다' : '인증리뷰어 해제되었습니다');
-      await loadAllData();
+    const ratingsQuery = query(collection(db, 'ratings'), where('userId', '==', userId));
+    const ratingsSnapshot = await getDocs(ratingsQuery);
+    for (let doc of ratingsSnapshot.docs) {
+      await deleteDoc(doc.ref);
     }
+
+    const postsQuery = query(collection(db, 'posts'), where('userId', '==', userId));
+    const postsSnapshot = await getDocs(postsQuery);
+    for (let doc of postsSnapshot.docs) {
+      await deleteDoc(doc.ref);
+    }
+
+    alert('사용자가 삭제되었습니다');
+    await loadAllData();
   } catch(e) {
-    alert('업데이트 실패: ' + e.message);
+    alert('삭제 실패');
   }
 }
-
-window.showUserDetail = async function(userId) {
-  alert('사용자 상세보기는 다음 단계에서 추가됩니다!');
-}
-    window.deleteUser = async function(userId) {
-      if (!confirm('이 사용자를 삭제하시겠습니까? (모든 평점과 글도 삭제됩니다)')) return;
-      
-      try {
-        const ratingsQuery = query(collection(db, 'ratings'), where('userId', '==', userId));
-        const ratingsSnapshot = await getDocs(ratingsQuery);
-        for (let doc of ratingsSnapshot.docs) {
-          await deleteDoc(doc.ref);
-        }
-
-        const postsQuery = query(collection(db, 'posts'), where('userId', '==', userId));
-        const postsSnapshot = await getDocs(postsQuery);
-        for (let doc of postsSnapshot.docs) {
-          await deleteDoc(doc.ref);
-        }
-
-        alert('사용자가 삭제되었습니다');
-        await loadAllData();
-      } catch(e) {
-        alert('삭제 실패');
-      }
-    }
   </script>
 
 </body>
