@@ -1528,6 +1528,30 @@
   </style>
 </head>
 <body>
+  <!-- 로딩 스크린 -->
+  <div id="loadingScreen" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1a0000 0%, #0a0a0a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+">
+  <div style="text-align: center;">
+    <div style="font-size: 4rem; margin-bottom: 20px; animation: pulse 1s infinite;">👻</div>
+    <div style="color: #ff0000; font-size: 1.2rem; font-family: 'Noto Serif KR', serif; letter-spacing: 3px;">로딩 중...</div>
+  </div>
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</div>
 
   <div class="sponsor-bar" id="sponsorBar">📢 이 자리는 스폰서 광고 배너입니다</div>
 
@@ -3124,17 +3148,32 @@ noRatingModal.onclick = function(e) {
 }
 
 // 페이지 완전히 로드된 후 실행
-async function initializeApp() {
-  await loadRatings();
-  await loadAnnouncements();
-  await loadSponsorSettings();
+async function initializeGongteguide() {
+  try {
+    await loadRatings();
+    await loadAnnouncements();
+    await loadSponsorSettings();
+    
+    // 모든 로드 완료 후 로딩 화면 숨기기
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+      loadingScreen.style.display = 'none';
+    }
+  } catch(e) {
+    console.error('로드 오류:', e);
+    // 오류 발생해도 로딩 화면 숨기기
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+      loadingScreen.style.display = 'none';
+    }
+  }
 }
 
 // 페이지 로드 완료 후 실행
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp);
+  document.addEventListener('DOMContentLoaded', initializeGongteguide);
 } else {
-  initializeApp();
+  initializeGongteguide();
 }
   </script>
 
