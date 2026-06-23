@@ -3109,8 +3109,6 @@ noRatingModal.onclick = function(e) {
       }
     }
 
-    loadRatings();
-    loadAnnouncements();
     async function loadSponsorSettings() {
   try {
     const settingsDocs = await getDocs(query(collection(db, 'settings'), where('type', '==', 'banner')));
@@ -3124,7 +3122,20 @@ noRatingModal.onclick = function(e) {
     console.log('스폰서 배너 로드 오류:', e);
   }
 }
-    loadSponsorSettings();
+
+// 페이지 완전히 로드된 후 실행
+async function initializeApp() {
+  await loadRatings();
+  await loadAnnouncements();
+  await loadSponsorSettings();
+}
+
+// 페이지 로드 완료 후 실행
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  initializeApp();
+}
   </script>
 
 </body>
