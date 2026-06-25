@@ -382,7 +382,8 @@
       <button class="nav-btn" onclick="switchTab('announcements', this)">📢 공지사항</button>
       <button class="nav-btn" onclick="switchTab('sponsors', this)">👑 스폰서</button>
       <button class="nav-btn" onclick="switchTab('community', this)">💬 커뮤니티</button>
-      <button class="nav-btn" onclick="switchTab('users', this)">👥 사용자</button>
+      <button class="nav-btn" onclick="switchTab('events', this)">🎉 이벤트</button>
+<button class="nav-btn" onclick="switchTab('users', this)">👥 사용자</button>
     </div>
 
     <!-- 메인 콘텐츠 -->
@@ -640,6 +641,73 @@
         </div>
       </div>
 
+      <!-- 이벤트 관리 -->
+      <div id="events" class="tab-content">
+        <h2 style="color: #ffffff; margin-bottom: 20px;">🎉 이벤트 관리</h2>
+        
+        <div class="form-section">
+          <div class="form-title" id="eventFormTitle">새 이벤트 추가</div>
+          
+          <div class="form-group">
+            <label class="form-label">제목</label>
+            <input type="text" id="eventTitle" class="form-input" placeholder="이벤트 제목 입력">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">내용</label>
+            <textarea id="eventContent" class="form-textarea" placeholder="이벤트 내용 입력"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">이미지 URL</label>
+            <input type="text" id="eventImage" class="form-input" placeholder="https://...">
+          </div>
+
+          <div class="btn-group">
+            <button class="submit-btn" id="eventSubmitBtn" onclick="addEvent()">이벤트 추가</button>
+            <button class="cancel-btn" onclick="resetEventForm()">초기화</button>
+          </div>
+        </div>
+
+        <h3 style="color: #ffffff; margin-top: 30px; margin-bottom: 16px;">등록된 이벤트 목록</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>제목</th>
+                <th>내용</th>
+                <th>이미지</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="eventsList">
+              <tr>
+                <td colspan="4" style="text-align: center; color: #666666;">이벤트를 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="color: #ffffff; margin-top: 30px; margin-bottom: 16px;">댓글 관리</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>이벤트</th>
+                <th>작성자</th>
+                <th>댓글</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="eventCommentsList">
+              <tr>
+                <td colspan="4" style="text-align: center; color: #666666;">댓글을 불러오는 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- 사용자 관리 -->
       <div id="users" class="tab-content">
   <h2 style="color: #ffffff; margin-bottom: 20px;">👥 사용자 관리</h2>
@@ -774,6 +842,21 @@
           const data = doc.data();
           allUsers[data.userId] = data;
         });
+         // 이벤트 로드
+        const eventsSnapshot = await getDocs(collection(db, 'events'));
+        allEventsAdmin = [];
+        eventsSnapshot.forEach(doc => {
+          allEventsAdmin.push({ id: doc.id, ...doc.data() });
+        });
+        renderEvents();
+
+        // 이벤트 댓글 로드
+        const eventCommentsSnapshot = await getDocs(collection(db, 'eventComments'));
+        allEventCommentsAdmin = [];
+        eventCommentsSnapshot.forEach(doc => {
+          allEventCommentsAdmin.push({ id: doc.id, ...doc.data() });
+        });
+        renderEventComments();
 
         // 통계 업데이트
         updateStats();
@@ -1159,8 +1242,154 @@
       }
     }
 
+    // 이벤트 관리
+    let allEventsAdmin = [];
+    let allEventCommentsAdmin = [];
+    let editingEventId = null;
+
+    window.addEvent = async function() {
+      const title = document.getElementById('eventTitle').value;
+      const content = document.getElementById('eventContent').value;
+      const image = document.getElementById('eventImage').value;
+
+      if (!title || !content || !image) {
+        alert('모든 필드를 입력해주세요');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'events'), {
+          title, content, image,
+          createdAt: new Date().toISOString()
+        });
+        alert('이벤트가 추가되었습니다');
+        resetEventForm();
+        await loadAllData();
+      } catch(e) {
+        alert('추가 실패: ' + e.message);
+      }
+    }
+
+    window.editEvent = function(eventId) {
+      const event = allEventsAdmin.find(e => e.id === eventId);
+      if (!event) return;
+      
+      editingEventId = eventId;
+      
+      document.getElementById('eventTitle').value = event.title;
+      document.getElementById('eventContent').value = event.content;
+      document.getElementById('eventImage').value = event.image;
+      
+      document.getElementById('eventFormTitle').textContent = '이벤트 수정';
+      document.getElementById('eventSubmitBtn').textContent = '이벤트 수정';
+      document.getElementById('eventSubmitBtn').onclick = () => updateEvent();
+    }
+
+    window.updateEvent = async function() {
+      if (!editingEventId) return;
+      
+      const title = document.getElementById('eventTitle').value;
+      const content = document.getElementById('eventContent').value;
+      const image = document.getElementById('eventImage').value;
+
+      if (!title || !content || !image) {
+        alert('모든 필드를 입력해주세요');
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, 'events', editingEventId), {
+          title, content, image
+        });
+        alert('이벤트가 수정되었습니다');
+        resetEventForm();
+        await loadAllData();
+      } catch(e) {
+        alert('수정 실패: ' + e.message);
+      }
+    }
+
+    window.resetEventForm = function() {
+      editingEventId = null;
+      document.getElementById('eventTitle').value = '';
+      document.getElementById('eventContent').value = '';
+      document.getElementById('eventImage').value = '';
+      
+      document.getElementById('eventFormTitle').textContent = '새 이벤트 추가';
+      document.getElementById('eventSubmitBtn').textContent = '이벤트 추가';
+      document.getElementById('eventSubmitBtn').onclick = () => addEvent();
+    }
+
+    window.deleteEvent = async function(eventId) {
+      if (!confirm('이 이벤트를 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'events', eventId));
+        alert('이벤트가 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
+    function renderEvents() {
+      const tbody = document.getElementById('eventsList');
+      
+      if (allEventsAdmin.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-message">등록된 이벤트가 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allEventsAdmin.map(event => `
+        <tr>
+          <td>${event.title}</td>
+          <td>${event.content.substring(0, 30)}...</td>
+          <td><a href="${event.image}" target="_blank" style="color: #ff6666;">보기</a></td>
+          <td>
+            <button class="action-btn edit-btn" onclick="editEvent('${event.id}')">수정</button>
+            <button class="action-btn delete-btn" onclick="deleteEvent('${event.id}')">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderEventComments() {
+      const tbody = document.getElementById('eventCommentsList');
+      
+      if (allEventCommentsAdmin.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-message">댓글이 없습니다</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allEventCommentsAdmin.map(comment => {
+        const event = allEventsAdmin.find(e => e.id === comment.eventId);
+        return `
+          <tr>
+            <td>${event ? event.title : 'N/A'}</td>
+            <td>${comment.userName}</td>
+            <td>${comment.content.substring(0, 30)}...</td>
+            <td>
+              <button class="action-btn delete-btn" onclick="deleteEventComment('${comment.id}')">삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.deleteEventComment = async function(commentId) {
+      if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
+      
+      try {
+        await deleteDoc(doc(db, 'eventComments', commentId));
+        alert('댓글이 삭제되었습니다');
+        await loadAllData();
+      } catch(e) {
+        alert('삭제 실패');
+      }
+    }
+
     // 사용자 관리
-function renderUsers() {
+    function renderUsers() {
   const tbody = document.getElementById('usersList');
   
   const uniqueUsers = new Map();
