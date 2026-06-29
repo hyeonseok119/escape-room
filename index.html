@@ -2303,7 +2303,7 @@ const horrorMatch = currentHorrors.length === 0 || currentHorrors.includes(t.hor
   }
 
   // 페이지네이션
-  const THEMES_PER_PAGE = 10;
+  const THEMES_PER_PAGE = 12;
   const startIdx = (window.currentThemePage - 1) * THEMES_PER_PAGE;
   const endIdx = startIdx + THEMES_PER_PAGE;
   const paginatedThemes = sorted.slice(startIdx, endIdx);
@@ -2876,11 +2876,14 @@ noRatingModal.onclick = function(e) {
         .sort((a, b) => b[1].score - a[1].score)
         .map(([name, data], idx) => ({ name, rank: idx + 1, ...data }));
 
-      if (sorted.length === 0) {
-        top3Container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px 0;">평점이 없습니다</div>';
-        listContainer.innerHTML = '';
-        return;
-      }
+const sortedTop10 = sorted.slice(0, 10);
+
+  if (sortedTop10.length === 0) {
+    top3Container.innerHTML = '<div style="text-align: center; color: #666; padding: 40px 0;">평점이 없습니다</div>';
+    listContainer.innerHTML = '';
+    return;
+  }
+
 
       const top3 = sorted.slice(0, 3);
       const ranks = ['🥇', '🥈', '🥉'];
@@ -2897,7 +2900,7 @@ noRatingModal.onclick = function(e) {
         </div>
       `).join('');
 
-      const rest = sorted.slice(3);
+      const rest = sortedTop10.slice(3);
       listContainer.innerHTML = rest.map(item => `
         <div class="ranking-item" onclick="openDetail('${item.name}')">
           <div class="ranking-rank">#${item.rank}</div>
@@ -2998,7 +3001,8 @@ noRatingModal.onclick = function(e) {
         <img src="${theme?.img}" alt="${post.theme}" class="post-card-img">
         <div class="post-card-content">
           <div class="post-card-theme">${post.theme}</div>
-          <div class="post-card-text">${post.content}</div>
+          <div class="post-card-text">${post.content.replace(/\n/g, '<br>')}</div>
+
           <div class="post-card-meta">
             <span>작성자: ${post.userName}</span>
             <span>📅 ${date}</span>
@@ -3033,7 +3037,8 @@ noRatingModal.onclick = function(e) {
         return `
           <div class="post-card" style="cursor: default;" onmouseover="this.style.borderColor='#ff0000'" onmouseout="this.style.borderColor='#2a0000'">
             <div class="post-card-content" style="flex: 1;">
-              <div class="post-card-text">${post.content}</div>
+              <div class="post-card-text">${post.content.replace(/\n/g, '<br>')}</div>
+
               <div class="post-card-meta">
                 <span>작성자: ${post.userName}</span>
                 <span>📅 ${date}</span>
@@ -3154,7 +3159,7 @@ noRatingModal.onclick = function(e) {
 
     window.openAnnouncementModal = function(title, content) {
       document.getElementById('announcementTitle').textContent = title;
-      document.getElementById('announcementContent').textContent = content;
+      document.getElementById('announcementContent').innerHTML = content.replace(/\n/g, '<br>');
       document.getElementById('announcementModal').classList.add('active');
     }
 
@@ -3350,7 +3355,8 @@ window.openEventDetail = async function(eventId) {
   
   document.getElementById('eventDetailTitle').textContent = event.title;
   document.getElementById('eventDetailImage').src = event.image;
-  document.getElementById('eventDetailContent').textContent = event.content;
+  document.getElementById('eventDetailContent').innerHTML = event.content.replace(/\n/g, '<br>');
+
   
   await loadEventComments(eventId);
   
@@ -3401,7 +3407,8 @@ function renderEventComments(eventId) {
             <div style="color: #ff6666; font-weight: 700; font-size: 0.9rem;">${comment.userName}</div>
             <div style="color: #666666; font-size: 0.75rem;">📅 ${date}</div>
           </div>
-          <div style="color: #aaaaaa; font-size: 0.9rem; line-height: 1.4; margin-bottom: 8px;">${comment.content}</div>
+          <div style="color: #aaaaaa; font-size: 0.9rem; line-height: 1.4; margin-bottom: 8px;">${comment.content.replace(/\n/g, '<br>')}</div>
+
           ${currentUser && currentUser.uid === comment.userId ? `
             <button onclick="deleteEventComment('${comment.id}')" style="padding: 4px 8px; background-color: #ff0000; border: none; border-radius: 4px; color: #ffffff; font-size: 0.75rem; cursor: pointer;">삭제</button>
           ` : ''}
