@@ -2070,6 +2070,8 @@ let allEventComments = [];
       await loadThemesFromFirebase();
       renderThemes();
       renderMypage();
+      
+      return false;
     });
 
     async function loadUserProfile() {
