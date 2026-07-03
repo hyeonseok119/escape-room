@@ -3000,7 +3000,7 @@ const sortedTop10 = sorted.slice(0, 10);
     const theme = themes.find(t => t.name === post.theme);
     return `
       <div class="post-card" onclick="goToThemeBoard('${post.theme}')">
-        <img src="${theme?.img}" alt="${post.theme}" class="post-card-img" onerror="this.src='https://dummyimage.com/400x300/111111/888888?text=No+Image'"
+       <img src="${theme?.img}" alt="${post.theme}" class="post-card-img" onerror="this.src='https://dummyimage.com/400x300/111111/888888?text=No+Image'">
         <div class="post-card-content">
           <div class="post-card-theme">${post.theme}</div>
           <div class="post-card-text">${post.content.replace(/\n/g, '<br>')}</div>
@@ -3297,7 +3297,7 @@ function renderEventCarousel() {
 
   track.innerHTML = allEvents.map(event => `
     <div class="event-carousel-item" onclick="openEventDetail('${event.id}')">
-      <img src="${event.image}" alt="${event.title}" onerror="this.src='https://via.placeholder.com/1600x900'">
+      <img src="${event.image}" alt="${event.title}" onerror="this.src='https://dummyimage.com/400x300/111111/888888?text=No+Image'">
       <div class="event-carousel-overlay">
         <div class="event-carousel-title">${event.title}</div>
       </div>
