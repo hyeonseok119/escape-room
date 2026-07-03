@@ -2070,7 +2070,7 @@ let allEventComments = [];
       await loadThemesFromFirebase();
       renderThemes();
       renderMypage();
-      
+
       return false;
     });
 
@@ -3000,7 +3000,7 @@ const sortedTop10 = sorted.slice(0, 10);
     const theme = themes.find(t => t.name === post.theme);
     return `
       <div class="post-card" onclick="goToThemeBoard('${post.theme}')">
-        <img src="${theme?.img}" alt="${post.theme}" class="post-card-img">
+        <img src="${theme?.img}" alt="${post.theme}" class="post-card-img" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
         <div class="post-card-content">
           <div class="post-card-theme">${post.theme}</div>
           <div class="post-card-text">${post.content.replace(/\n/g, '<br>')}</div>
@@ -3016,6 +3016,7 @@ const sortedTop10 = sorted.slice(0, 10);
       </div>
     `;
   }).join('') + pageButtonsHtml;
+
 }
     
 
