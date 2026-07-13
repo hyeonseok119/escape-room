@@ -2239,9 +2239,27 @@ window.switchTab = function(tab, btn) {
   document.getElementById('page-' + tab).classList.add('active');
   btn.classList.add('active');
   document.querySelector('.sponsor-bar').style.display = 'block'; // 항상 표시
+  
+  // 필터/검색 초기화
+  if (tab === 'home') {
+    currentRegions = [];
+    currentHorrors = [];
+    document.getElementById('homeSearchInput').value = '';
+    window.currentThemePage = 1;
+    updateActiveFilters();
+    refreshFilterUI();
+    renderThemes();
+  }
+  
+  if (tab === 'community') {
+    currentCommunitySearch = '';
+    document.getElementById('communitySearchInput').value = '';
+    window.currentCommunityPage = 1;
+    renderCommunity();
+  }
+  
   if (tab === 'mypage') renderMypage();
   if (tab === 'ranking') renderRanking();
-  if (tab === 'community') renderCommunity();
 }
 
     window.switchRankingTab = function(tab, btn) {
@@ -3253,6 +3271,7 @@ const sortedTop10 = sorted.slice(0, 10);
         userRatings.add(currentTheme);
         closeModal();
         await loadRatings();
+        renderMypage();
       } catch(e) {
         console.error('평점 저장 오류:', e);
         alert('오류가 발생했어요. 다시 시도해주세요.');
