@@ -2324,6 +2324,12 @@ const horrorMatch = currentHorrors.length === 0 || currentHorrors.includes(t.hor
 
   // 페이지네이션
   const THEMES_PER_PAGE = 12;
+
+  // 검색 시 1페이지로 리셋
+if (document.getElementById('homeSearchInput').value) {
+  window.currentThemePage = 1;
+}
+
   const startIdx = (window.currentThemePage - 1) * THEMES_PER_PAGE;
   const endIdx = startIdx + THEMES_PER_PAGE;
   const paginatedThemes = sorted.slice(startIdx, endIdx);
@@ -2989,6 +2995,11 @@ const sortedTop10 = sorted.slice(0, 10);
     return dateB - dateA;
   });
 
+  // 검색 시 1페이지로 리셋 (주석 제거)
+  if (currentCommunitySearch) {
+    window.currentCommunityPage = 1;
+  }
+
   // 페이지네이션
   const startIdx = (window.currentCommunityPage - 1) * POSTS_PER_PAGE;
   const endIdx = startIdx + POSTS_PER_PAGE;
@@ -3084,6 +3095,7 @@ const sortedTop10 = sorted.slice(0, 10);
 
     window.filterCommunityPosts = function() {
       currentCommunitySearch = document.getElementById('communitySearchInput').value;
+       window.currentCommunityPage = 1; 
       renderCommunityList();
     }
 
