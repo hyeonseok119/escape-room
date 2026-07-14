@@ -2823,6 +2823,18 @@ noRatingModal.onclick = function(e) {
 
     window.saveNickname = async function() {
   const newNickname = document.getElementById('nicknameInput').value.trim();
+   // 이모지 검증 (이모지 포함하면 거부)
+  const emojiRegex = /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu;
+  if (emojiRegex.test(newNickname)) {
+    alert('이모지는 사용할 수 없습니다');
+    return;
+  }
+
+  if (newNickname.length < 2 || newNickname.length > 20) {
+    alert('닉네임은 2~20자 사이여야 합니다');
+    return;
+  }
+  
   
   if (!newNickname) {
     alert('닉네임을 입력해주세요');
