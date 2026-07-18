@@ -1662,21 +1662,27 @@
       </div>
 
       <div class="filter-dropdown" id="regionDropdown">
-        <div class="filter-options" id="regionFilter">
-          <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
-          <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
-          <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
-          <button class="filter-btn" onclick="setFilter('region','건대',this)">건대</button>
-          <button class="filter-btn" onclick="setFilter('region','대학로',this)">대학로</button>
-          <button class="filter-btn" onclick="setFilter('region','잠실',this)">잠실</button>
-          <button class="filter-btn" onclick="setFilter('region','신촌',this)">신촌</button>
-          <button class="filter-btn" onclick="setFilter('region','신림',this)">신림</button>
-          <button class="filter-btn" onclick="setFilter('region','인천',this)">인천</button>
-          <button class="filter-btn" onclick="setFilter('region','수원',this)">수원</button>
-          <button class="filter-btn" onclick="setFilter('region','안산',this)">안산</button>
-          <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
-        </div>
-      </div>
+  <div class="filter-options" id="regionFilter">
+    <button class="filter-btn active" onclick="setFilter('region','전체',this)">전체</button>
+    <button class="filter-btn" onclick="setFilter('region','강남',this)">강남</button>
+    <button class="filter-btn" onclick="setFilter('region','홍대',this)">홍대</button>
+    <button class="filter-btn" onclick="setFilter('region','건대',this)">건대</button>
+    <button class="filter-btn" onclick="setFilter('region','대학로',this)">대학로</button>
+    <button class="filter-btn" onclick="setFilter('region','잠실',this)">잠실</button>
+    <button class="filter-btn" onclick="setFilter('region','신촌',this)">신촌</button>
+    <button class="filter-btn" onclick="setFilter('region','신림',this)">신림</button>
+    <button class="filter-btn" onclick="setFilter('region','인천',this)">인천</button>
+    <button class="filter-btn" onclick="setFilter('region','수원',this)">수원</button>
+    <button class="filter-btn" onclick="setFilter('region','안산',this)">안산</button>
+    <button class="filter-btn" onclick="setFilter('region','안양',this)">안양</button>
+    <button class="filter-btn" onclick="setFilter('region','서울(기타)',this)">서울(기타)</button>
+    <button class="filter-btn" onclick="setFilter('region','경기(기타)',this)">경기(기타)</button>
+    <button class="filter-btn" onclick="setFilter('region','대전',this)">대전</button>
+    <button class="filter-btn" onclick="setFilter('region','대구',this)">대구</button>
+    <button class="filter-btn" onclick="setFilter('region','부산',this)">부산</button>
+    <button class="filter-btn" onclick="setFilter('region','광주',this)">광주</button>
+  </div>
+</div>
 
       <div class="filter-dropdown" id="horrorDropdown">
         <div class="filter-options" id="horrorFilter">
@@ -2038,7 +2044,7 @@ let currentHorrors = [];
 let eventCarouselIndex = 0;
 let allEventComments = [];
 
-    const regions = ['전체', '강남', '홍대', '건대', '대학로', '잠실', '신촌', '신림', '인천', '수원', '안산', '안양'];
+    const regions = ['전체', '강남', '홍대', '건대', '대학로', '잠실', '신촌', '신림', '인천', '수원', '안산', '안양', '서울(기타)', '경기(기타)', '대전', '대구', '부산', '광주'];
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
