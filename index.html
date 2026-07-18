@@ -3522,22 +3522,30 @@ window.backToCommunity = function() {
 // 페이지 완전히 로드된 후 실행
 async function initializeGongteguide() {
   try {
-    await loadRatings();
-    await loadAnnouncements();
-    await loadEvents();
-    await loadSponsorSettings();
+    // 최대 5초 대기
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Timeout')), 5000)
+    );
     
-    // 모든 로드 완료 후 로딩 화면 숨기기
+    await Promise.race([
+      Promise.all([
+        loadRatings(),
+        loadAnnouncements(),
+        loadEvents(),
+        loadSponsorSettings()
+      ]),
+      timeout
+    ]);
+    
     const loadingScreen = document.getElementById('loadingScreen');
     if (loadingScreen) {
       loadingScreen.style.display = 'none';
     }
   } catch(e) {
     console.error('로드 오류:', e);
-    // 오류 발생해도 로딩 화면 숨기기
     const loadingScreen = document.getElementById('loadingScreen');
     if (loadingScreen) {
-      loadingScreen.style.display = 'none';
+      loadingScreen.style.display = 'none';  // 무조건 숨김!
     }
   }
 }
